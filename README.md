@@ -19,5 +19,11 @@ El programa tiene como objetivo lograr jugar una partida de truco 1v1 contra la 
 - [ ] Calcular puntaje de Envido y ganador
 - [ ] Posibilidad de cantar Truco y variantes cuando corresponde
 - [ ] Determinar ganador de la ronda
+- [ ] Manejo de empates
 - [ ] Elegir partida de 15 o 30 puntos
 - [ ] Determinar ganador de la partida
+- [ ] Decisiones de la computadora
+- [ ] Dificultades del partido ?? H
+- [ ] Display grafico de las cartas (Terminal ASCII)
+- [ ] Guardado y continuacion de partidas
+- [ ] Tutorial
