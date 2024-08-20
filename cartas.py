@@ -44,6 +44,8 @@ mazo_truco = [
 ]
 
 
+#hola agussss
+
 def repartir_cartas(mazo):
     cartas=[]
     for x in range (0,3):
