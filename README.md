@@ -28,8 +28,8 @@ El programa tiene como objetivo lograr jugar una partida de truco 1v1 contra la 
 - [ ] Guardado y continuación de partidas
 - [ ] Tutorial
 
-### SEGUIR ESTE ESTILO DE CODIGO: (Elijan si quieren todo en inglés o todo en español (fran  prefiere inglés))
+### SEGUIR ESTE ESTILO DE CODIGO:
 - Variables: ```nombre_variable = "valor"``` (snake_case)
-- Funciones: nombre_funcion (snake_case)
+- Funciones: ```def nombre_funcion():``` (snake_case)
 
 
