@@ -1,4 +1,7 @@
 from colores import Colors
+from guardado import hay_partida_guardada, mostrar_historial
+from partido import nueva_partida, continuar_partida
+
 
 def mensaje_bienvenida():
     print(rf"""{Colors.BLUE}
@@ -24,12 +27,23 @@ def jugar_al_truco():
     print('TRUCOOO')
 
 
-    eleccion_puntos = print('Hasta cuantos puntos queres jugar? \n 1) 15 \n 2) 30')
+    hay_partidas_guardadas = hay_partida_guardada()
 
-    puntos = 15 if eleccion_puntos == 1 else 30
-    partida = {
-        "objetivo": puntos
-    }
+    if hay_partidas_guardadas:
+        print('Tenes una partida en progreso guardada, queres continuar con ella?')
+        eleccion = int(input(' 1) Si \n 2) No\n'))
+        if eleccion == 1:
+            continuar_partida()
+        else:
+            pass
+
+
+    eleccion = int(input('Elegi una de las opciones: \n 1) Jugar una nueva partida \n 2) Ver el historial de partidas\n'))
+
+    if eleccion == 1:
+        nueva_partida()
+    elif eleccion == 2:
+        mostrar_historial()
 
 
 jugar_al_truco()
