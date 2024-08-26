@@ -1,19 +1,28 @@
+import json
 
 
 def hay_partida_guardada():
-    return True
-    pass
+    try:
+        with open('partida_guardada.json', 'r+') as archivo:
+            if archivo:
+                return True
+    except FileNotFoundError:
+        return False
 
 def cargar_partida_guardada():
-    pass
+    with open('partida_guardada.json', 'r+') as archivo:
+        if archivo:
+            return json.load(archivo)
 
 def guardar_partida(partida):
-    pass
+    try:
+        with open('partida_guardada.json', 'w') as archivo:
+            json.dump(partida, archivo)
 
+            return True
+    except FileNotFoundError:
+        return False
 
-var = [[0,1],
-       [1,3],
-       [1,3]]
 # partido de historial
 # {
 # ganador: 'Computadora' o 'Jugador',
@@ -22,10 +31,23 @@ var = [[0,1],
 # fecha: str
 # }
 def buscar_historial():
-    pass
+    with open('historial.json', 'r+') as archivo:
+        if archivo:
+            return json.load(archivo)
+
+
 
 def guardar_partida_en_historial(partido):
-    pass
+    try:
+        with open('historial.json', 'w') as archivo:
+            json.dump(partido, archivo)
+
+            return True
+    except FileNotFoundError:
+        return False
 
 def mostrar_historial():
     pass
+
+
+hay_partida_guardada()
