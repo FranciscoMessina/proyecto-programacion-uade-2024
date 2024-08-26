@@ -1,3 +1,12 @@
+
+
+
+def nueva_partida():
+    pass
+
+def continuar_partida():
+    pass
+
 #puntos del partido
 bandera=True
 while bandera== True:
@@ -12,3 +21,4 @@ while bandera== True:
         print("seleccione un numero valido")
         
 print("la partida sera a",puntos, "puntos")
+

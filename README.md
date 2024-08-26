@@ -9,7 +9,7 @@
 
 ### Descripción
 El programa tiene como objetivo lograr jugar una partida de truco 1v1 contra la computadora. Algunas de las funciones a incluir son:
-- [ ] Crear un mazo de cartas
+- [x] Crear un mazo de cartas
 - [ ] Mezclar un mazo de cartas
 - [ ] Repartir las cartas
 - [ ] Calcular los puntajes de cada carta
