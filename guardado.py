@@ -31,12 +31,20 @@ def guardar_partida(partida):
 # fecha: str
 # }
 def buscar_historial():
-    pass
+    with open('historial.json', 'r+') as archivo:
+        if archivo:
+            return json.load(archivo)
 
 
 
 def guardar_partida_en_historial(partido):
-    pass
+    try:
+        with open('historial.json', 'w') as archivo:
+            json.dump(partido, archivo)
+
+            return True
+    except FileNotFoundError:
+        return False
 
 def mostrar_historial():
     pass
