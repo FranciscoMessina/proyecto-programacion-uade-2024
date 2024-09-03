@@ -48,11 +48,22 @@ def mezclar_mazo(mazo: list[dict]):
     mazo_clonado = mazo.copy()
     mazo_mezclado = []
 
-    for i in range(len(mazo_clonado)):
+    for i in range(len(mazo_clonado )):
         mazo_mezclado.append(mazo_clonado.pop(randint(0, len(mazo_clonado) - 1)))
 
     return mazo_mezclado
 
+def repartir_cartas(mazo_mezclado):
+    mano=mazo_mezclado[0:6:2]
+    mazo_nombre=[]
+    for i in mano:
+        mazo_nombre.append(i['nombre'])
+    return mazo_nombre
 
-print(mezclar_mazo(mazo_truco))
+
+
+mazo_mezclado=mezclar_mazo(mazo_truco)
+mano = repartir_cartas(mazo_mezclado)
+print("sus cartas son las siguientes: \n",mano)
+
 
