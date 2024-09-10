@@ -7,7 +7,6 @@ def nueva_partida():
 def continuar_partida():
     pass
 
-
 #puntos del partido
 def puntos_partida(puntos_partido):
     if puntos_partida == 0:
