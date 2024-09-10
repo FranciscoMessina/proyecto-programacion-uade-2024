@@ -1,7 +1,7 @@
-
 from random import choice
 
 from mano import jugar_mano
+from utilidades import pedir_eleccion
 
 
 def nueva_partida():
@@ -11,19 +11,28 @@ def nueva_partida():
 
     partida = {
         "puntos_maximos": puntos_maximos,
-        "puntos_jugador": 0,
+        "puntos_usuario": 0,
         "puntos_computadora": 0,
         "manos_jugadas": 0,
-        "mano_actual": [],
-        "siguiente_en_empezar": choice(["jugador"]),
+        "mano_actual": {
+            "rondas": [{}]
+        },
+        "siguiente_en_empezar": choice(["usuario"]),
     }
 
     continuar = True
 
-    while continuar:
-        jugar_mano(partida)
+    ganador = None
 
-    pass
+    def terminar_partida(_ganador):
+        global ganador, continuar
+        ganador = _ganador
+        continuar = False
+
+    while continuar:
+        jugar_mano(partida, terminar_partida)
+
+    print(f"El ganador de la partida es {ganador}")
 
 
 def continuar_partida():
@@ -32,13 +41,11 @@ def continuar_partida():
 
 # puntos del partido
 def preguntar_puntos_partida():
-    eleccion = int(input("A cuantos puntos queres jugar? \n 1) 30 Puntos \n 2) 15 Puntos \n"))
+    print("A cuantos puntos queres jugar? ")
 
-    return 15 if eleccion == 1 else 30
+    respuesta = pedir_eleccion([
+        ['A 15 puntos', 15],
+        ['A 30 puntos', 30]
+    ])
 
-
-    
-    
-    
-    
-
+    return respuesta
