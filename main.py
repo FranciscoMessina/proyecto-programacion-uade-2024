@@ -12,7 +12,7 @@ def mensaje_bienvenida():
 | |__| |  / ____ \  | |__| | | |____       / /_  | |_| |  / /_     | |   
  \____/  /_/    \_\ |_____/  |______|     |____|  \___/  |____|    |_|   {Colors.RESET}
 """
-f"""
+          f"""
 --------- PROGRAMACIÓN 1 ---------- PROF: {Colors.YELLOW}{Colors.BOLD}JULIA MONASTERIO{Colors.RESET} -----------
 
 ------------------------ {Colors.PURPLE}BORRA AGUSTÍN{Colors.RESET} -------------------------------
@@ -21,29 +21,25 @@ f"""
 ------------------------ {Colors.PURPLE}PELLACCINI FRANCO{Colors.RESET} ---------------------------
     """)
 
+
 def jugar_al_truco():
     mensaje_bienvenida()
 
-    print('TRUCOOO')
+    print('Bienvenido al truco!')
 
+    continuar = True
 
-    hay_partidas_guardadas = hay_partida_guardada()
+    while continuar:
+        eleccion = int(input(
+            'Elegi una de las opciones: \n 1) Jugar una nueva partida \n 2) Salir del programa \n más opciones próximamente'))
 
-    if hay_partidas_guardadas:
-        print('Tenes una partida en progreso guardada, queres continuar con ella?')
-        eleccion = int(input(' 1) Si \n 2) No\n'))
         if eleccion == 1:
-            continuar_partida()
+            nueva_partida()
+        elif eleccion == 2:
+            continuar = False
+            print('Gracias por jugar!')
         else:
-            pass
-
-
-    eleccion = int(input('Elegi una de las opciones: \n 1) Jugar una nueva partida \n 2) Ver el historial de partidas\n'))
-
-    if eleccion == 1:
-        nueva_partida()
-    elif eleccion == 2:
-        mostrar_historial()
+            print('Elegí una opción válida')
 
 
 jugar_al_truco()

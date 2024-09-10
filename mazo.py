@@ -1,7 +1,7 @@
-from random import randint, choice
+from random import choice
 
 mazo_truco = [
-    # nombre, palo, numero, poder
+    # 0 - nombre, 1 - palo, 2 - numero, 3 - poder
     ["Ancho de Espada", "espada", 1, 14],
     ["Dos de Espada", "espada", 2, 9],
     ["Tres de Espada", "espada", 3, 10],
