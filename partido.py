@@ -8,17 +8,15 @@ def continuar_partida():
     pass
 
 #puntos del partido
-bandera=True
-while bandera== True:
-    partida= int(input("elija duracion del juego,escriba 1 para 15 o 2 para 30: " ))
-    if partida == 1:
-        bandera=False
-        puntos=15
-    elif partida == 2:
-        bandera=False
-        puntos=30
-    else:
-        print("seleccione un numero valido")
-        
-print("la partida sera a",puntos, "puntos")
+def puntos_partida(puntos_partido):
+    if puntos_partida == 0:
+        duracion_de_partida=15
+    elif puntos_partida == 1:
+        duracion_de_partida==30
+    return duracion_de_partida
+    
+    
+    
+    
+    
 
