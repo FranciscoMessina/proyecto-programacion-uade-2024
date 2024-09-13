@@ -2,6 +2,12 @@ from mazo import mazo_truco
 
 
 def pedir_eleccion(opciones):
+    """
+
+    :param opciones:
+    :return: eleccion del usuario
+    """
+    
     for i in range(len(opciones)):
         texto, _ = opciones[i]
 
@@ -16,7 +22,7 @@ def pedir_eleccion(opciones):
 
     eleccion = int(ingresado)
 
-    opciones_disponibles = max(1, len(opciones) - 1)
+    opciones_disponibles = max(1, len(opciones))
 
     if eleccion < 1 or eleccion > opciones_disponibles:
         print(f"{Colors.RED}{Colors.BOLD}Eleccion invalida. {Colors.RESET}")

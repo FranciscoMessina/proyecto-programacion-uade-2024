@@ -1,5 +1,7 @@
 from random import choice
 
+from ordenamiento import ordenar_mano_por_poder
+
 mazo_truco = [
     # 0 - nombre, 1 - palo, 2 - numero, 3 - poder
     ["Ancho de Espada", "espada", 1, 14],
@@ -58,4 +60,17 @@ def repartir_cartas(mazo):
         cartas_computadora.append(carta)
         copia_mazo.remove(carta)
 
-    return cartas_usuario, cartas_computadora
+    return ordenar_mano_por_poder(cartas_usuario), ordenar_mano_por_poder(cartas_computadora)
+
+
+def determinar_carta_mayor(carta_1, carta_2):
+    if carta_1[3] > carta_2[3]:
+        return carta_1
+    elif carta_2[3] > carta_1[3]:
+        return carta_2
+    else:
+        return "empate"
+
+
+def obtener_poder_carta(carta):
+    return carta[3]
