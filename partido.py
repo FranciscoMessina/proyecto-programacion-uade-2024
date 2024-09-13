@@ -7,15 +7,20 @@ from utilidades import pedir_eleccion
 def nueva_partida():
     puntos_maximos = preguntar_puntos_partida()
 
+    print("INICIANDO NUEVA PARTIDA")
     print(f"La partida sera a {puntos_maximos} puntos")
 
     partida = {
         "puntos_maximos": puntos_maximos,
-        "puntos_usuario": 0,
-        "puntos_computadora": 0,
+        "puntos": {
+            "usuario": 0,
+            "computadora": 0
+        },
         "manos_jugadas": 0,
         "mano_actual": {
-            "rondas": [{}]
+            "rondas": [],
+            "truco": None,
+            "envido": None,
         },
         "siguiente_en_empezar": choice(["usuario"]),
     }
@@ -24,13 +29,12 @@ def nueva_partida():
 
     ganador = None
 
-    def terminar_partida(_ganador):
-        global ganador, continuar
-        ganador = _ganador
-        continuar = False
-
     while continuar:
-        jugar_mano(partida, terminar_partida)
+        resultado = jugar_mano(partida)
+
+        if resultado['accion'] == 'terminar_partida':
+            continuar = False
+            ganador = resultado['ganador']
 
     print(f"El ganador de la partida es {ganador}")
 
