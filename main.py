@@ -1,6 +1,6 @@
-from colores import Colors
 from guardado import hay_partida_guardada, mostrar_historial
 from partido import nueva_partida, continuar_partida
+from utilidades import Colors, pedir_eleccion
 
 
 def mensaje_bienvenida():
@@ -29,17 +29,19 @@ def jugar_al_truco():
 
     continuar = True
 
-    while continuar:
-        eleccion = int(input(
-            'Elegi una de las opciones: \n 1) Jugar una nueva partida \n 2) Salir del programa \n más opciones próximamente'))
+    def cerrar_programa():
+        global continuar
+        continuar = False
 
-        if eleccion == 1:
-            nueva_partida()
-        elif eleccion == 2:
-            continuar = False
-            print('Gracias por jugar!')
-        else:
-            print('Elegí una opción válida')
+    while continuar:
+        print('Elegi una de las opciones:')
+
+        respuesta = pedir_eleccion([
+            ['Comenzar nueva partida', nueva_partida],
+            ['Salir del programa', cerrar_programa]
+        ])
+
+        respuesta()
 
 
 jugar_al_truco()

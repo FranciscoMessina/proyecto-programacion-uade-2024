@@ -7,7 +7,7 @@ def pedir_eleccion(opciones):
 
         print(f"{i + 1}) {texto} ")
 
-    ingresado = input('\n')
+    ingresado = input('\n').strip()
 
     if ingresado == "":
         print(f"{Colors.RED}{Colors.BOLD}Por favor ingrese un numero {Colors.RESET}")
@@ -16,7 +16,9 @@ def pedir_eleccion(opciones):
 
     eleccion = int(ingresado)
 
-    if eleccion < 1 or eleccion > len(opciones) - 1:
+    opciones_disponibles = max(1, len(opciones) - 1)
+
+    if eleccion < 1 or eleccion > opciones_disponibles:
         print(f"{Colors.RED}{Colors.BOLD}Eleccion invalida. {Colors.RESET}")
         pedir_eleccion(opciones)
         return

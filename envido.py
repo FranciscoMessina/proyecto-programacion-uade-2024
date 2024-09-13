@@ -1,6 +1,3 @@
-from mazo import repartir_cartas, mazo_truco
-
-
 def calcular_envido(mano):
     palos = {
         'espada': [],
