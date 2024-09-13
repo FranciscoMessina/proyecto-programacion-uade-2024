@@ -25,23 +25,24 @@ def mensaje_bienvenida():
 def jugar_al_truco():
     mensaje_bienvenida()
 
-    print('Bienvenido al truco!')
+    print('Bienvenido al truco! \n')
 
     continuar = True
 
-    def cerrar_programa():
-        global continuar
-        continuar = False
-
     while continuar:
-        print('Elegi una de las opciones:')
+
+        print('Elegi una de las opciones: \n')
 
         respuesta = pedir_eleccion([
-            ['Comenzar nueva partida', nueva_partida],
-            ['Salir del programa', cerrar_programa]
+            ['Comenzar nueva partida', {"accion": nueva_partida}],
+            ['Salir del programa', {"accion": "cerrar_programa"}]
         ])
 
-        respuesta()
+        if respuesta['accion'] == 'cerrar_programa':
+            print("Gracias por usar nuestro programa, esperamos verlo pronto.")
+            continuar = False
+        else:
+            respuesta['accion']()
 
 
 jugar_al_truco()
