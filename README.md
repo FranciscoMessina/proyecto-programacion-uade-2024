@@ -5,7 +5,7 @@
 ### Integrantes
 
 - Agustin Borra
-- Agustin Margaretto
+- Agustin Margareto
 - Francisco Messina
 - Franco Pellaccini
 
