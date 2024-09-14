@@ -1,13 +1,18 @@
-from mazo import mazo_truco
+from mazo import mazo_truco, obtener_palo
 
 
 def pedir_eleccion(opciones):
     """
+    Función de utilidad para pedir input al usuario, recibe una lista con las opciones a mostrar y devuelve la elección del usuario.
+    Cada elemento de la lista es otra lista con el siguiente formato: [texto, valor].
+    Texto es lo que se muestra al usuario al momento de pedirle el input y valor es lo que se devuelve si el usuario elige esa opción.
 
-    :param opciones:
+    También se encarga de validar que la elección del usuario.
+
+    :param opciones: lista con las opciones a mostrar
     :return: eleccion del usuario
     """
-    
+
     for i in range(len(opciones)):
         texto, _ = opciones[i]
 
@@ -51,4 +56,9 @@ colores_palos = {
 
 
 def formatear_carta(carta):
-    return f"{colores_palos[carta[1]]}{Colors.BOLD}{carta[0]}{Colors.RESET}"
+    """
+    Función de utilidad para generar una string visualmente atractiva de una carta de truco.
+    :param carta:
+    :return: string estilada para ser impresa en consola
+    """
+    return f"{colores_palos[obtener_palo(carta)]}{Colors.BOLD}{carta[0]}{Colors.RESET}"

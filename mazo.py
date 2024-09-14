@@ -1,7 +1,5 @@
 from random import choice
 
-from ordenamiento import ordenar_mano_por_poder
-
 mazo_truco = [
     # 0 - nombre, 1 - palo, 2 - numero, 3 - poder
     ["Ancho de Espada", "espada", 1, 14],
@@ -47,7 +45,13 @@ mazo_truco = [
 ]
 
 
-def repartir_cartas(mazo):
+def repartir_cartas(mazo) -> tuple[list, list]:
+    """
+    Reparte 3 cartas a cada jugador y las ordena por poder de menor a mayor. Devuelve una tupla con las manos de ambos jugadores.
+
+    :param mazo: el mazo con las cartas a utilizar
+    :return (mano_usuario, mano_computadora)
+    """
     copia_mazo = mazo.copy()
     cartas_usuario = []
     cartas_computadora = []
@@ -64,13 +68,46 @@ def repartir_cartas(mazo):
 
 
 def determinar_carta_mayor(carta_1, carta_2):
-    if carta_1[3] > carta_2[3]:
+    """
+    Determina cual de las dos cartas es mayor. Si son iguales, devuelve "empate".
+    :param carta_1:
+    :param carta_2:
+    :return:
+    """
+    if obtener_poder(carta_1) > obtener_poder(carta_2):
         return carta_1
-    elif carta_2[3] > carta_1[3]:
+    elif obtener_poder(carta_2) > obtener_poder(carta_1):
         return carta_2
     else:
         return "empate"
 
 
-def obtener_poder_carta(carta):
+def obtener_palo(carta):
+    """
+    Devuelve el palo de una carta.
+    :param carta:
+    :return: str
+    """
+    return carta[1]
+
+
+def obtener_poder(carta):
+    """
+    Devuelve el poder de una carta.
+    :param carta:
+    :return: int
+    """
     return carta[3]
+
+
+def ordenar_mano_por_poder(mano):
+    """
+    Ordena una mano de cartas de menor a mayor poder.
+    :param mano:
+    :return:
+    """
+    for i in range(len(mano)):
+        for j in range(len(mano) - 1):
+            if obtener_poder(mano[j]) > obtener_poder(mano[j + 1]):
+                mano[j], mano[j + 1] = mano[j + 1], mano[j]
+    return mano
