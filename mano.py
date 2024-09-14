@@ -5,8 +5,10 @@ from utilidades import formatear_carta
 
 
 def jugar_mano(partida):
-    print(f"Inciando mano numero {partida["manos_jugadas"] + 1}")
+    print(f"Iniciando una nueva mano".center(60, "-"))
+
     cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
+
     partida['manos_jugadas'] += 1
 
     if partida['puntos']['usuario'] >= partida['puntos_maximos']:
@@ -14,6 +16,7 @@ def jugar_mano(partida):
             "accion": "terminar_partida",
             "ganador": "usuario"
         }
+
     elif partida['puntos']['computadora'] >= partida['puntos_maximos']:
         return {
             "accion": "terminar_partida",
@@ -22,14 +25,16 @@ def jugar_mano(partida):
 
     partida['mano_actual'] = {
         'rondas': [],
-        "truco": None,
-        "envido": None,
+        "truco": {},
+        "envido": {},
     }
 
     mano_actual = partida['mano_actual']
 
     continuar = True
+
     numero_de_ronda = 1
+
     while continuar and numero_de_ronda < 4:
         # Esto de aca adentro es cada ronda de una mano.
         mano_actual['rondas'].append({
@@ -128,6 +133,16 @@ def jugar_mano(partida):
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
     print(f"Gana {ganador_mano} sumando {puntos_a_sumar} puntos")
+
+    print("|", end="")
+    print(" PUNTOS ".center(85, '='), end='|\n')
+    print("|---  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30", end='|\n')
+    print(f"|TU: {" *" * partida['puntos']['usuario']} ", end='')
+    print("|".rjust(81 - partida['puntos']['usuario'] * 2))
+    print(f"|PC: {" *" * partida['puntos']['computadora']} ", end='')
+    print("|".rjust(81 - partida['puntos']['computadora'] * 2))
+    print("|", end="")
+    print("".center(85, '='), end='|\n')
 
     return {
         "accion": "none"

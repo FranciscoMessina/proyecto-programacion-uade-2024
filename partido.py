@@ -1,7 +1,7 @@
 from random import choice
 
 from mano import jugar_mano
-from utilidades import pedir_eleccion
+from utilidades import pedir_eleccion, limpiar_terminal
 
 
 def nueva_partida():
