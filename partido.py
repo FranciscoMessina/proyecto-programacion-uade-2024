@@ -3,6 +3,7 @@ from random import choice
 from mano import jugar_mano
 from utilidades import pedir_eleccion
 
+
 def nueva_partida():
     puntos_maximos = preguntar_puntos_partida()
 
@@ -32,6 +33,7 @@ def nueva_partida():
 
     print(f"El ganador de la partida es {ganador}")
 
+
 def continuar_partida():
     pass
 
@@ -44,6 +46,6 @@ def preguntar_puntos_partida():
         ["DEMO ONLY 3 puntos", 3],
         ['A 15 puntos', 15],
         ['A 30 puntos', 30]
-    ])
+    ], True)
 
     return respuesta

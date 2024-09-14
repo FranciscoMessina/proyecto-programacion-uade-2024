@@ -100,6 +100,15 @@ def obtener_poder(carta):
     return carta[3]
 
 
+def obtener_numero(carta):
+    """
+    Devuelve el número de una carta.
+    :param carta:
+    :return: int
+    """
+    return carta[2]
+
+
 def ordenar_mano_por_poder(mano):
     """
     Ordena una mano de cartas de menor a mayor poder.

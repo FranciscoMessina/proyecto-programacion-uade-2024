@@ -1,7 +1,13 @@
-from mazo import mazo_truco, obtener_palo
+import os
+
+from mazo import obtener_palo, obtener_numero
 
 
-def pedir_eleccion(opciones):
+def limpiar_terminal():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+
+def pedir_eleccion(opciones, limpiar_consola=False):
     """
     Función de utilidad para pedir input al usuario, recibe una lista con las opciones a mostrar y devuelve la elección del usuario.
     Cada elemento de la lista es otra lista con el siguiente formato: [texto, valor].
@@ -20,19 +26,21 @@ def pedir_eleccion(opciones):
 
     ingresado = input('\n').strip()
 
+    if limpiar_consola:
+        limpiar_terminal()
+
     if ingresado == "":
-        print(f"{Colors.RED}{Colors.BOLD}Por favor ingrese un numero {Colors.RESET}")
-        pedir_eleccion(opciones)
-        return
+        print(f"{Colors.RED}{Colors.BOLD}Por favor ingrese un numero. {Colors.RESET}\n")
+        return pedir_eleccion(opciones)
 
     eleccion = int(ingresado)
 
     opciones_disponibles = max(1, len(opciones))
 
     if eleccion < 1 or eleccion > opciones_disponibles:
-        print(f"{Colors.RED}{Colors.BOLD}Eleccion invalida. {Colors.RESET}")
-        pedir_eleccion(opciones)
-        return
+        print(f"{Colors.RED}{Colors.BOLD}Eleccion invalida. {Colors.RESET}\n")
+        return pedir_eleccion(opciones)
+
     else:
         return opciones[eleccion - 1][1]
 
@@ -62,3 +70,38 @@ def formatear_carta(carta):
     :return: string estilada para ser impresa en consola
     """
     return f"{colores_palos[obtener_palo(carta)]}{Colors.BOLD}{carta[0]}{Colors.RESET}"
+
+
+palo_ascii = {
+    "espada": lambda num: f"""{colores_palos['espada']}
+    +-----------+
+    | {num}   .     |
+    |    / \    |
+    |    | |    |
+    |    |.|    |
+    |    |.|    |
+    |    |:|    |
+    |    |:|    |
+    |  `--8--'  |
+    |     8     |
+    |     O     |     
+    |         {num} |
+    +-----------+
+    {Colors.RESET}
+    """,
+    "basto": lambda num: f"""{colores_palos['basto']}
+    """,
+    "oro": lambda num: f"""{colores_palos['oro']}
+    """,
+    "copa": lambda num: f"""{colores_palos['copa']}
+"""
+}
+
+
+def imprimir_carta_ascii(carta):
+    """
+    Imprime una carta en formato ASCII.
+    :param carta:
+    :return:
+    """
+    print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
