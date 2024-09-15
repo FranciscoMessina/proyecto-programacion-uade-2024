@@ -32,7 +32,7 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     # Verificamos que el input sea un numero
     if ingresado == "" or not ingresado.isdigit():
-        print(f"{Colors.RED}{Colors.BOLD}Por favor ingrese un numero. {Colors.RESET}\n")
+        print(f"{Colores.RED}{Colores.BOLD}Por favor ingrese un numero. {Colores.RESET}\n")
         return pedir_eleccion(opciones)
 
     eleccion = int(ingresado)
@@ -41,7 +41,7 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     # Si la eleccion esta fuera de rango, la volvemos a pedir.
     if eleccion < 1 or eleccion > opciones_disponibles:
-        print(f"{Colors.RED}{Colors.BOLD}Eleccion invalida. {Colors.RESET}\n")
+        print(f"{Colores.RED}{Colores.BOLD}Eleccion invalida. {Colores.RESET}\n")
         return pedir_eleccion(opciones)
 
     else:
@@ -49,7 +49,7 @@ def pedir_eleccion(opciones, limpiar_consola=False):
         return opciones[eleccion - 1][1]
 
 
-class Colors:
+class Colores:
     # Colores para imprimir en consola.
     GREEN = '\033[92m'
     RESET = '\033[0m'
@@ -62,10 +62,10 @@ class Colors:
 
 colores_palos = {
     # Asignamos un color a cada palo
-    'espada': Colors.BLUE,
-    'basto': Colors.GREEN,
-    'oro': Colors.YELLOW,
-    'copa': Colors.RED
+    'espada': Colores.BLUE,
+    'basto': Colores.GREEN,
+    'oro': Colores.YELLOW,
+    'copa': Colores.RED
 }
 
 
@@ -75,7 +75,7 @@ def formatear_carta(carta):
     :param carta:
     :return: string estilada para ser impresa en consola
     """
-    return f"{colores_palos[obtener_palo(carta)]}{Colors.BOLD}{carta[0]}{Colors.RESET}"
+    return f"{colores_palos[obtener_palo(carta)]}{Colores.BOLD}{carta[0]}{Colores.RESET}"
 
 
 palo_ascii = {
@@ -93,7 +93,7 @@ palo_ascii = {
     |     O     |     
     |         {num} |
     +-----------+
-    {Colors.RESET}
+    {Colores.RESET}
     """,
     "basto": lambda num: f"""{colores_palos['basto']}
     """,

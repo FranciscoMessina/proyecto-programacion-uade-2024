@@ -1,5 +1,5 @@
 from partido import nueva_partida
-from utilidades import Colors, pedir_eleccion
+from utilidades import Colores, pedir_eleccion
 
 
 def mensaje_bienvenida():
@@ -7,7 +7,7 @@ def mensaje_bienvenida():
     Imprime en terminal un mensaje de bienvenida e informacion del proyecto para el usuario
     :return:
     """
-    print(rf"""{Colors.BLUE}
+    print(rf"""{Colores.BLUE}
    ▄         ▄       ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄        ▄▄▄▄▄▄▄▄▄▄▄
   ▐░▌       ▐░▌     ▐░░░░░░░░░░░▌     ▐░░░░░░░░░░▌      ▐░░░░░░░░░░░▌
   ▐░▌       ▐░▌     ▐░█▀▀▀▀▀▀▀█░▌     ▐░█▀▀▀▀▀▀▀█░▌     ▐░█▀▀▀▀▀▀▀▀▀
@@ -19,15 +19,15 @@ def mensaje_bienvenida():
   ▐░█▄▄▄▄▄▄▄█░▌     ▐░▌       ▐░▌     ▐░█▄▄▄▄▄▄▄█░▌     ▐░█▄▄▄▄▄▄▄▄▄
   ▐░░░░░░░░░░░▌     ▐░▌       ▐░▌     ▐░░░░░░░░░░▌      ▐░░░░░░░░░░░▌
    ▀▀▀▀▀▀▀▀▀▀▀       ▀         ▀       ▀▀▀▀▀▀▀▀▀▀        ▀▀▀▀▀▀▀▀▀▀▀
-    {Colors.RESET}""")
+    {Colores.RESET}""")
     print(f" PROGRAMACIÓN 1 ".center(69, '-'))
     print("")
-    print(f" PROF: {Colors.YELLOW}{Colors.BOLD}JULIA MONASTERIO{Colors.RESET} ".center(82, '-'))
+    print(f" PROF: {Colores.YELLOW}{Colores.BOLD}JULIA MONASTERIO{Colores.RESET} ".center(82, '-'))
     print("")
-    print(f" {Colors.PURPLE}BORRA AGUSTÍN{Colors.RESET} ".center(78, '-'))
-    print(f" {Colors.PURPLE}MARGARETO AGUSTÍN{Colors.RESET} ".center(78, '-'))
-    print(f" {Colors.PURPLE}MESSINA FRANCISCO{Colors.RESET} ".center(78, '-'))
-    print(f" {Colors.PURPLE}PELACCINI FRANCO{Colors.RESET} ".center(78, '-'))
+    print(f" {Colores.PURPLE}BORRA AGUSTÍN{Colores.RESET} ".center(78, '-'))
+    print(f" {Colores.PURPLE}MARGARETO AGUSTÍN{Colores.RESET} ".center(78, '-'))
+    print(f" {Colores.PURPLE}MESSINA FRANCISCO{Colores.RESET} ".center(78, '-'))
+    print(f" {Colores.PURPLE}PELACCINI FRANCO{Colores.RESET} ".center(78, '-'))
 
     print(rf"""
                  .------..------..------..------..------.
