@@ -1,5 +1,10 @@
-#Calcula el envido(aun no se implementa)
+# Calcula el envido(aun no se usa)
 def calcular_envido(mano):
+    """
+    Calcula los puntos de envido que tiene una mano
+    :param mano: Lista con 3 cartas
+    :return: el maximo envido posible de la mano
+    """
     palos = {
         'espada': [],
         'basto': [],
