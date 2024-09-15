@@ -3,7 +3,7 @@ from sys import intern
 
 from mazo import obtener_palo, obtener_numero
 
-
+#Deja mas prolija la terminal para empezar a jugar
 def limpiar_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
