@@ -1,3 +1,4 @@
+#Calcula el envido(aun no se implementa)
 def calcular_envido(mano):
     palos = {
         'espada': [],

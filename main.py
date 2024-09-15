@@ -1,7 +1,7 @@
 from partido import nueva_partida
 from utilidades import Colors, pedir_eleccion
 
-
+#Muestra los creditos del juego al inicio
 def mensaje_bienvenida():
     print(rf"""{Colors.BLUE}
    ▄         ▄       ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄        ▄▄▄▄▄▄▄▄▄▄▄
@@ -25,7 +25,7 @@ def mensaje_bienvenida():
     print(f" {Colors.PURPLE}MESSINA FRANCISCO{Colors.RESET} ".center(78, '-'))
     print(f" {Colors.PURPLE}PELLACCINI FRANCO{Colors.RESET} ".center(78, '-'))
 
-
+#Menu del juego, se elige si empezar una partida o salir del programa
 def jugar_al_truco():
     mensaje_bienvenida()
 

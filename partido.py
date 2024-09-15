@@ -3,7 +3,7 @@ from random import choice
 from mano import jugar_mano
 from utilidades import pedir_eleccion, limpiar_terminal
 
-
+#Crea una nueva partida y printea quien gana
 def nueva_partida():
     puntos_maximos = preguntar_puntos_partida()
 

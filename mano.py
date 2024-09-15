@@ -6,7 +6,7 @@ from utilidades import formatear_carta
 
 def jugar_mano(partida):
     cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
-
+    #Aca se determina quien gana
     if partida['puntos']['usuario'] >= partida['puntos_maximos']:
         return {
             "accion": "terminar_partida",
@@ -18,7 +18,7 @@ def jugar_mano(partida):
             "accion": "terminar_partida",
             "ganador": "computadora"
         }
-
+    #Pasa a la siguiente mano
     print(f"Iniciando una nueva mano".center(60, "-"))
     partida['manos_jugadas'] += 1
 
@@ -42,7 +42,7 @@ def jugar_mano(partida):
         ronda_actual = partida['mano_actual']['rondas'][-1]
 
         ronda_anterior = partida['mano_actual']['rondas'][-2] if numero_de_ronda > 1 else {}
-
+        #Si la ronda la gano el usuario o hubo empate la siguiente ronda la empieza el usuario
         if numero_de_ronda == 1 or numero_de_ronda != 1 and ronda_anterior['ganador'] == 'usuario' or ronda_anterior[
             'ganador'] == 'empate':
 
@@ -50,7 +50,7 @@ def jugar_mano(partida):
 
             while esperando_carta:
                 input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
-
+                #Que pasa si el jugador juega una carta
                 if input_usuario['accion'] == 'jugar_carta':
                     cartas_usuario.remove(input_usuario['carta'])
                     ronda_actual['carta_usuario'] = input_usuario['carta']
@@ -66,7 +66,7 @@ def jugar_mano(partida):
                         cartas_computadora.remove(respuesta_computadora['carta'])
                         ronda_actual['carta_computadora'] = respuesta_computadora['carta']
                         print(f"La computadora jugo {formatear_carta(ronda_actual['carta_computadora'])}")
-
+                #Que pasa si el jugador canta truco
                 if input_usuario['accion'] == 'cantar_truco':
                     print("CANTASTE TRUCO")
                     mano_actual['truco'] = {
@@ -88,7 +88,7 @@ def jugar_mano(partida):
                         ronda_actual['ganador'] = 'usuario'
                         continuar = False
                         esperando_carta = False
-
+        #Si la ronda la gana la compu, la compu empieza y tira una carta
         elif ronda_anterior['ganador'] == 'computadora':
             # tiene que empezar la computadora
             accion_computadora = actuar_computadora(cartas_computadora, partida, numero_de_ronda)
@@ -99,7 +99,7 @@ def jugar_mano(partida):
                 ronda_actual['carta_computadora'] = accion_computadora['carta']
 
             esperando_carta = True
-
+            #Esto es como en la funcion anteriror
             while esperando_carta:
                 respuesta_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
 
@@ -130,10 +130,10 @@ def jugar_mano(partida):
                         ronda_actual['ganador'] = 'usuario'
                         continuar = False
                         esperando_carta = False
-
+        #Si el truco se rechaza, la mano termina
         if mano_actual['truco'].get('rechazado_por') is not None:
             break
-
+        #Se determina que carta gana
         carta_ganadora = determinar_carta_mayor(ronda_actual['carta_usuario'],
                                                 ronda_actual['carta_computadora'])
 
@@ -151,7 +151,7 @@ def jugar_mano(partida):
             print(f"Gano {formatear_carta(carta_ganadora)}, jugada por {ronda_actual['ganador']}")
 
         numero_de_ronda += 1
-
+    #Suma los puntos de la mano al contador de la partida
     ganador_mano = determinar_ganador_de_la_mano(mano_actual)
 
     puntos_a_sumar = determinar_puntos(mano_actual)
@@ -159,7 +159,7 @@ def jugar_mano(partida):
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
     print(f"Gana {ganador_mano} sumando {puntos_a_sumar} puntos")
-
+    #Printea un grafico que muestra los puntos de cada jugador
     print("|", end="")
     print(" PUNTOS ".center(85, '='), end='|\n')
     print("|---  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30", end='|\n')
@@ -174,7 +174,7 @@ def jugar_mano(partida):
         "accion": "none"
     }
 
-
+#Determina cuantos puntos se lleva el ganador de la mano
 def determinar_puntos(mano):
     puntos = 1
 
@@ -183,7 +183,7 @@ def determinar_puntos(mano):
 
     return puntos
 
-
+#Determina quien gano la mano
 def determinar_ganador_de_la_mano(mano):
     if mano['truco'].get('rechazado_por') is not None:
         return mano['truco']['cantado_por']
