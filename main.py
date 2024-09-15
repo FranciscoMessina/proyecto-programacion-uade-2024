@@ -1,7 +1,5 @@
-from guardado import hay_partida_guardada, mostrar_historial
-from mazo import mazo_truco
-from partido import nueva_partida, continuar_partida
-from utilidades import Colors, pedir_eleccion, imprimir_carta_ascii
+from partido import nueva_partida
+from utilidades import Colors, pedir_eleccion
 
 
 def mensaje_bienvenida():
