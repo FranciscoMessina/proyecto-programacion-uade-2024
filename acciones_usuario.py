@@ -1,6 +1,6 @@
 from utilidades import formatear_carta, pedir_eleccion
 
-
+#Esta funcion proporciona una lista con las acciones que el jugador puede tomar
 def pedir_accion_usuario(cartas, partida, numero_ronda):
     opciones = []
     for carta in cartas:
