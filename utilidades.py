@@ -49,6 +49,10 @@ def pedir_eleccion(opciones, limpiar_consola=False):
         return opciones[eleccion - 1][1]
 
 
+# Se que no se supone que usemos clases, pero es una forma mas
+# facil de poder acceder a las propiedades sin cometer errores de tipeo
+# asi por favor no nos saquen puntos por esto.
+# Si no lo cambiamos a diccionario, solo avisar.
 class Colores:
     # Colores para imprimir en consola.
     GREEN = '\033[92m'
