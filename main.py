@@ -23,7 +23,7 @@ def mensaje_bienvenida():
     print(f" {Colors.PURPLE}BORRA AGUSTÍN{Colors.RESET} ".center(78, '-'))
     print(f" {Colors.PURPLE}MARGARETO AGUSTÍN{Colors.RESET} ".center(78, '-'))
     print(f" {Colors.PURPLE}MESSINA FRANCISCO{Colors.RESET} ".center(78, '-'))
-    print(f" {Colors.PURPLE}PELLACCINI FRANCO{Colors.RESET} ".center(78, '-'))
+    print(f" {Colors.PURPLE}PELACCINI FRANCO{Colors.RESET} ".center(78, '-'))
 
 #Menu del juego, se elige si empezar una partida o salir del programa
 def jugar_al_truco():
