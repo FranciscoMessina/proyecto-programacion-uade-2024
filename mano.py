@@ -5,11 +5,7 @@ from utilidades import formatear_carta
 
 
 def jugar_mano(partida):
-    print(f"Iniciando una nueva mano".center(60, "-"))
-
     cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
-
-    partida['manos_jugadas'] += 1
 
     if partida['puntos']['usuario'] >= partida['puntos_maximos']:
         return {
@@ -22,6 +18,9 @@ def jugar_mano(partida):
             "accion": "terminar_partida",
             "ganador": "computadora"
         }
+
+    print(f"Iniciando una nueva mano".center(60, "-"))
+    partida['manos_jugadas'] += 1
 
     partida['mano_actual'] = {
         'rondas': [],
@@ -99,11 +98,38 @@ def jugar_mano(partida):
                 cartas_computadora.remove(accion_computadora['carta'])
                 ronda_actual['carta_computadora'] = accion_computadora['carta']
 
-            respuesta_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
+            esperando_carta = True
 
-            if respuesta_usuario['accion'] == "jugar_carta":
-                cartas_usuario.remove(respuesta_usuario['carta'])
-                ronda_actual['carta_usuario'] = respuesta_usuario['carta']
+            while esperando_carta:
+                respuesta_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
+
+                if respuesta_usuario['accion'] == "jugar_carta":
+                    cartas_usuario.remove(respuesta_usuario['carta'])
+                    ronda_actual['carta_usuario'] = respuesta_usuario['carta']
+                    print(f"Jugaste {formatear_carta(ronda_actual['carta_usuario'])}")
+                    esperando_carta = False
+                elif respuesta_usuario['accion'] == 'cantar_truco':
+                    print("CANTASTE TRUCO")
+                    mano_actual['truco'] = {
+                        "cantado_por": "usuario",
+                        "nivel": 0,
+                    }
+                    respuesta_computadora = responder_a_usuario(respuesta_usuario, cartas_computadora, partida,
+                                                                numero_de_ronda)
+
+                    if respuesta_computadora['accion'] == 'aceptar':
+                        print('ACEPTADO')
+                        mano_actual['truco'].update({
+                            "nivel": 1
+                        })
+                    elif respuesta_computadora['accion'] == 'rechazar':
+                        print("RECHAZADO")
+                        mano_actual['truco'].update({
+                            "rechazado_por": "computadora"
+                        })
+                        ronda_actual['ganador'] = 'usuario'
+                        continuar = False
+                        esperando_carta = False
 
         if mano_actual['truco'].get('rechazado_por') is not None:
             break

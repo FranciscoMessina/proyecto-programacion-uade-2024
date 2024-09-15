@@ -1,4 +1,5 @@
 import os
+from sys import intern
 
 from mazo import obtener_palo, obtener_numero
 
@@ -29,7 +30,7 @@ def pedir_eleccion(opciones, limpiar_consola=False):
     if limpiar_consola:
         limpiar_terminal()
 
-    if ingresado == "":
+    if ingresado == "" or not ingresado.isdigit():
         print(f"{Colors.RED}{Colors.BOLD}Por favor ingrese un numero. {Colors.RESET}\n")
         return pedir_eleccion(opciones)
 
