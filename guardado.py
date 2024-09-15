@@ -1,6 +1,6 @@
 import json
 
-
+#Se implementa mas adelante en el desarrollo
 def hay_partida_guardada():
     try:
         with open('partida_guardada.json', 'r+') as archivo:
@@ -9,10 +9,12 @@ def hay_partida_guardada():
     except FileNotFoundError:
         return False
 
+
 def cargar_partida_guardada():
     with open('partida_guardada.json', 'r+') as archivo:
         if archivo:
             return json.load(archivo)
+
 
 def guardar_partida(partida):
     try:
