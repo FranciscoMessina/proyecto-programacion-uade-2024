@@ -1,9 +1,8 @@
 import os
-from sys import intern
-
 from mazo import obtener_palo, obtener_numero
 
-#Deja mas prolija la terminal para empezar a jugar
+
+# Deja mas prolija la terminal para empezar a jugar
 def limpiar_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
@@ -21,6 +20,7 @@ def pedir_eleccion(opciones, limpiar_consola=False):
     """
 
     for i in range(len(opciones)):
+        # por cada una de las opciones recibidas, desempaquetamos el texto y el valor
         texto, _ = opciones[i]
 
         print(f"{i + 1}) {texto} ")
@@ -30,6 +30,7 @@ def pedir_eleccion(opciones, limpiar_consola=False):
     if limpiar_consola:
         limpiar_terminal()
 
+    # Verificamos que el input sea un numero
     if ingresado == "" or not ingresado.isdigit():
         print(f"{Colors.RED}{Colors.BOLD}Por favor ingrese un numero. {Colors.RESET}\n")
         return pedir_eleccion(opciones)
@@ -38,15 +39,18 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     opciones_disponibles = max(1, len(opciones))
 
+    # Si la eleccion esta fuera de rango, la volvemos a pedir.
     if eleccion < 1 or eleccion > opciones_disponibles:
         print(f"{Colors.RED}{Colors.BOLD}Eleccion invalida. {Colors.RESET}\n")
         return pedir_eleccion(opciones)
 
     else:
+        # Devolvemos el valor asignado a la eleccion
         return opciones[eleccion - 1][1]
 
 
 class Colors:
+    # Colores para imprimir en consola.
     GREEN = '\033[92m'
     RESET = '\033[0m'
     BOLD = '\033[1m'
@@ -57,6 +61,7 @@ class Colors:
 
 
 colores_palos = {
+    # Asignamos un color a cada palo
     'espada': Colors.BLUE,
     'basto': Colors.GREEN,
     'oro': Colors.YELLOW,

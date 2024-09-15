@@ -1,8 +1,12 @@
 from partido import nueva_partida
 from utilidades import Colors, pedir_eleccion
 
-#Muestra los creditos del juego al inicio
+
 def mensaje_bienvenida():
+    """
+    Imprime en terminal un mensaje de bienvenida e informacion del proyecto para el usuario
+    :return:
+    """
     print(rf"""{Colors.BLUE}
    ▄         ▄       ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄        ▄▄▄▄▄▄▄▄▄▄▄
   ▐░▌       ▐░▌     ▐░░░░░░░░░░░▌     ▐░░░░░░░░░░▌      ▐░░░░░░░░░░░▌
@@ -25,18 +29,22 @@ def mensaje_bienvenida():
     print(f" {Colors.PURPLE}MESSINA FRANCISCO{Colors.RESET} ".center(78, '-'))
     print(f" {Colors.PURPLE}PELLACCINI FRANCO{Colors.RESET} ".center(78, '-'))
 
-#Menu del juego, se elige si empezar una partida o salir del programa
-def jugar_al_truco():
-    mensaje_bienvenida()
-
     print(rf"""
-             .------..------..------..------..------.
-             |T.--. ||R.--. ||U.--. ||C.--. ||O.--. |
-             | :/\: || :(): || (\/) || :/\: || :/\: |
-             | (__) || ()() || :\/: || :\/: || :\/: |
-             | '--'T|| '--'R|| '--'U|| '--'C|| '--'O|
-             `------'`------'`------'`------'`------'
-""")
+                 .------..------..------..------..------.
+                 |T.--. ||R.--. ||U.--. ||C.--. ||O.--. |
+                 | :/\: || :(): || (\/) || :/\: || :/\: |
+                 | (__) || ()() || :\/: || :\/: || :\/: |
+                 | '--'T|| '--'R|| '--'U|| '--'C|| '--'O|
+                 `------'`------'`------'`------'`------'
+    """)
+
+
+def jugar_al_truco():
+    """
+    Menu principal del juego, se elige si comenzar una nueva partida o salir del programa
+    :return:
+    """
+    mensaje_bienvenida()
 
     continuar = True
 
