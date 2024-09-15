@@ -1,5 +1,6 @@
 from random import choice
 
+#Una matriz con todas las cartas del Truco
 mazo_truco = [
     # 0 - nombre, 1 - palo, 2 - numero, 3 - poder
     ["Ancho de Espada", "espada", 1, 14],
@@ -44,7 +45,7 @@ mazo_truco = [
     ["Doce de Copa", "copa", 12, 7]
 ]
 
-
+#Reparte las cartas a cada jugador
 def repartir_cartas(mazo) -> tuple[list, list]:
     """
     Reparte 3 cartas a cada jugador y las ordena por poder de menor a mayor. Devuelve una tupla con las manos de ambos jugadores.
@@ -66,7 +67,7 @@ def repartir_cartas(mazo) -> tuple[list, list]:
 
     return ordenar_mano_por_poder(cartas_usuario), ordenar_mano_por_poder(cartas_computadora)
 
-
+#Determina que carta tiene mayor poder para poder ordenar la mano posteriormente
 def determinar_carta_mayor(carta_1, carta_2):
     """
     Determina cual de las dos cartas es mayor. Si son iguales, devuelve "empate".
@@ -81,7 +82,7 @@ def determinar_carta_mayor(carta_1, carta_2):
     else:
         return "empate"
 
-
+#Obtiene el palo de la carta
 def obtener_palo(carta):
     """
     Devuelve el palo de una carta.
@@ -90,7 +91,7 @@ def obtener_palo(carta):
     """
     return carta[1]
 
-
+#Obtiene el poder de la carta
 def obtener_poder(carta):
     """
     Devuelve el poder de una carta.
@@ -99,7 +100,7 @@ def obtener_poder(carta):
     """
     return carta[3]
 
-
+#Obtiene el numero de la carta
 def obtener_numero(carta):
     """
     Devuelve el número de una carta.
@@ -108,7 +109,7 @@ def obtener_numero(carta):
     """
     return carta[2]
 
-
+#Ordena la mano del jugador en base al poder
 def ordenar_mano_por_poder(mano):
     """
     Ordena una mano de cartas de menor a mayor poder.
