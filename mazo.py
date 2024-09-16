@@ -1,58 +1,123 @@
-from random import randint
+from random import choice
 
+#Una matriz con todas las cartas del Truco
 mazo_truco = [
-    {"id": "espada_1", "nombre": "Ancho de Espada", "palo": "espada", "valor": 1, "poder": 14},
-    {"id": "espada_2", "nombre": "Dos de Espada", "palo": "espada", "valor": 2, "poder": 9},
-    {"id": "espada_3", "nombre": "Tres de Espada", "palo": "espada", "valor": 3, "poder": 10},
-    {"id": "espada_4", "nombre": "Cuatro de Espada", "palo": "espada", "valor": 4, "poder": 1},
-    {"id": "espada_5", "nombre": "Cinco de Espada", "palo": "espada", "valor": 5, "poder": 2},
-    {"id": "espada_6", "nombre": "Seis de Espada", "palo": "espada", "valor": 6, "poder": 3},
-    {"id": "espada_7", "nombre": "Siete de Espada", "palo": "espada", "valor": 7, "poder": 12},
-    {"id": "espada_10", "nombre": "Diez de Espada", "palo": "espada", "valor": 10, "poder": 5},
-    {"id": "espada_11", "nombre": "Once de Espada", "palo": "espada", "valor": 11, "poder": 6},
-    {"id": "espada_12", "nombre": "Doce de Espada", "palo": "espada", "valor": 12, "poder": 7},
-    {"id": "basto_1", "nombre": "Ancho de Basto", "palo": "basto", "valor": 1, "poder": 13},
-    {"id": "basto_2", "nombre": "Dos de Basto", "palo": "basto", "valor": 2, "poder": 9},
-    {"id": "basto_3", "nombre": "Tres de Basto", "palo": "basto", "valor": 3, "poder": 10},
-    {"id": "basto_4", "nombre": "Cuatro de Basto", "palo": "basto", "valor": 4, "poder": 1},
-    {"id": "basto_5", "nombre": "Cinco de Basto", "palo": "basto", "valor": 5, "poder": 2},
-    {"id": "basto_6", "nombre": "Seis de Basto", "palo": "basto", "valor": 6, "poder": 3},
-    {"id": "basto_7", "nombre": "Siete de Basto", "palo": "basto", "valor": 7, "poder": 4},
-    {"id": "basto_10", "nombre": "Diez de Basto", "palo": "basto", "valor": 10, "poder": 5},
-    {"id": "basto_11", "nombre": "Once de Basto", "palo": "basto", "valor": 11, "poder": 6},
-    {"id": "basto_12", "nombre": "Doce de Basto", "palo": "basto", "valor": 12, "poder": 7},
-    {"id": "oro_1", "nombre": "Uno de Oro", "palo": "oro", "valor": 1, "poder": 8},
-    {"id": "oro_2", "nombre": "Dos de Oro", "palo": "oro", "valor": 2, "poder": 9},
-    {"id": "oro_3", "nombre": "Tres de Oro", "palo": "oro", "valor": 3, "poder": 10},
-    {"id": "oro_4", "nombre": "Cuatro de Oro", "palo": "oro", "valor": 4, "poder": 1},
-    {"id": "oro_5", "nombre": "Cinco de Oro", "palo": "oro", "valor": 5, "poder": 2},
-    {"id": "oro_6", "nombre": "Seis de Oro", "palo": "oro", "valor": 6, "poder": 3},
-    {"id": "oro_7", "nombre": "Siete de Oro", "palo": "oro", "valor": 7, "poder": 11},
-    {"id": "oro_10", "nombre": "Diez de Oro", "palo": "oro", "valor": 10, "poder": 5},
-    {"id": "oro_11", "nombre": "Once de Oro", "palo": "oro", "valor": 11, "poder": 6},
-    {"id": "oro_12", "nombre": "Doce de Oro", "palo": "oro", "valor": 12, "poder": 7},
-    {"id": "copa_1", "nombre": "Uno de Copa", "palo": "copa", "valor": 1, "poder": 8},
-    {"id": "copa_2", "nombre": "Dos de Copa", "palo": "copa", "valor": 2, "poder": 9},
-    {"id": "copa_3", "nombre": "Tres de Copa", "palo": "copa", "valor": 3, "poder": 10},
-    {"id": "copa_4", "nombre": "Cuatro de Copa", "palo": "copa", "valor": 4, "poder": 1},
-    {"id": "copa_5", "nombre": "Cinco de Copa", "palo": "copa", "valor": 5, "poder": 2},
-    {"id": "copa_6", "nombre": "Seis de Copa", "palo": "copa", "valor": 6, "poder": 3},
-    {"id": "copa_7", "nombre": "Siete de Copa", "palo": "copa", "valor": 7, "poder": 4},
-    {"id": "copa_10", "nombre": "Diez de Copa", "palo": "copa", "valor": 10, "poder": 5},
-    {"id": "copa_11", "nombre": "Once de Copa", "palo": "copa", "valor": 11, "poder": 6},
-    {"id": "copa_12", "nombre": "Doce de Copa", "palo": "copa", "valor": 12, "poder": 7}
+    # 0 - nombre, 1 - palo, 2 - numero, 3 - poder
+    ["Ancho de Espada", "espada", 1, 14],
+    ["Dos de Espada", "espada", 2, 9],
+    ["Tres de Espada", "espada", 3, 10],
+    ["Cuatro de Espada", "espada", 4, 1],
+    ["Cinco de Espada", "espada", 5, 2],
+    ["Seis de Espada", "espada", 6, 3],
+    ["Siete de Espada", "espada", 7, 12],
+    ["Diez de Espada", "espada", 10, 5],
+    ["Once de Espada", "espada", 11, 6],
+    ["Doce de Espada", "espada", 12, 7],
+    ["Ancho de Basto", "basto", 1, 13],
+    ["Dos de Basto", "basto", 2, 9],
+    ["Tres de Basto", "basto", 3, 10],
+    ["Cuatro de Basto", "basto", 4, 1],
+    ["Cinco de Basto", "basto", 5, 2],
+    ["Seis de Basto", "basto", 6, 3],
+    ["Siete de Basto", "basto", 7, 4],
+    ["Diez de Basto", "basto", 10, 5],
+    ["Once de Basto", "basto", 11, 6],
+    ["Doce de Basto", "basto", 12, 7],
+    ["Uno de Oro", "oro", 1, 8],
+    ["Dos de Oro", "oro", 2, 9],
+    ["Tres de Oro", "oro", 3, 10],
+    ["Cuatro de Oro", "oro", 4, 1],
+    ["Cinco de Oro", "oro", 5, 2],
+    ["Seis de Oro", "oro", 6, 3],
+    ["Siete de Oro", "oro", 7, 11],
+    ["Diez de Oro", "oro", 10, 5],
+    ["Once de Oro", "oro", 11, 6],
+    ["Doce de Oro", "oro", 12, 7],
+    ["Uno de Copa", "copa", 1, 8],
+    ["Dos de Copa", "copa", 2, 9],
+    ["Tres de Copa", "copa", 3, 10],
+    ["Cuatro de Copa", "copa", 4, 1],
+    ["Cinco de Copa", "copa", 5, 2],
+    ["Seis de Copa", "copa", 6, 3],
+    ["Siete de Copa", "copa", 7, 4],
+    ["Diez de Copa", "copa", 10, 5],
+    ["Once de Copa", "copa", 11, 6],
+    ["Doce de Copa", "copa", 12, 7]
 ]
 
+#Reparte las cartas a cada jugador
+def repartir_cartas(mazo) -> tuple[list, list]:
+    """
+    Reparte 3 cartas a cada jugador y las ordena por poder de menor a mayor. Devuelve una tupla con las manos de ambos jugadores.
 
-def mezclar_mazo(mazo: list[dict]):
-    mazo_clonado = mazo.copy()
-    mazo_mezclado = []
+    :param mazo: el mazo con las cartas a utilizar
+    :return (mano_usuario, mano_computadora)
+    """
+    copia_mazo = mazo.copy()
+    cartas_usuario = []
+    cartas_computadora = []
 
-    for i in range(len(mazo_clonado)):
-        mazo_mezclado.append(mazo_clonado.pop(randint(0, len(mazo_clonado) - 1)))
+    for i in range(3):
+        carta = choice(copia_mazo)
+        cartas_usuario.append(carta)
+        copia_mazo.remove(carta)
+        carta = choice(copia_mazo)
+        cartas_computadora.append(carta)
+        copia_mazo.remove(carta)
 
-    return mazo_mezclado
+    return ordenar_mano_por_poder(cartas_usuario), ordenar_mano_por_poder(cartas_computadora)
 
+#Determina que carta tiene mayor poder para poder ordenar la mano posteriormente
+def determinar_carta_mayor(carta_1, carta_2):
+    """
+    Determina cual de las dos cartas es mayor. Si son iguales, devuelve "empate".
+    :param carta_1:
+    :param carta_2:
+    :return:
+    """
+    if obtener_poder(carta_1) > obtener_poder(carta_2):
+        return carta_1
+    elif obtener_poder(carta_2) > obtener_poder(carta_1):
+        return carta_2
+    else:
+        return "empate"
 
-print(mezclar_mazo(mazo_truco))
+#Obtiene el palo de la carta
+def obtener_palo(carta):
+    """
+    Devuelve el palo de una carta.
+    :param carta:
+    :return: str
+    """
+    return carta[1]
 
+#Obtiene el poder de la carta
+def obtener_poder(carta):
+    """
+    Devuelve el poder de una carta.
+    :param carta:
+    :return: int
+    """
+    return carta[3]
+
+#Obtiene el numero de la carta
+def obtener_numero(carta):
+    """
+    Devuelve el número de una carta.
+    :param carta:
+    :return: int
+    """
+    return carta[2]
+
+#Ordena la mano del jugador en base al poder
+def ordenar_mano_por_poder(mano):
+    """
+    Ordena una mano de cartas de menor a mayor poder.
+    :param mano:
+    :return:
+    """
+    for i in range(len(mano)):
+        for j in range(len(mano) - 1):
+            if obtener_poder(mano[j]) > obtener_poder(mano[j + 1]):
+                mano[j], mano[j + 1] = mano[j + 1], mano[j]
+    return mano
