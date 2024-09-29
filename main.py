@@ -4,7 +4,7 @@ from utilidades import Colores, pedir_eleccion
 
 def mensaje_bienvenida():
     """
-    Imprime en terminal un mensaje de bienvenida e informacion del proyecto para el usuario
+    Imprime en terminal un mensaje de bienvenida e información del proyecto para el usuario
     :return:
     """
     print(rf"""{Colores.BLUE}
@@ -48,20 +48,28 @@ def jugar_al_truco():
 
     continuar = True
 
+    def cerrar_programa():
+        print("Gracias por usar nuestro programa, esperamos verlo pronto.")
+        # Esto hace que en vez de buscar la variable en el scope local de la funcion `cerrar_programa` lo busque en el scop anterior,
+        # que en este caso es la funcion `jugar_al_truco`. De esta manera se puede modificar la variable `continuar` y salir del bucle.
+        # La diferencia con la keyword `global` es que esa buscaria la variable en el scope global del archivo, y no lo encontraria.
+        nonlocal continuar
+        continuar = False
     while continuar:
 
         print('Elegi una de las opciones: \n'.center(65))
 
         respuesta = pedir_eleccion([
             ['Comenzar nueva partida', {"accion": nueva_partida}],
-            ['Salir del programa', {"accion": "cerrar_programa"}]
+            ['Salir del programa', {"accion": cerrar_programa}]
         ], True)
 
-        if respuesta['accion'] == 'cerrar_programa':
-            print("Gracias por usar nuestro programa, esperamos verlo pronto.")
-            continuar = False
-        else:
-            respuesta['accion']()
+        respuesta['accion']()
+        # if respuesta['accion'] == 'cerrar_programa':
+        #     print("Gracias por usar nuestro programa, esperamos verlo pronto.")
+        #     continuar = False
+        # else:
+        #     respuesta['accion']()
 
 
 jugar_al_truco()
