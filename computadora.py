@@ -39,6 +39,9 @@ def responder_a_usuario(accion_usuario, cartas_computadora, partida, numero_rond
     elif accion_usuario['accion'] == 'cantar_truco':
         # Si el usuario canto truco, la computadora responde aceptando o rechazando (por ahora 50% de cada opcion, a mejorar)
         return choice([{"accion": "aceptar"}, {"accion": "rechazar"}])
+    elif accion_usuario['accion'] == 'cantar_envido':
+        
+        return choice([{"accion": "aceptar"}, {"accion": "rechazar"}])
     else:
         return None
 

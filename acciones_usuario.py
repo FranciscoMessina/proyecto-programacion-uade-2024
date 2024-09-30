@@ -19,4 +19,7 @@ def pedir_accion_usuario(cartas, partida, numero_ronda):
         # Si no se ha cantado truco aun, se le da la opcion de cantar truco
         opciones.append(["Cantar truco", {"accion": "cantar_truco"}])
 
+    if partida['mano_actual']['envido'].get('nivel') is None:
+        opciones.append(["Cantar envido", {"accion": "cantar_envido"}])
+
     return pedir_eleccion(opciones)

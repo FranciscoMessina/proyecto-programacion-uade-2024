@@ -96,6 +96,28 @@ def jugar_mano(partida):
 
                         print(f"La computadora jugo {formatear_carta(ronda_actual['carta_computadora'])}")
 
+                if input_usuario['accion'] == 'cantar_envido':
+
+                    print("CANTASTE ENVIDO")
+
+                    mano_actual['envido'] = {
+                        "cantado_por": "usuario",
+                        "nivel": 0,
+                    }
+
+                    respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,
+                                                                numero_de_ronda)
+                    if respuesta_computadora['accion'] == 'aceptar':
+                        print('ACEPTADO')
+                        mano_actual['envido'].update({
+                            "nivel": 1
+                        })
+                    elif respuesta_computadora['accion'] == 'rechazar':
+                        print("RECHAZADO")
+                        mano_actual['envido'].update({
+                            "rechazado_por": "computadora"
+                        })
+
                 if input_usuario['accion'] == 'cantar_truco':
                     # logica de cantar truco
                     print("CANTASTE TRUCO")
