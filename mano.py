@@ -2,6 +2,7 @@ from acciones_usuario import pedir_accion_usuario
 from computadora import responder_a_usuario, actuar_computadora
 from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
 from utilidades import formatear_carta
+from envido import envido
 
 
 def jugar_mano(partida):
@@ -112,6 +113,10 @@ def jugar_mano(partida):
                         mano_actual['envido'].update({
                             "nivel": 1
                         })
+
+                        envido(cartas_usuario, cartas_computadora, partida)
+                        print(partida)
+
                     elif respuesta_computadora['accion'] == 'rechazar':
                         print("RECHAZADO")
                         mano_actual['envido'].update({
@@ -218,7 +223,7 @@ def jugar_mano(partida):
     ganador_mano = determinar_ganador_de_la_mano(mano_actual)
 
     # Determinamos cuantos puntos se lleva el ganador de la mano
-    puntos_a_sumar = determinar_puntos(mano_actual, ganador_mano)
+    puntos_a_sumar = determinar_puntos(mano_actual, ganador_mano, partida)
 
     # Sumamos los puntos al ganador de la mano
     partida['puntos'][ganador_mano] += puntos_a_sumar
@@ -240,7 +245,7 @@ def jugar_mano(partida):
     }
 
 
-def determinar_puntos(mano, ganador):
+def determinar_puntos(mano, ganador, partida):
     """
     Calcula cuantos puntos hay que sumar al ganador de la mano
     :param mano: mano actual
@@ -255,6 +260,8 @@ def determinar_puntos(mano, ganador):
 
     if mano['envido'].get('rechazado_por') is not None and ganador != mano['envido'].get('rechazado_por'):
         puntos += mano['envido']['nivel'] + 1
+    elif ganador == mano['envido'].get('rechazado_por'):
+        partida['puntos']['usuario'] += 1
 
     return puntos
 
