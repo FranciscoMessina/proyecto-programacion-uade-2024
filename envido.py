@@ -39,3 +39,6 @@ def calcular_envido(mano):
             max_envido = max(max_envido, valor)
 
     return max_envido
+
+def envido(mano_cantada, mano_aceptada):
+    pass

@@ -218,7 +218,7 @@ def jugar_mano(partida):
     ganador_mano = determinar_ganador_de_la_mano(mano_actual)
 
     # Determinamos cuantos puntos se lleva el ganador de la mano
-    puntos_a_sumar = determinar_puntos(mano_actual)
+    puntos_a_sumar = determinar_puntos(mano_actual, ganador_mano)
 
     # Sumamos los puntos al ganador de la mano
     partida['puntos'][ganador_mano] += puntos_a_sumar
@@ -240,7 +240,7 @@ def jugar_mano(partida):
     }
 
 
-def determinar_puntos(mano):
+def determinar_puntos(mano, ganador):
     """
     Calcula cuantos puntos hay que sumar al ganador de la mano
     :param mano: mano actual
@@ -252,6 +252,9 @@ def determinar_puntos(mano):
     if mano['truco']:
         # Si hubiese truco, se suman los puntos correspondientes al nivel del truco
         puntos += mano['truco']['nivel']
+
+    if mano['envido'].get('rechazado_por') is not None and ganador != mano['envido'].get('rechazado_por'):
+        puntos += mano['envido']['nivel'] + 1
 
     return puntos
 
