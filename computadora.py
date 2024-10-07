@@ -1,6 +1,6 @@
 from random import choice
 from mazo import obtener_poder
-from envido import envido, calcular_envido
+from envido import calcular_envido
 
 
 def actuar_computadora(cartas, partida, numero_ronda):
@@ -12,12 +12,12 @@ def actuar_computadora(cartas, partida, numero_ronda):
     :param numero_ronda: numero de la ronda actual
     :return:
     """
-
-    #envido_puntos = calcular_envido(cartas)
-    #if envido_puntos >= 20:
-    #    return {
-    #    "accion": "cantar_envido"
-    #}
+    if partida['mano_actual']['rondas'][0]['ganador'] is None:
+        envido_puntos = calcular_envido(cartas)
+        if envido_puntos >= 20:
+            return {
+            "accion": "cantar_envido"
+        }
 
     # Por ahora solo juega una carta al azar, le vamos a agregar la posibilidad de cantar truco y envido
     # y tal vez de elegir con mas logica que carta jugar

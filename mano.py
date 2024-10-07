@@ -101,10 +101,14 @@ def jugar_mano(partida):
                             })
 
                 # Pedimos al usuario que elija que hacer en su turno
-                #accion_computadora = actuar_computadora(cartas_computadora, partida, numero_de_ronda)
+                accion_computadora = actuar_computadora(cartas_computadora, partida, numero_de_ronda)
 
-                #if accion_computadora['accion'] == "cantar_envido":
-                #    print(f"la compu canto envido")
+                if accion_computadora['accion'] == "cantar_envido":
+                    print(f"la compu canto envido")
+                    mano_actual['envido'] = {
+                            "cantado_por": "computadora",
+                            "nivel": 0,
+                        }
 
                 input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
 

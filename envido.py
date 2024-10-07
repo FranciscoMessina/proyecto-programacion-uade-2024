@@ -43,7 +43,6 @@ def calcular_envido(mano):
 def envido(mano_cantada, mano_aceptada, partida):
     envido_cantado = calcular_envido(mano_cantada)
     envido_aceptado = calcular_envido(mano_aceptada)
-    print(envido_cantado, envido_aceptado)
     if envido_cantado > envido_aceptado:
         print(f"TENES {envido_cantado} DE ENVIDO Y LA COMPUTADORA TIENE {envido_aceptado}, GANASTE 2 PUNTOS")
         partida['puntos']['usuario'] += 2
