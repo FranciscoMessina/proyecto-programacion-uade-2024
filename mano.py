@@ -1,8 +1,8 @@
-from acciones_usuario import pedir_accion_usuario
+from acciones_usuario import pedir_accion_usuario, accion_usuario_envido
 from computadora import responder_a_usuario, actuar_computadora
 from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
 from utilidades import formatear_carta
-from envido import envido
+from envido import envido, calcular_envido
 
 
 def jugar_mano(partida):
@@ -71,7 +71,41 @@ def jugar_mano(partida):
             esperando_carta = True
 
             while esperando_carta:
+
+                puntos_envido = calcular_envido(cartas_usuario)
+                if  puntos_envido >= 20:
+                    input_usuario = accion_usuario_envido(partida, puntos_envido)
+
+                    if input_usuario['accion'] == 'cantar_envido':
+
+                        print("CANTASTE ENVIDO")
+
+                        mano_actual['envido'] = {
+                            "cantado_por": "usuario",
+                            "nivel": 0,
+                        }
+
+                        respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,numero_de_ronda)
+                        if respuesta_computadora['accion'] == 'aceptar':
+                            print('ACEPTADO')
+                            mano_actual['envido'].update({
+                                "nivel": 1
+                            })
+
+                            envido(cartas_usuario, cartas_computadora, partida)
+
+                        elif respuesta_computadora['accion'] == 'rechazar':
+                            print("RECHAZADO")
+                            mano_actual['envido'].update({
+                                "rechazado_por": "computadora"
+                            })
+
                 # Pedimos al usuario que elija que hacer en su turno
+                #accion_computadora = actuar_computadora(cartas_computadora, partida, numero_de_ronda)
+
+                #if accion_computadora['accion'] == "cantar_envido":
+                #    print(f"la compu canto envido")
+
                 input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
 
                 if input_usuario['accion'] == 'jugar_carta':
@@ -96,32 +130,6 @@ def jugar_mano(partida):
                         ronda_actual['carta_computadora'] = respuesta_computadora['carta']
 
                         print(f"La computadora jugo {formatear_carta(ronda_actual['carta_computadora'])}")
-
-                if input_usuario['accion'] == 'cantar_envido':
-
-                    print("CANTASTE ENVIDO")
-
-                    mano_actual['envido'] = {
-                        "cantado_por": "usuario",
-                        "nivel": 0,
-                    }
-
-                    respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,
-                                                                numero_de_ronda)
-                    if respuesta_computadora['accion'] == 'aceptar':
-                        print('ACEPTADO')
-                        mano_actual['envido'].update({
-                            "nivel": 1
-                        })
-
-                        envido(cartas_usuario, cartas_computadora, partida)
-                        print(partida)
-
-                    elif respuesta_computadora['accion'] == 'rechazar':
-                        print("RECHAZADO")
-                        mano_actual['envido'].update({
-                            "rechazado_por": "computadora"
-                        })
 
                 if input_usuario['accion'] == 'cantar_truco':
                     # logica de cantar truco
