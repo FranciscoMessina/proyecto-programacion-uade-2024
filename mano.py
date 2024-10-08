@@ -109,6 +109,7 @@ def jugar_mano(partida):
                             "cantado_por": "computadora",
                             "nivel": 0,
                         }
+                    input_usuario = accion_usuario_envido(partida, puntos_envido)
 
                 input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
 

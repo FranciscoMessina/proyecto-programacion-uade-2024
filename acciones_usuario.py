@@ -24,9 +24,13 @@ def pedir_accion_usuario(cartas, partida, numero_ronda):
 
 def accion_usuario_envido(partida, puntos_envido):
     opciones = []
-    print(f"Tenes {puntos_envido} de envido,")
-    if partida['mano_actual']['rondas'][0]['ganador'] is None:
-        # Si no se ha cantado truco aun, se le da la opcion de cantar truco
+    if partida['mano_actual']['envido'].get('cantado_por') is not None:
+        print(f"Tenes {puntos_envido} de envido,")
+        opciones.append(["Aceptar envido", {"accion": "aceptar_envido"}])
+        opciones.append(["No aceptar envido", {"accion": "no_aceptar_envido"}])
+
+    else:
+        print(f"Tenes {puntos_envido} de envido,")
         opciones.append(["Cantar envido", {"accion": "cantar_envido"}])
         opciones.append(["No cantar envido", {"accion": "no_cantar_envido"}])
 
