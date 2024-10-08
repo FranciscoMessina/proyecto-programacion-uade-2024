@@ -111,6 +111,9 @@ def jugar_mano(partida):
                         }
                     input_usuario = accion_usuario_envido(partida, puntos_envido)
 
+                    if input_usuario['accion'] == 'aceptar_envido':
+                        pass
+
                 input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
 
                 if input_usuario['accion'] == 'jugar_carta':
