@@ -12,6 +12,7 @@ def actuar_computadora(cartas, partida, numero_ronda):
     :param numero_ronda: numero de la ronda actual
     :return:
     """
+
     if partida['mano_actual']['rondas'][0]['ganador'] is None and partida['mano_actual']['envido'].get('cantado_por') is None:
         envido_puntos = calcular_envido(cartas)
         if envido_puntos >= 20:
@@ -19,14 +20,18 @@ def actuar_computadora(cartas, partida, numero_ronda):
             "accion": "cantar_envido"
         }
 
-    # Por ahora solo juega una carta al azar, le vamos a agregar la posibilidad de cantar truco y envido
-    # y tal vez de elegir con mas logica que carta jugar
-    carta_random = choice(cartas)
+    cantar_truco = choice([True, False])
+    if not cantar_truco:
+        carta_random = choice(cartas)
+        return {
 
-    return {
         "accion": "jugar_carta",
         "carta": carta_random
-    }
+        }
+    elif cantar_truco and partida['mano_actual']['truco'].get('nivel') is None:
+        return{
+            "accion": "cantar_truco"
+        }
 
 
 def responder_a_usuario(accion_usuario, cartas_computadora, partida, numero_ronda):

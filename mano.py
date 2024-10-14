@@ -2,6 +2,7 @@ from acciones_usuario import pedir_accion_usuario, accion_usuario_envido
 from computadora import responder_a_usuario, actuar_computadora
 from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
 from utilidades import formatear_carta
+
 from envido import envido, calcular_envido
 
 
@@ -150,6 +151,32 @@ def jugar_mano(partida):
 
                         print(f"La computadora jugo {formatear_carta(ronda_actual['carta_computadora'])}")
 
+                if input_usuario['accion'] == 'cantar_envido':
+
+                    print("CANTASTE ENVIDO")
+
+                    mano_actual['envido'] = {
+                        "cantado_por": "usuario",
+                        "nivel": 0,
+                    }
+
+                    respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,
+                                                                numero_de_ronda)
+                    if respuesta_computadora['accion'] == 'aceptar':
+                        print('ACEPTADO')
+                        mano_actual['envido'].update({
+                            "nivel": 1
+                        })
+
+                        envido(cartas_usuario, cartas_computadora, partida)
+                        print(partida)
+
+                    elif respuesta_computadora['accion'] == 'rechazar':
+                        print("RECHAZADO")
+                        mano_actual['envido'].update({
+                            "rechazado_por": "computadora"
+                        })
+
                 if input_usuario['accion'] == 'cantar_truco':
                     # logica de cantar truco
                     print("CANTASTE TRUCO")
@@ -189,6 +216,13 @@ def jugar_mano(partida):
                 print(f"La computadora jugo {formatear_carta(accion_computadora['carta'])}")
                 cartas_computadora.remove(accion_computadora['carta'])
                 ronda_actual['carta_computadora'] = accion_computadora['carta']
+            elif accion_computadora['accion'] == "cantar_truco":
+                print("La computadora canta truco, aceptas?")
+                mano_actual['truco'] = {
+                        "cantado_por": "computadora",
+                        # Indica el nivel del truco, 0 es sin cantar, 1 es truco, 2 es retruco, 3 vale cuatro
+                        "nivel": 0,
+                    }
 
             esperando_carta = True
             # Aca se repite el flujo de accionar como si el usuario fuese primero, va a ser refactorizado para evitar tanta duplicacion.
@@ -222,6 +256,17 @@ def jugar_mano(partida):
                         ronda_actual['ganador'] = 'usuario'
                         continuar = False
                         esperando_carta = False
+                elif respuesta_usuario['accion'] == 'aceptar_truco':
+                    print("ACEPTADO")
+                    mano_actual['truco'].update({
+                            "nivel": 1
+                        })
+                elif respuesta_usuario['accion'] == 'rechazar_truco':
+                    print("RECHAZADO")
+                    mano_actual['truco'].update({
+                            "rechazado_por": "computadora"
+                        })
+
         # Aca verificamos si se canto truco y si fue rechazado, de ser asi salimos del ciclo de rondas
         if mano_actual['truco'].get('rechazado_por') is not None:
             break
@@ -289,6 +334,7 @@ def determinar_puntos(mano, ganador, partida):
         puntos += mano['envido']['nivel'] + 1
     elif ganador == mano['envido'].get('rechazado_por'):
         partida['puntos'][mano['envido'].get('cantado_por')] += 1
+
 
     return puntos
 
