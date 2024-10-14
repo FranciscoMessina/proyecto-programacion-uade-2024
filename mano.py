@@ -1,7 +1,8 @@
-from acciones_usuario import pedir_accion_usuario
+from acciones_usuario import pedir_accion_usuario, accion_usuario_envido
 from computadora import responder_a_usuario, actuar_computadora
 from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
 from utilidades import formatear_carta
+from envido import envido, calcular_envido
 
 
 def jugar_mano(partida):
@@ -70,7 +71,60 @@ def jugar_mano(partida):
             esperando_carta = True
 
             while esperando_carta:
-                # Pedimos al usuario que elija que hacer en su turno
+                
+                puntos_envido = calcular_envido(cartas_usuario)
+                if  puntos_envido >= 0 and partida['mano_actual']['rondas'][0]['ganador'] is None:
+                    input_usuario = accion_usuario_envido(partida, puntos_envido)
+
+                    if input_usuario['accion'] == 'cantar_envido':
+
+                        print("CANTASTE ENVIDO")
+
+                        mano_actual['envido'] = {
+                            "cantado_por": "usuario",
+                            "nivel": 0,
+                        }
+
+                        respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,numero_de_ronda)
+                        if respuesta_computadora['accion'] == 'aceptar':
+                            print('ACEPTADO')
+                            mano_actual['envido'].update({
+                                "nivel": 1
+                            })
+
+                            envido(cartas_usuario, cartas_computadora, partida, "usuario")
+
+                        elif respuesta_computadora['accion'] == 'rechazar':
+                            print("RECHAZADO")
+                            mano_actual['envido'].update({
+                                "rechazado_por": "computadora"
+                            })
+
+                # La computadora va a cantar envido si es que no se canto anteriormente o si es que puede
+                accion_computadora = actuar_computadora(cartas_computadora, partida, numero_de_ronda)
+
+                if accion_computadora['accion'] == "cantar_envido":
+                    print(f"la compu canto envido")
+                    mano_actual['envido'] = {
+                            "cantado_por": "computadora",
+                            "nivel": 0,
+                        }
+                    input_usuario = accion_usuario_envido(partida, puntos_envido)
+
+                    if input_usuario['accion'] == 'aceptar_envido':
+                        print('ACEPTASTE EL ENVIDO')
+                        mano_actual['envido'].update({
+                            "nivel": 1
+                        })
+
+                        envido(cartas_computadora, cartas_usuario, partida, "computadora")
+
+                    elif input_usuario['accion'] == 'no_aceptar_envido':
+                        print("RECHAZASTE EL ENVIDO")
+                        mano_actual['envido'].update({
+                            "rechazado_por": "usuario"
+                        })
+
                 input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
 
                 if input_usuario['accion'] == 'jugar_carta':
@@ -196,7 +250,7 @@ def jugar_mano(partida):
     ganador_mano = determinar_ganador_de_la_mano(mano_actual)
 
     # Determinamos cuantos puntos se lleva el ganador de la mano
-    puntos_a_sumar = determinar_puntos(mano_actual)
+    puntos_a_sumar = determinar_puntos(mano_actual, ganador_mano, partida)
 
     # Sumamos los puntos al ganador de la mano
     partida['puntos'][ganador_mano] += puntos_a_sumar
@@ -218,7 +272,7 @@ def jugar_mano(partida):
     }
 
 
-def determinar_puntos(mano):
+def determinar_puntos(mano, ganador, partida):
     """
     Calcula cuantos puntos hay que sumar al ganador de la mano
     :param mano: mano actual
@@ -230,6 +284,11 @@ def determinar_puntos(mano):
     if mano['truco']:
         # Si hubiese truco, se suman los puntos correspondientes al nivel del truco
         puntos += mano['truco']['nivel']
+
+    if mano['envido'].get('rechazado_por') is not None and ganador != mano['envido'].get('rechazado_por'):
+        puntos += mano['envido']['nivel'] + 1
+    elif ganador == mano['envido'].get('rechazado_por'):
+        partida['puntos'][mano['envido'].get('cantado_por')] += 1
 
     return puntos
 
