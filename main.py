@@ -55,6 +55,8 @@ def jugar_al_truco():
         # La diferencia con la keyword `global` es que esa buscaria la variable en el scope global del archivo, y no lo encontraria.
         nonlocal continuar
         continuar = False
+
+        hola_franco = "hola"
     while continuar:
 
         print('Elegi una de las opciones: \n'.center(65))
