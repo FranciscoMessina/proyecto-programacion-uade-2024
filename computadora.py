@@ -1,6 +1,6 @@
 from random import choice
-
 from mazo import obtener_poder
+from envido import calcular_envido
 
 
 def actuar_computadora(cartas, partida, numero_ronda):
@@ -12,15 +12,23 @@ def actuar_computadora(cartas, partida, numero_ronda):
     :param numero_ronda: numero de la ronda actual
     :return:
     """
-
-    # Por ahora solo juega una carta al azar, le vamos a agregar la posibilidad de cantar truco y envido
-    # y tal vez de elegir con mas logica que carta jugar
-    carta_random = choice(cartas)
-
-    return {
+    if partida['mano_actual']['rondas'][0]['ganador'] is None:
+        envido_puntos = calcular_envido(cartas)
+        if envido_puntos >= 20:
+            return {
+            "accion": "cantar_envido"
+        }
+    cantar_truco = choice([True, False])
+    if not cantar_truco:
+        carta_random = choice(cartas)
+        return {
         "accion": "jugar_carta",
         "carta": carta_random
-    }
+        }
+    elif cantar_truco and partida['mano_actual']['truco'].get('nivel') is None:
+        return{
+            "accion": "cantar_truco"
+        }
 
 
 def responder_a_usuario(accion_usuario, cartas_computadora, partida, numero_ronda):
@@ -38,6 +46,9 @@ def responder_a_usuario(accion_usuario, cartas_computadora, partida, numero_rond
         return responder_a_carta(accion_usuario['carta'], cartas_computadora, partida, numero_ronda)
     elif accion_usuario['accion'] == 'cantar_truco':
         # Si el usuario canto truco, la computadora responde aceptando o rechazando (por ahora 50% de cada opcion, a mejorar)
+        return choice([{"accion": "aceptar"}, {"accion": "rechazar"}])
+    elif accion_usuario['accion'] == 'cantar_envido':
+        
         return choice([{"accion": "aceptar"}, {"accion": "rechazar"}])
     else:
         return None
