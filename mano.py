@@ -71,6 +71,7 @@ def jugar_mano(partida):
             esperando_carta = True
 
             while esperando_carta:
+                
                 puntos_envido = calcular_envido(cartas_usuario)
                 if  puntos_envido >= 0 and partida['mano_actual']['rondas'][0]['ganador'] is None:
                     input_usuario = accion_usuario_envido(partida, puntos_envido)
@@ -91,7 +92,7 @@ def jugar_mano(partida):
                                 "nivel": 1
                             })
 
-                            envido(cartas_usuario, cartas_computadora, partida)
+                            envido(cartas_usuario, cartas_computadora, partida, "usuario")
 
                         elif respuesta_computadora['accion'] == 'rechazar':
                             print("RECHAZADO")
@@ -111,9 +112,14 @@ def jugar_mano(partida):
                     input_usuario = accion_usuario_envido(partida, puntos_envido)
 
                     if input_usuario['accion'] == 'aceptar_envido':
-                        pass
+                        print('ACEPTASTE EL ENVIDO')
+                        mano_actual['envido'].update({
+                            "nivel": 1
+                        })
 
-                    if input_usuario['accion'] == 'no_aceptar_envido':
+                        envido(cartas_computadora, cartas_usuario, partida, "computadora")
+
+                    elif input_usuario['accion'] == 'no_aceptar_envido':
                         print("RECHAZASTE EL ENVIDO")
                         mano_actual['envido'].update({
                             "rechazado_por": "usuario"
