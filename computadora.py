@@ -12,7 +12,7 @@ def actuar_computadora(cartas, partida, numero_ronda):
     :param numero_ronda: numero de la ronda actual
     :return:
     """
-    if partida['mano_actual']['rondas'][0]['ganador'] is None:
+    if partida['mano_actual']['rondas'][0]['ganador'] is None and partida['mano_actual']['envido'].get('cantado_por') is None:
         envido_puntos = calcular_envido(cartas)
         if envido_puntos >= 20:
             return {

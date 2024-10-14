@@ -71,9 +71,8 @@ def jugar_mano(partida):
             esperando_carta = True
 
             while esperando_carta:
-
                 puntos_envido = calcular_envido(cartas_usuario)
-                if  puntos_envido >= 20:
+                if  puntos_envido >= 0 and partida['mano_actual']['rondas'][0]['ganador'] is None:
                     input_usuario = accion_usuario_envido(partida, puntos_envido)
 
                     if input_usuario['accion'] == 'cantar_envido':
@@ -100,7 +99,7 @@ def jugar_mano(partida):
                                 "rechazado_por": "computadora"
                             })
 
-                # Pedimos al usuario que elija que hacer en su turno
+                # La computadora va a cantar envido si es que no se canto anteriormente o si es que puede
                 accion_computadora = actuar_computadora(cartas_computadora, partida, numero_de_ronda)
 
                 if accion_computadora['accion'] == "cantar_envido":
@@ -113,6 +112,12 @@ def jugar_mano(partida):
 
                     if input_usuario['accion'] == 'aceptar_envido':
                         pass
+
+                    if input_usuario['accion'] == 'no_aceptar_envido':
+                        print("RECHAZASTE EL ENVIDO")
+                        mano_actual['envido'].update({
+                            "rechazado_por": "usuario"
+                        })
 
                 input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
 
@@ -277,7 +282,7 @@ def determinar_puntos(mano, ganador, partida):
     if mano['envido'].get('rechazado_por') is not None and ganador != mano['envido'].get('rechazado_por'):
         puntos += mano['envido']['nivel'] + 1
     elif ganador == mano['envido'].get('rechazado_por'):
-        partida['puntos']['usuario'] += 1
+        partida['puntos'][mano['envido'].get('cantado_por')] += 1
 
     return puntos
 
