@@ -14,9 +14,17 @@ def pedir_accion_usuario(cartas, partida, numero_ronda):
     for carta in cartas:
         # Por cada carta en su mano agregamos la opcion de jugarla.
         opciones.append([f"Jugar {formatear_carta(carta)}", {"carta": carta, "accion": "jugar_carta"}])
+        
 
     if partida['mano_actual']['truco'].get('nivel') is None:
         # Si no se ha cantado truco aun, se le da la opcion de cantar truco
         opciones.append(["Cantar truco", {"accion": "cantar_truco"}])
+
+    if partida['mano_actual']['guardado'].get('nivel') is None:
+            # Si no se ha cantado truco aun, se le da la opcion de cantar truco
+            opciones.append(["Guardar Partida", {"accion":"guardar_partida"}])
+
+
+
 
     return pedir_eleccion(opciones)

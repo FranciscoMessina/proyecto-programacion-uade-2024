@@ -1,5 +1,6 @@
 import json
 
+"""
 #Se implementa mas adelante en el desarrollo
 def hay_partida_guardada():
     try:
@@ -53,3 +54,4 @@ def mostrar_historial():
 
 
 hay_partida_guardada()
+"""

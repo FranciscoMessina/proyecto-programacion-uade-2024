@@ -2,7 +2,7 @@ from acciones_usuario import pedir_accion_usuario
 from computadora import responder_a_usuario, actuar_computadora
 from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
 from utilidades import formatear_carta
-
+from guardado import guardar_partida
 
 def jugar_mano(partida):
     """
@@ -38,6 +38,7 @@ def jugar_mano(partida):
         'rondas': [],
         "truco": {},
         "envido": {},
+        "guardado": {},
     }
 
     # variable de utilidad para acceder mas facilmente a la mano_actual
@@ -72,6 +73,16 @@ def jugar_mano(partida):
             while esperando_carta:
                 # Pedimos al usuario que elija que hacer en su turno
                 input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
+
+                if input_usuario['accion'] == 'guardar_partida':
+                    print("Guardando partida...")
+                    mano_actual['guardado'] = {
+                        "nivel": 1,
+                    }
+                    if guardar_partida == True:
+                        print("La partida se guardo correctamente")
+                    else:
+                        print("No se pudo guardar la partida")
 
                 if input_usuario['accion'] == 'jugar_carta':
                     # Si elije jugar una carta, sacamos la misma de su mano actual.
