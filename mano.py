@@ -81,7 +81,7 @@ def jugar_mano(partida):
                     }
                     if guardar_partida == True:
                         print("La partida se guardo correctamente")
-                    else:
+                    if guardar_partida == False:
                         print("No se pudo guardar la partida")
 
                 if input_usuario['accion'] == 'jugar_carta':
