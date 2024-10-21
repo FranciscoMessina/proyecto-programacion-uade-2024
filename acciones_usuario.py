@@ -43,10 +43,6 @@ def pedir_accion_usuario():
             opciones.append([f"Jugar {formatear_carta(carta)}", jugar_carta(carta)])
 
 
-    if partida['mano_actual']['guardado'].get('nivel') is None:
-            # Si no se ha cantado truco aun, se le da la opcion de cantar truco
-            opciones.append(["Guardar Partida", {"accion":"guardar_partida"}])
-
 
 
 
