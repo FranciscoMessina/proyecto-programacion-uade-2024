@@ -1,12 +1,14 @@
-from acciones_usuario import pedir_accion_usuario, accion_usuario_envido
-from computadora import responder_a_usuario, actuar_computadora
+from acciones_usuario import pedir_accion_usuario
+from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
+from ronda import determinar_ganador_ronda
 from utilidades import formatear_carta
 
-from envido import envido, calcular_envido
+from variables import get_user_points, get_max_points, get_computer_points, get_current_round, get_current_game, \
+    get_previous_round, add_action, init_hand, partida_actual, get_current_hand
 
 
-def jugar_mano(partida):
+def jugar_mano():
     """
     Juega una mano de truco, esta funcion es ejecutada las veces necesarias para llegar a los puntos maximos de la partida
     :param partida: estado actual de la partida
@@ -14,13 +16,15 @@ def jugar_mano(partida):
     """
     # Antes de comenzar una nueva mano se verifica si alguno de los jugadores llego a los puntos maximos,
     # en ese caso se termina la partida
-    if partida['puntos']['usuario'] >= partida['puntos_maximos']:
+    max_points = get_max_points()
+
+    if get_user_points() >= max_points:
         return {
             "accion": "terminar_partida",
             "ganador": "usuario"
         }
 
-    elif partida['puntos']['computadora'] >= partida['puntos_maximos']:
+    elif get_computer_points() >= max_points:
         return {
             "accion": "terminar_partida",
             "ganador": "computadora"
@@ -29,6 +33,8 @@ def jugar_mano(partida):
     # Aca empieza una nueva mano.
     print(f"Iniciando una nueva mano".center(60, "-"))
 
+    partida = get_current_game()
+
     # Se reparten las cartas a cada jugadora
     cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
 
@@ -36,14 +42,8 @@ def jugar_mano(partida):
     partida['manos_jugadas'] += 1
 
     # se actualiza el estado de la partida, reiniciando la Mano Actual
-    partida['mano_actual'] = {
-        'rondas': [],
-        "truco": {},
-        "envido": {},
-    }
-
     # variable de utilidad para acceder mas facilmente a la mano_actual
-    mano_actual = partida['mano_actual']
+    mano_actual = init_hand(cartas_usuario, cartas_computadora)
 
     continuar = True
     numero_de_ronda = 1
@@ -57,242 +57,43 @@ def jugar_mano(partida):
             "ganador": None,
         })
 
+        mano_actual['acciones'] = []
+
         # Guardamos en una variable de utilidad la ronda actual para acceder mas facilmente a ella.
-        ronda_actual = partida['mano_actual']['rondas'][-1]
+        ronda_actual = get_current_round()
         # Guardamos en una variable de utilidad la ronda anterior para acceder mas facilmente a ella.
         # Si es la primera ronda, la ronda anterior es un diccionario vacio.
-        ronda_anterior = partida['mano_actual']['rondas'][-2] if numero_de_ronda > 1 else {}
+        ronda_anterior = get_previous_round()
 
-        # Si la ronda la gano el usuario o hubo empate la siguiente ronda la empieza el usuario
-        # Por ahora tambien si es la primera ronda siempre comienza el usuario, lo mismo si la ronda anterior fue empate.
-        if numero_de_ronda == 1 or numero_de_ronda != 1 and ronda_anterior['ganador'] == 'usuario' or ronda_anterior[
-            'ganador'] == 'empate':
+        # print('INICIO')
+        # print(ronda_actual)
+        # print(ronda_anterior)
 
-            # Bandera para determinar el final del turno del jugador, que es cuando juega una carta
-            esperando_carta = True
+        if ronda_anterior.get('ganador') == 'computadora':
+            add_action(actuar_computadora)
 
-            while esperando_carta:
-                
-                puntos_envido = calcular_envido(cartas_usuario)
-                if  puntos_envido >= 0 and partida['mano_actual']['rondas'][0]['ganador'] is None:
-                    input_usuario = accion_usuario_envido(partida, puntos_envido)
+        if ronda_anterior.get('ganador') == 'usuario':
+            add_action(pedir_accion_usuario)
 
-                    if input_usuario['accion'] == 'cantar_envido':
+        if ronda_anterior == {} or ronda_anterior.get('ganador') == 'empate':
+            if partida['siguiente_en_empezar'] == 'usuario':
+                add_action(pedir_accion_usuario)
 
-                        print("CANTASTE ENVIDO")
+            if partida['siguiente_en_empezar'] == 'computadora':
+                add_action(actuar_computadora)
 
-                        mano_actual['envido'] = {
-                            "cantado_por": "usuario",
-                            "nivel": 0,
-                        }
+        for idx, action in enumerate(mano_actual['acciones']):
+            result = action()
+            result()
 
-                        respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,numero_de_ronda)
-                        if respuesta_computadora['accion'] == 'aceptar':
-                            print('ACEPTADO')
-                            mano_actual['envido'].update({
-                                "nivel": 1
-                            })
-
-                            envido(cartas_usuario, cartas_computadora, partida, "usuario")
-
-                        elif respuesta_computadora['accion'] == 'rechazar':
-                            print("RECHAZADO")
-                            mano_actual['envido'].update({
-                                "rechazado_por": "computadora"
-                            })
-
-                # La computadora va a cantar envido si es que no se canto anteriormente o si es que puede
-                accion_computadora = actuar_computadora(cartas_computadora, partida, numero_de_ronda)
-
-                if accion_computadora['accion'] == "cantar_envido":
-                    print(f"la compu canto envido")
-                    mano_actual['envido'] = {
-                            "cantado_por": "computadora",
-                            "nivel": 0,
-                        }
-                    input_usuario = accion_usuario_envido(partida, puntos_envido)
-
-                    if input_usuario['accion'] == 'aceptar_envido':
-                        print('ACEPTASTE EL ENVIDO')
-                        mano_actual['envido'].update({
-                            "nivel": 1
-                        })
-
-                        envido(cartas_computadora, cartas_usuario, partida, "computadora")
-
-                    elif input_usuario['accion'] == 'no_aceptar_envido':
-                        print("RECHAZASTE EL ENVIDO")
-                        mano_actual['envido'].update({
-                            "rechazado_por": "usuario"
-                        })
-
-                input_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
-
-                if input_usuario['accion'] == 'jugar_carta':
-                    # Si elije jugar una carta, sacamos la misma de su mano actual.
-                    cartas_usuario.remove(input_usuario['carta'])
-                    # Guardamos la carta jugada en la ronda actual
-                    ronda_actual['carta_usuario'] = input_usuario['carta']
-
-                    print(f"Jugaste {formatear_carta(ronda_actual['carta_usuario'])}")
-
-                    # Cambiamos la bandera para que siga la ronda.
-                    esperando_carta = False
-
-                    # Pedimos respuesta a la computadora
-                    respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,
-                                                                numero_de_ronda)
-
-                    if respuesta_computadora['accion'] == "jugar_carta":
-                        # Si la computadora juega una carta, la sacamos de su mano.
-                        cartas_computadora.remove(respuesta_computadora['carta'])
-                        # Guardamos la carta jugada en la ronda actual
-                        ronda_actual['carta_computadora'] = respuesta_computadora['carta']
-
-                        print(f"La computadora jugo {formatear_carta(ronda_actual['carta_computadora'])}")
-
-                if input_usuario['accion'] == 'cantar_envido':
-
-                    print("CANTASTE ENVIDO")
-
-                    mano_actual['envido'] = {
-                        "cantado_por": "usuario",
-                        "nivel": 0,
-                    }
-
-                    respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,
-                                                                numero_de_ronda)
-                    if respuesta_computadora['accion'] == 'aceptar':
-                        print('ACEPTADO')
-                        mano_actual['envido'].update({
-                            "nivel": 1
-                        })
-
-                        envido(cartas_usuario, cartas_computadora, partida)
-                        print(partida)
-
-                    elif respuesta_computadora['accion'] == 'rechazar':
-                        print("RECHAZADO")
-                        mano_actual['envido'].update({
-                            "rechazado_por": "computadora"
-                        })
-
-                if input_usuario['accion'] == 'cantar_truco':
-                    # logica de cantar truco
-                    print("CANTASTE TRUCO")
-                    # Actualizamos la propiedad truco de la mano actual
-                    mano_actual['truco'] = {
-                        "cantado_por": "usuario",
-                        # Indica el nivel del truco, 0 es sin cantar, 1 es truco, 2 es retruco, 3 vale cuatro
-                        "nivel": 0,
-                    }
-
-                    respuesta_computadora = responder_a_usuario(input_usuario, cartas_computadora, partida,
-                                                                numero_de_ronda)
-                    if respuesta_computadora['accion'] == 'aceptar':
-                        # Si la computadora acepta, cambiamos el nivel del truco a 1
-                        print('ACEPTADO')
-                        mano_actual['truco'].update({
-                            "nivel": 1
-                        })
-                    elif respuesta_computadora['accion'] == 'rechazar':
-                        # Si la computadora rechaza, agregamos a la propiedad truco de la mano actual quien lo rechazo
-                        print("RECHAZADO")
-                        mano_actual['truco'].update({
-                            "rechazado_por": "computadora"
-                        })
-                        # Como al rechazar un truco termina, tanto la ronda como la mano, indicamos que esta ronda fue ganada por el usuario
-                        ronda_actual['ganador'] = 'usuario'
-                        # Actualizamos las bandera para que finalice la mano
-                        continuar = False
-                        esperando_carta = False
-        # Si la ronda la gana la compu, la compu empieza y tira una carta
-        elif ronda_anterior['ganador'] == 'computadora':
-            # Por ahora la computadora siempre juega una carta al azar
-            accion_computadora = actuar_computadora(cartas_computadora, partida, numero_de_ronda)
-
-            if accion_computadora['accion'] == "jugar_carta":
-                # Esto es codigo repetido, que vamos a refactorizar para la proxima entrega
-                print(f"La computadora jugo {formatear_carta(accion_computadora['carta'])}")
-                cartas_computadora.remove(accion_computadora['carta'])
-                ronda_actual['carta_computadora'] = accion_computadora['carta']
-            elif accion_computadora['accion'] == "cantar_truco":
-                print("La computadora canta truco, aceptas?")
-                mano_actual['truco'] = {
-                        "cantado_por": "computadora",
-                        # Indica el nivel del truco, 0 es sin cantar, 1 es truco, 2 es retruco, 3 vale cuatro
-                        "nivel": 0,
-                    }
-
-            esperando_carta = True
-            # Aca se repite el flujo de accionar como si el usuario fuese primero, va a ser refactorizado para evitar tanta duplicacion.
-            while esperando_carta:
-                respuesta_usuario = pedir_accion_usuario(cartas_usuario, partida, numero_de_ronda)
-
-                if respuesta_usuario['accion'] == "jugar_carta":
-                    cartas_usuario.remove(respuesta_usuario['carta'])
-                    ronda_actual['carta_usuario'] = respuesta_usuario['carta']
-                    print(f"Jugaste {formatear_carta(ronda_actual['carta_usuario'])}")
-                    esperando_carta = False
-                elif respuesta_usuario['accion'] == 'cantar_truco':
-                    print("CANTASTE TRUCO")
-                    mano_actual['truco'] = {
-                        "cantado_por": "usuario",
-                        "nivel": 0,
-                    }
-                    respuesta_computadora = responder_a_usuario(respuesta_usuario, cartas_computadora, partida,
-                                                                numero_de_ronda)
-
-                    if respuesta_computadora['accion'] == 'aceptar':
-                        print('ACEPTADO')
-                        mano_actual['truco'].update({
-                            "nivel": 1
-                        })
-                    elif respuesta_computadora['accion'] == 'rechazar':
-                        print("RECHAZADO")
-                        mano_actual['truco'].update({
-                            "rechazado_por": "computadora"
-                        })
-                        ronda_actual['ganador'] = 'usuario'
-                        continuar = False
-                        esperando_carta = False
-                elif respuesta_usuario['accion'] == 'aceptar_truco':
-                    print("ACEPTADO")
-                    mano_actual['truco'].update({
-                            "nivel": 1
-                        })
-                elif respuesta_usuario['accion'] == 'rechazar_truco':
-                    print("RECHAZADO")
-                    mano_actual['truco'].update({
-                            "rechazado_por": "computadora"
-                        })
-
-        # Aca verificamos si se canto truco y si fue rechazado, de ser asi salimos del ciclo de rondas
-        if mano_actual['truco'].get('rechazado_por') is not None:
-            break
-        # Se determina que carta gana
-        carta_ganadora = determinar_carta_mayor(ronda_actual['carta_usuario'],
-                                                ronda_actual['carta_computadora'])
-
-        # Verificamos a quien pertenece la carta ganadora, si es empate se indica como tal.
-        # Y guardamos el ganador de la ronda.
-        if carta_ganadora == ronda_actual['carta_usuario']:
-            ronda_actual['ganador'] = 'usuario'
-        elif carta_ganadora == ronda_actual['carta_computadora']:
-            ronda_actual['ganador'] = 'computadora'
-        else:
-            ronda_actual['ganador'] = 'empate'
-
-        if carta_ganadora == 'empate':
-            print(
-                f"{formatear_carta(ronda_actual['carta_usuario'])} empata con {formatear_carta(ronda_actual['carta_computadora'])}")
-        else:
-            print(f"Gano {formatear_carta(carta_ganadora)}, jugada por {ronda_actual['ganador']}")
+        # print('final')
+        # print(ronda_actual)
+        # print(ronda_anterior)
 
         numero_de_ronda += 1
 
     # Determinamos quien gano la ronda actual
-    ganador_mano = determinar_ganador_de_la_mano(mano_actual)
+    ganador_mano = determinar_ganador_de_la_mano()
 
     # Determinamos cuantos puntos se lleva el ganador de la mano
     puntos_a_sumar = determinar_puntos(mano_actual, ganador_mano, partida)
@@ -301,20 +102,30 @@ def jugar_mano(partida):
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
     print(f"Gana {ganador_mano} sumando {puntos_a_sumar} puntos")
-    # Printea un grafico que muestra los puntos de cada jugador
-    print("|", end="")
-    print(" PUNTOS ".center(85, '='), end='|\n')
-    print("|---  1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30", end='|\n')
-    print(f"|TU: {" *" * partida['puntos']['usuario']} ", end='')
-    print("|".rjust(81 - partida['puntos']['usuario'] * 2))
-    print(f"|PC: {" *" * partida['puntos']['computadora']} ", end='')
-    print("|".rjust(81 - partida['puntos']['computadora'] * 2))
-    print("|", end="")
-    print("".center(85, '='), end='|\n')
+
+    for round in mano_actual['rondas']:
+        print(round)
+
+    imprimir_puntos()
 
     return {
         "accion": "none"
     }
+
+
+def imprimir_puntos():
+    puntos_usuario = get_user_points()
+    puntos_computadora = get_computer_points()
+    # Printea un grafico que muestra los puntos de cada jugador
+    print("|", end="")
+    print(" PUNTOS ".center(95, '='), end='|\n')
+    print("|---  01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ", end='|\n')
+    print(f"|TU: {"  *" * puntos_usuario} ", end='')
+    print("|".rjust(89 - puntos_usuario * 2))
+    print(f"|PC: {"  *" * puntos_computadora} ", end='')
+    print("|".rjust(89 - puntos_computadora * 2))
+    print("|", end="")
+    print("".center(95, '='), end='|\n')
 
 
 def determinar_puntos(mano, ganador, partida):
@@ -323,7 +134,7 @@ def determinar_puntos(mano, ganador, partida):
     :param mano: mano actual
     :return:
     """
-    # Siempre se suma 1 punto por ganar la mano
+    # Siempre se suma al menos 1 punto por ganar la mano
     puntos = 1
 
     if mano['truco']:
@@ -335,24 +146,24 @@ def determinar_puntos(mano, ganador, partida):
     elif ganador == mano['envido'].get('rechazado_por'):
         partida['puntos'][mano['envido'].get('cantado_por')] += 1
 
-
     return puntos
 
 
-def determinar_ganador_de_la_mano(mano):
+def determinar_ganador_de_la_mano():
     """
     Determina quien gano la mano actual
     :param mano: mano actual
     :return:
     """
+    mano_actual = get_current_hand()
 
     # Si se canto truco, y fue rechazado, automatica gana el que lo canto
-    if mano['truco'].get('rechazado_por') is not None:
-        return mano['truco']['cantado_por']
+    if mano_actual['truco'].get('rechazado_por') is not None:
+        return mano_actual['truco']['cantado_por']
 
-    ronda_1 = mano['rondas'][0]
-    ronda_2 = mano['rondas'][1]
-    ronda_3 = mano['rondas'][2]
+    ronda_1 = mano_actual['rondas'][0]
+    ronda_2 = mano_actual['rondas'][1]
+    ronda_3 = mano_actual['rondas'][2]
 
     rondas_ganadas = {
         "usuario": 0,
@@ -360,7 +171,7 @@ def determinar_ganador_de_la_mano(mano):
         "empate": 0
     }
 
-    for ronda in mano['rondas']:
+    for ronda in mano_actual['rondas']:
         # Sumamos cuantas rondas gano cada jugador
         rondas_ganadas[ronda['ganador']] += 1
 

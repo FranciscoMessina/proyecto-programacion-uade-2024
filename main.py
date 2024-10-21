@@ -57,16 +57,16 @@ def jugar_al_truco():
         continuar = False
 
         hola_franco = "hola"
-    while continuar:
 
+    while continuar:
         print('Elegi una de las opciones: \n'.center(65))
 
         respuesta = pedir_eleccion([
-            ['Comenzar nueva partida', {"accion": nueva_partida}],
-            ['Salir del programa', {"accion": cerrar_programa}]
+            ['Comenzar nueva partida', nueva_partida],
+            ['Salir del programa', cerrar_programa]
         ], True)
 
-        respuesta['accion']()
+        respuesta()
         # if respuesta['accion'] == 'cerrar_programa':
         #     print("Gracias por usar nuestro programa, esperamos verlo pronto.")
         #     continuar = False

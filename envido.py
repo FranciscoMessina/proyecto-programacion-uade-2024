@@ -1,4 +1,5 @@
 from mazo import obtener_numero
+from variables import get_current_hand, partida_actual, get_current_game
 
 
 def calcular_envido(mano):
@@ -40,21 +41,27 @@ def calcular_envido(mano):
 
     return max_envido
 
-def envido(mano_cantada, mano_aceptada, partida, cantado_por):
+
+def envido(mano_cantada, mano_aceptada):
     envido_cantado = calcular_envido(mano_cantada)
     envido_aceptado = calcular_envido(mano_aceptada)
-    if cantado_por == "usuario":
+
+    partida_actual = get_current_game()
+    mano_envido = get_current_hand()['envido']
+
+    if mano_envido['cantado_por'] == "usuario":
         if envido_cantado > envido_aceptado:
             print(f"TENES {envido_cantado} DE ENVIDO Y LA COMPUTADORA TIENE {envido_aceptado}, GANASTE 2 PUNTOS")
-            partida['puntos']['usuario'] += 2
+            partida_actual['puntos']['usuario'] += 2
         elif envido_aceptado > envido_cantado:
-            print(f"TENES {envido_cantado} DE ENVIDO Y LA COMPUTADORA TIENE {envido_aceptado}, LA COMPUTADORA GANA 2 PUNTOS")
-            partida['puntos']['computadora'] += 2
-    elif cantado_por == "computadora":
+            print(
+                f"TENES {envido_cantado} DE ENVIDO Y LA COMPUTADORA TIENE {envido_aceptado}, LA COMPUTADORA GANA 2 PUNTOS")
+            partida_actual['puntos']['computadora'] += 2
+    elif mano_envido['cantado_por'] == "computadora":
         if envido_cantado > envido_aceptado:
             print(f"LA COMPUTADORA TIENE {envido_cantado} DE ENVIDO Y VOS TENES {envido_aceptado}, GANA 2 PUNTOS")
-            partida['puntos']['computadora'] += 2
+            partida_actual['puntos']['computadora'] += 2
         elif envido_aceptado > envido_cantado:
             print(f"LA COMPUTADORA TIENE {envido_cantado} DE ENVIDO Y VOS TENES {envido_aceptado}, GANASTE 2 PUNTOS")
-            partida['puntos']['usuario'] += 2
-    return partida
+            partida_actual['puntos']['usuario'] += 2
+    return partida_actual
