@@ -2,6 +2,7 @@ from random import choice
 
 from mano import jugar_mano
 from utilidades import pedir_eleccion
+from variables import init_game
 
 
 def nueva_partida():
@@ -15,22 +16,14 @@ def nueva_partida():
     print(f"La partida sera a {puntos_maximos} puntos")
 
     # inicializamos la partida en un diccionario.
-    partida = {
-        "puntos_maximos": puntos_maximos,
-        "puntos": {
-            "usuario": 0,
-            "computadora": 0
-        },
-        "manos_jugadas": 0,
-        "siguiente_en_empezar": choice(["usuario"]),
-    }
+    partida = init_game(puntos_maximos)
 
     continuar = True
 
     ganador = None
 
     while continuar:
-        resultado = jugar_mano(partida)
+        resultado = jugar_mano()
 
         if resultado['accion'] == 'terminar_partida':
             # Si se termina la partida, salimos del loop

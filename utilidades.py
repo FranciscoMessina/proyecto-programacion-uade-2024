@@ -115,3 +115,7 @@ def imprimir_carta_ascii(carta):
     :return:
     """
     print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
+
+
+def noop():
+    return "Noop"
