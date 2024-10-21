@@ -12,19 +12,16 @@ def actuar_computadora():
     """
     Determina como acciona la computadora en su turno, cuando no tiene que responder al usuario.
 
-    :param cartas: cartas que tiene la computadora
-    :param partida: estado actual de la partida
-    :param numero_ronda: numero de la ronda actual
     :return:
     """
 
-    partida = get_current_game()
+    mano_actual = get_current_hand()
     cartas = get_computer_cards()
 
     carta_random = choice(cartas)
     return jugar_carta_(carta_random)
 
-    if partida['mano_actual']['rondas'][0]['ganador'] is None and partida['mano_actual']['envido'].get(
+    if mano_actual['rondas'][0]['ganador'] is None and mano_actual['envido'].get(
             'cantado_por') is None:
         envido_puntos = calcular_envido(cartas)
         if envido_puntos >= 20:
@@ -55,7 +52,7 @@ def responder_a_carta():
         filter(lambda carta: obtener_poder(carta_usuario) <= obtener_poder(carta), cartas_computadora))
 
     if len(cartas_mas_fuertes) > 0:
-        # Si tiene cartas que le gganan o empata, juega la de menor valor disponible
+        # Si tiene cartas que le ganan o empata, juega la de menor valor disponible
         return jugar_carta_(cartas_mas_fuertes[0])
 
     # TODO: falta manejar caso de carta empardadora
@@ -231,11 +228,11 @@ def jugar_carta_(carta):
         ronda_actual['carta_computadora'] = carta
         print(f"La computadora jugo el {formatear_carta(carta)}")
 
-        if not is_last_action_in_round():
+        if is_last_action_in_round():
+            add_action(determinar_ganador_ronda)
+        else:
             from acciones_usuario import pedir_accion_usuario
             add_action(pedir_accion_usuario)
-        else:
-            add_action(determinar_ganador_ronda)
 
         return noop
 

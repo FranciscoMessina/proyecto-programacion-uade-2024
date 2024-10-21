@@ -9,12 +9,9 @@ from variables import get_current_hand, get_user_cards, is_first_round, get_curr
 
 def pedir_accion_usuario():
     """
-    Muestra al usuario la acciones disponibles y le pide que elija una de ellas
+    Muestra al usuario las acciones disponibles y le pide que elija una de ellas
 
-    :param cartas: cartas que tiene el jugador
-    :param partida: estado actual de la partida
-    :param numero_ronda:  numero de la ronda actual
-    :return: valor de la accion que el jugador desea tomar
+    :return: la accion que se va a ejecutar
     """
     opciones = []
 
@@ -78,7 +75,6 @@ def jugar_carta(carta):
         # print('__??', is_last_action_in_round())
         if is_last_action_in_round():
             add_action(determinar_ganador_ronda)
-            print('Es la ultima accion de la ronda')
         else:
             add_action(responder_a_carta)
 

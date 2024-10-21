@@ -42,14 +42,14 @@ def jugar_mano():
     partida['manos_jugadas'] += 1
 
     # se actualiza el estado de la partida, reiniciando la Mano Actual
-    # variable de utilidad para acceder mas facilmente a la mano_actual
+    # variable de utilidad para acceder más facilmente a la mano_actual
     mano_actual = init_hand(cartas_usuario, cartas_computadora)
 
     continuar = True
     numero_de_ronda = 1
-    # Generalmente las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
+    # Generalmente, las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
     # por eso tenemos un while con una condicion de corte en 4 rondas y una bandera: continuar.
-    # Esta ultima puede ser modificada dentro de la ronda para darle un final temprano.
+    # Esta última puede ser modificada dentro de la ronda para darle un final temprano.
     while continuar and numero_de_ronda < 4:
         # Este es el inicio de una nueva ronda en la mano actual.
         # Agregamos a la lista de rondas de la mano una nueva ronda.
@@ -59,10 +59,9 @@ def jugar_mano():
 
         mano_actual['acciones'] = []
 
-        # Guardamos en una variable de utilidad la ronda actual para acceder mas facilmente a ella.
-        ronda_actual = get_current_round()
-        # Guardamos en una variable de utilidad la ronda anterior para acceder mas facilmente a ella.
-        # Si es la primera ronda, la ronda anterior es un diccionario vacio.
+
+        # Guardamos en una variable de utilidad la ronda anterior para acceder más fácilmente a ella.
+        # Si es la primera ronda, la ronda anterior es un diccionario vació.
         ronda_anterior = get_previous_round()
 
         # print('INICIO')
@@ -83,6 +82,7 @@ def jugar_mano():
                 add_action(actuar_computadora)
 
         for idx, action in enumerate(mano_actual['acciones']):
+            # Cada accion devuelve una funcion, que hay que ejecutar.
             result = action()
             result()
 
@@ -116,7 +116,7 @@ def jugar_mano():
 def imprimir_puntos():
     puntos_usuario = get_user_points()
     puntos_computadora = get_computer_points()
-    # Printea un grafico que muestra los puntos de cada jugador
+    # Printea un gráfico que muestra los puntos de cada jugador
     print("|", end="")
     print(" PUNTOS ".center(95, '='), end='|\n')
     print("|---  01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ", end='|\n')
