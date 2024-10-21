@@ -3,6 +3,7 @@ from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
 from ronda import determinar_ganador_ronda
 from utilidades import formatear_carta
+from guardado import guardar_partida
 
 from variables import get_user_points, get_max_points, get_computer_points, get_current_round, get_current_game, \
     get_previous_round, add_action, init_hand, partida_actual, get_current_hand
@@ -63,6 +64,7 @@ def jugar_mano():
         ronda_actual = get_current_round()
         # Guardamos en una variable de utilidad la ronda anterior para acceder mas facilmente a ella.
         # Si es la primera ronda, la ronda anterior es un diccionario vacio.
+
         ronda_anterior = get_previous_round()
 
         # print('INICIO')

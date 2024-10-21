@@ -1,3 +1,5 @@
+
+from guardado import guardar_partida
 from computadora import responder_a_carta, responder_a_truco, responder_a_envido
 from envido import calcular_envido
 from ronda import determinar_ganador_ronda
@@ -5,6 +7,7 @@ from ronda import determinar_ganador_ronda
 from utilidades import formatear_carta, pedir_eleccion, noop
 from variables import get_current_hand, get_user_cards, is_first_round, get_current_round, add_action, \
     is_last_action_in_round
+
 
 
 def pedir_accion_usuario():
@@ -17,6 +20,7 @@ def pedir_accion_usuario():
     :return: valor de la accion que el jugador desea tomar
     """
     opciones = []
+
 
     mano_actual = get_current_hand()
     cartas = get_user_cards()
@@ -41,16 +45,24 @@ def pedir_accion_usuario():
             # Por cada carta en su mano agregamos la opcion de jugarla.
             opciones.append([f"Jugar {formatear_carta(carta)}", jugar_carta(carta)])
 
-        if mano_actual['truco'].get('activo') is False:
-            # Si no se ha cantado truco aun, se le da la opcion de cantar truco
-            opciones.append(["Cantar truco", cantar_truco()])
-        """    
-        if partida['mano_actual']['truco'].get('nivel') == 1:
-            opciones.append(["Cantar retruco", {"accion": "cantar_retruco"}])
 
-        if partida['mano_actual']['truco'].get('nivel') == 2:
-            opciones.append(["Cantar vale 4", {"accion": "cantar_vale_4"}])
-        """
+    if partida['mano_actual']['guardado'].get('nivel') is None:
+            # Si no se ha cantado truco aun, se le da la opcion de cantar truco
+            opciones.append(["Guardar Partida", {"accion":"guardar_partida"}])
+
+
+
+
+    if mano_actual['truco'].get('activo') is False:
+        # Si no se ha cantado truco aun, se le da la opcion de cantar truco
+        opciones.append(["Cantar truco", cantar_truco()])
+    """    
+    if partida['mano_actual']['truco'].get('nivel') == 1:
+        opciones.append(["Cantar retruco", {"accion": "cantar_retruco"}])
+
+    if partida['mano_actual']['truco'].get('nivel') == 2:
+        opciones.append(["Cantar vale 4", {"accion": "cantar_vale_4"}])
+    """
     return pedir_eleccion(opciones)
 
 
