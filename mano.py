@@ -3,6 +3,7 @@ from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
 from ronda import determinar_ganador_ronda
 from utilidades import formatear_carta
+from guardado import guardar_partida
 
 from variables import get_user_points, get_max_points, get_computer_points, get_current_round, get_current_game, \
     get_previous_round, add_action, init_hand, partida_actual, get_current_hand
@@ -42,14 +43,14 @@ def jugar_mano():
     partida['manos_jugadas'] += 1
 
     # se actualiza el estado de la partida, reiniciando la Mano Actual
-    # variable de utilidad para acceder más facilmente a la mano_actual
+    # variable de utilidad para acceder mas facilmente a la mano_actual
     mano_actual = init_hand(cartas_usuario, cartas_computadora)
 
     continuar = True
     numero_de_ronda = 1
-    # Generalmente, las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
+    # Generalmente las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
     # por eso tenemos un while con una condicion de corte en 4 rondas y una bandera: continuar.
-    # Esta última puede ser modificada dentro de la ronda para darle un final temprano.
+    # Esta ultima puede ser modificada dentro de la ronda para darle un final temprano.
     while continuar and numero_de_ronda < 4:
         # Este es el inicio de una nueva ronda en la mano actual.
         # Agregamos a la lista de rondas de la mano una nueva ronda.
@@ -82,7 +83,6 @@ def jugar_mano():
                 add_action(actuar_computadora)
 
         for idx, action in enumerate(mano_actual['acciones']):
-            # Cada accion devuelve una funcion, que hay que ejecutar.
             result = action()
             result()
 
