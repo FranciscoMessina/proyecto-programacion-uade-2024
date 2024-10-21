@@ -12,7 +12,7 @@ from variables import get_current_hand, get_user_cards, is_first_round, get_curr
 
 def pedir_accion_usuario():
     """
-    Muestra al usuario la acciones disponibles y le pide que elija una de ellas
+    Muestra al usuario la acciones disponibles y le pide que elija una de ellass
 
     :param cartas: cartas que tiene el jugador
     :param partida: estado actual de la partida
