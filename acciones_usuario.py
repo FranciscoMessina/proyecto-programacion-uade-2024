@@ -12,7 +12,7 @@ from variables import get_current_hand, get_user_cards, is_first_round, get_curr
 
 def pedir_accion_usuario():
     """
-    Muestra al usuario la acciones disponibles y le pide que elija una de ellass
+    Muestra al usuario la acciones disponibles y le pide que elija una de ellas
 
     :param cartas: cartas que tiene el jugador
     :param partida: estado actual de la partida
@@ -46,10 +46,7 @@ def pedir_accion_usuario():
             opciones.append([f"Jugar {formatear_carta(carta)}", jugar_carta(carta)])
 
 
-    if partida['mano_actual']['guardado'].get('nivel') is None:
-            # Si no se ha cantado truco aun, se le da la opcion de cantar truco
-            opciones.append(["Guardar Partida", {"accion":"guardar_partida"}])
-
+    
 
 
 

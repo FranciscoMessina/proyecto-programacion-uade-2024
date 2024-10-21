@@ -53,6 +53,8 @@ def init_hand(user_cards, computer_cards):
             "cantado_por": None,
             "rechazado_por": None,
             "nivel": 0
+        },"guardado":{
+            "nivel": 0
         }
     }
 
