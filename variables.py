@@ -49,12 +49,14 @@ def init_hand(user_cards, computer_cards):
             "activo": False,
             "cantando_por": None,
             "rechazado_por": None,
+            "esperando": False,
             "nivel": 0
         },
         "envido": {
             "activo": False,
             "cantado_por": None,
             "rechazado_por": None,
+            "esperando": False,
             "nivel": 0
         }
     }
@@ -70,28 +72,46 @@ def get_current_game():
     return partida_actual
 
 
-def get_user_points():
-    return partida_actual['puntos']['usuario']
+def truco_needs_answer():
+    truco = get_current_hand()['truco']
+
+    if truco['rechazado_por'] is not None:
+        return False
+
+    return truco['esperando']
 
 
-def get_computer_points():
-    return partida_actual['puntos']['computadora']
+def envido_needs_answer():
+    envido = get_current_hand()['envido']
 
+    if envido['rechazado_por'] is not None:
+        return False
 
-def get_max_points():
-    return partida_actual['puntos_maximos']
-
-
-def get_user_cards():
-    return partida_actual['mano_actual']['cartas_usuario']
-
-
-def get_computer_cards():
-    return partida_actual['mano_actual']['cartas_computadora']
+    return envido['esperando']
 
 
 def get_current_hand():
     return partida_actual['mano_actual']
+
+
+def get_user_points():
+    return get_current_game()['puntos']['usuario']
+
+
+def get_computer_points():
+    return get_current_game()['puntos']['computadora']
+
+
+def get_max_points():
+    return get_current_game()['puntos_maximos']
+
+
+def get_user_cards():
+    return get_current_hand()['cartas_usuario']
+
+
+def get_computer_cards():
+    return get_current_hand()['cartas_computadora']
 
 
 def is_first_round():

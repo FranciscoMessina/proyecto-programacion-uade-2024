@@ -1,6 +1,6 @@
 from envido import calcular_envido
 
-from utilidades import formatear_carta, pedir_eleccion
+from utilidades import formatear_carta, pedir_eleccion, Colores
 from variables import get_current_hand, get_user_cards, is_first_round, USUARIO
 
 
@@ -14,19 +14,6 @@ def pedir_accion_usuario():
 
     mano_actual = get_current_hand()
     cartas = get_user_cards()
-
-    if is_first_round():
-        puntos_envido = calcular_envido(cartas)
-        print(f"Tenes {puntos_envido} de envido")
-        if mano_actual['envido'].get("activo") is False and mano_actual['envido'].get("cantado_por") is None:
-            from acciones import cantar_envido
-            opciones.append(["Cantar envido", cantar_envido(USUARIO)])
-
-        if mano_actual['envido'].get("cantado_por") == "computadora":
-            from acciones import aceptar_envido, rechazar_envido
-            opciones.append(["Aceptar envido", aceptar_envido(USUARIO)])
-
-            opciones.append(["No aceptar envido", rechazar_envido(USUARIO)])
 
     if mano_actual['truco'].get('cantado_por') == "computadora" and mano_actual["truco"].get('nivel') == 0:
         # Si la computadora canta truco se le da la opcion al usuario de aceptar
@@ -44,6 +31,20 @@ def pedir_accion_usuario():
         # Si no se ha cantado truco aun, se le da la opcion de cantar truco
         from acciones import cantar_truco
         opciones.append(["Cantar truco", cantar_truco(USUARIO)])
+
+    if is_first_round():
+        puntos_envido = calcular_envido(cartas)
+        print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
+        if mano_actual['envido'].get("activo") is False and mano_actual['envido'].get("cantado_por") is None:
+            from acciones import cantar_envido
+            opciones.append(["Cantar envido", cantar_envido(USUARIO)])
+
+        if mano_actual['envido'].get("cantado_por") == "computadora":
+            from acciones import aceptar_envido, rechazar_envido
+            opciones.append(["Quiero", aceptar_envido(USUARIO)])
+
+            opciones.append(["No quiero", rechazar_envido(USUARIO)])
+
     """    
     if partida['mano_actual']['truco'].get('nivel') == 1:
         opciones.append(["Cantar retruco", {"accion": "cantar_retruco"}])

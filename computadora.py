@@ -3,7 +3,8 @@ from random import choice
 from envido import calcular_envido
 from mazo import obtener_poder
 from utilidades import noop
-from variables import get_computer_cards, get_current_round, get_current_hand, COMPUTADORA
+from variables import get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, envido_needs_answer, \
+    truco_needs_answer
 
 
 def actuar_computadora():
@@ -16,9 +17,11 @@ def actuar_computadora():
     mano_actual = get_current_hand()
     cartas = get_computer_cards()
 
-    carta_random = choice(cartas)
-    from acciones import jugar_carta
-    return jugar_carta(carta_random, COMPUTADORA)
+    if envido_needs_answer():
+        return responder_a_envido()
+
+    if truco_needs_answer():
+        return responder_a_truco()
 
     if mano_actual['rondas'][0]['ganador'] is None and mano_actual['envido'].get(
             'cantado_por') is None:
@@ -30,9 +33,12 @@ def actuar_computadora():
     c_truco = choice([True, False])
     if not c_truco:
         carta_random = choice(cartas)
-        return jugar_carta_(carta_random)
-    elif c_truco and partida['mano_actual']['truco'].get('nivel') is None:
+
+        from acciones import jugar_carta
+        return jugar_carta(carta_random, COMPUTADORA)
+    elif c_truco and mano_actual['truco'].get('nivel') is None:
         # CANTAR TRUCO
+        from acciones import cantar_truco
         return cantar_truco(COMPUTADORA)
 
 

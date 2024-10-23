@@ -64,10 +64,6 @@ def jugar_mano():
         # Si es la primera ronda, la ronda anterior es un diccionario vació.
         ronda_anterior = get_previous_round()
 
-        # print('INICIO')
-        # print(ronda_actual)
-        # print(ronda_anterior)
-
         if ronda_anterior.get('ganador') == 'computadora':
             add_action(actuar_computadora)
 
@@ -85,17 +81,13 @@ def jugar_mano():
             result = action()
             result()
 
-        # print('final')
-        # print(ronda_actual)
-        # print(ronda_anterior)
-
         numero_de_ronda += 1
 
     # Determinamos quien gano la ronda actual
     ganador_mano = determinar_ganador_de_la_mano()
 
     # Determinamos cuantos puntos se lleva el ganador de la mano
-    puntos_a_sumar = determinar_puntos(mano_actual, ganador_mano, partida)
+    puntos_a_sumar = determinar_puntos()
 
     # Sumamos los puntos al ganador de la mano
     partida['puntos'][ganador_mano] += puntos_a_sumar
@@ -124,23 +116,20 @@ def imprimir_puntos():
     print("".center(95, '='), end='|\n')
 
 
-def determinar_puntos(mano, ganador, partida):
+def determinar_puntos():
     """
     Calcula cuantos puntos hay que sumar al ganador de la mano
     :param mano: mano actual
     :return:
     """
+    truco = get_current_hand()['truco']
+
     # Siempre se suma al menos 1 punto por ganar la mano
     puntos = 1
 
-    if mano['truco']:
+    if truco['activo']:
         # Si hubiese truco, se suman los puntos correspondientes al nivel del truco
-        puntos += mano['truco']['nivel']
-
-    if mano['envido'].get('rechazado_por') is not None and ganador != mano['envido'].get('rechazado_por'):
-        puntos += mano['envido']['nivel'] + 1
-    elif ganador == mano['envido'].get('rechazado_por'):
-        partida['puntos'][mano['envido'].get('cantado_por')] += 1
+        puntos += truco['nivel']
 
     return puntos
 

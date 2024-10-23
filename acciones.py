@@ -55,8 +55,11 @@ def cantar_truco(jugador):
         mano_actual['truco'].update({
             "activo": False,
             "cantado_por": jugador,
-            "nivel": 1
+            "nivel": 1,
+            "esperando": True
         })
+
+        print(f"{jugador.capitalize()} canta truco")
 
         if is_last_action_in_round():
             pass
@@ -81,7 +84,10 @@ def aceptar_truco(jugador):
         mano_actual = get_current_hand()
         mano_actual['truco'].update({
             "activo": True,
+            "esperando": False,
         })
+
+        print(f"{jugador.capitalize()} quiere el truco")
 
         if is_last_action_in_round():
             add_action(determinar_ganador_ronda)
@@ -107,12 +113,10 @@ def rechazar_truco(jugador):
         mano_actual['truco'].update({
             "activo": False,
             "rechazado_por": jugador,
+            "esperando": False
         })
 
-        if is_last_action_in_round():
-            add_action(determinar_ganador_ronda)
-        else:
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        print(f"{jugador.capitalize()} no quiere el truco")
 
         return noop
 
@@ -132,7 +136,8 @@ def cantar_envido(jugador):
         mano_actual['envido'].update({
             "activo": False,
             "cantado_por": jugador,
-            "nivel": 1
+            "nivel": 1,
+            "esperando": True
         })
 
         if is_last_action_in_round():
@@ -158,6 +163,7 @@ def aceptar_envido(jugador):
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
             "activo": True,
+            "esperando": False
         })
 
         if is_last_action_in_round():
@@ -184,6 +190,7 @@ def rechazar_envido(jugador):
         mano_actual['envido'].update({
             "activo": False,
             "rechazado_por": jugador,
+            "esperando": False
         })
 
         if is_last_action_in_round():
