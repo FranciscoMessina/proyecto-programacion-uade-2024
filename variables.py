@@ -2,6 +2,9 @@ from random import choice
 
 partida_actual: dict = {}
 
+USUARIO = 'usuario'
+COMPUTADORA = 'computadora'
+
 
 def init_game(max_points):
     global partida_actual

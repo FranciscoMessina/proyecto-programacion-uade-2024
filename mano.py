@@ -60,7 +60,6 @@ def jugar_mano():
 
         mano_actual['acciones'] = []
 
-
         # Guardamos en una variable de utilidad la ronda anterior para acceder más fácilmente a ella.
         # Si es la primera ronda, la ronda anterior es un diccionario vació.
         ronda_anterior = get_previous_round()
@@ -102,9 +101,6 @@ def jugar_mano():
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
     print(f"Gana {ganador_mano} sumando {puntos_a_sumar} puntos")
-
-    for round in mano_actual['rondas']:
-        print(round)
 
     imprimir_puntos()
 

@@ -2,10 +2,8 @@ from random import choice
 
 from envido import calcular_envido
 from mazo import obtener_poder
-from ronda import determinar_ganador_ronda
-from utilidades import formatear_carta, noop
-from variables import get_computer_cards, get_current_round, add_action, get_current_game, is_last_action_in_round, \
-    get_current_hand
+from utilidades import noop
+from variables import get_computer_cards, get_current_round, get_current_hand, COMPUTADORA
 
 
 def actuar_computadora():
@@ -19,7 +17,8 @@ def actuar_computadora():
     cartas = get_computer_cards()
 
     carta_random = choice(cartas)
-    return jugar_carta_(carta_random)
+    from acciones import jugar_carta
+    return jugar_carta(carta_random, COMPUTADORA)
 
     if mano_actual['rondas'][0]['ganador'] is None and mano_actual['envido'].get(
             'cantado_por') is None:
@@ -28,13 +27,13 @@ def actuar_computadora():
             # CANTAR ENVIDO
             return noop
 
-    cantar_truco = choice([True, False])
-    if not cantar_truco:
+    c_truco = choice([True, False])
+    if not c_truco:
         carta_random = choice(cartas)
         return jugar_carta_(carta_random)
-    elif cantar_truco and partida['mano_actual']['truco'].get('nivel') is None:
+    elif c_truco and partida['mano_actual']['truco'].get('nivel') is None:
         # CANTAR TRUCO
-        return noop
+        return cantar_truco(COMPUTADORA)
 
 
 def responder_a_carta():
@@ -43,6 +42,7 @@ def responder_a_carta():
 
     :return:
     """
+    from acciones import jugar_carta
 
     carta_usuario = get_current_round()['carta_usuario']
     cartas_computadora = get_computer_cards()
@@ -53,12 +53,12 @@ def responder_a_carta():
 
     if len(cartas_mas_fuertes) > 0:
         # Si tiene cartas que le ganan o empata, juega la de menor valor disponible
-        return jugar_carta_(cartas_mas_fuertes[0])
+        return jugar_carta(cartas_mas_fuertes[0], COMPUTADORA)
 
     # TODO: falta manejar caso de carta empardadora
 
     # Si no tiene cartas que le ganen juega la carta mas baja que tenga ( su mano esta ordenada de menor a mayor poder)
-    return jugar_carta_(cartas_computadora[0])
+    return jugar_carta(cartas_computadora[0], COMPUTADORA)
 
 
 def responder_a_envido():
@@ -74,68 +74,13 @@ def responder_a_envido():
         # Si se canto envido, la computadora decide si aceptar o no
         aceptar = choice([True, False])
         if aceptar:
-            return aceptar_envido()
+            from acciones import aceptar_envido
+            return aceptar_envido(COMPUTADORA)
         else:
-            return rechazar_envido()
+            from acciones import rechazar_envido
+            return rechazar_envido(COMPUTADORA)
 
     return noop
-
-
-def aceptar_envido():
-    """
-    Funcion que se llama cuando la computadora decide
-    aceptar el envido cantado por el usuario
-
-
-    :return:
-    """
-
-    def _aceptar_envido():
-        mano_actual = get_current_hand()
-
-        mano_actual['envido'].update({
-            "activo": True,
-        })
-        print("La computadora QUIERE el envido.")
-
-        if is_last_action_in_round():
-            add_action(determinar_ganador_ronda)
-        else:
-            from acciones_usuario import pedir_accion_usuario
-            add_action(pedir_accion_usuario)
-
-        return noop
-
-    return _aceptar_envido
-
-
-def rechazar_envido():
-    """
-    Funcion que se llama cuando la computadora decide
-    aceptar el envido cantado por el usuario
-
-
-    :return:
-    """
-
-    def _rechazar_envido():
-        mano_actual = get_current_hand()
-
-        mano_actual['envido'].update({
-            "activo": False,
-            "rechazado_por": "computadora",
-        })
-        print("La computadora NO QUIERE el envido.")
-
-        if is_last_action_in_round():
-            add_action(determinar_ganador_ronda)
-        else:
-            from acciones_usuario import pedir_accion_usuario
-            add_action(pedir_accion_usuario)
-
-        return noop
-
-    return _rechazar_envido
 
 
 def responder_a_truco():
@@ -151,89 +96,10 @@ def responder_a_truco():
         # Si se canto retruco, la computadora decide si aceptar o no
         aceptar = choice([True, False])
         if aceptar:
-            return aceptar_truco()
+            from acciones import aceptar_truco
+            return aceptar_truco(COMPUTADORA)
         else:
-            return rechazar_truco()
+            from acciones import rechazar_truco
+            return rechazar_truco(COMPUTADORA)
 
     return noop
-
-
-def aceptar_truco():
-    """
-    Funcion que se llama cuando la computadora decide
-    aceptar el truco cantado por el usuario
-
-    :return:
-    """
-
-    def _aceptar_truco():
-        mano_actual = get_current_hand()
-
-        mano_actual['truco'].update({
-            "activo": True,
-        })
-        print("La computadora QUIERE el truco.")
-
-        if is_last_action_in_round():
-            add_action(determinar_ganador_ronda)
-        else:
-            from acciones_usuario import pedir_accion_usuario
-            add_action(pedir_accion_usuario)
-
-        return noop
-
-    return _aceptar_truco()
-
-
-def rechazar_truco():
-    """
-    Funcion que se llama cuando la computadora decide
-    aceptar el truco cantado por el usuario
-
-    :return:
-    """
-
-    def _rechazar_truco():
-        mano_actual = get_current_hand()
-
-        mano_actual['truco'].update({
-            "activo": False,
-            "rechazado_por": "computadora",
-        })
-
-        print("La computadora NO QUIERE el truco, ganaste la mano.")
-
-        return noop
-
-    return _rechazar_truco()
-
-
-def jugar_carta_(carta):
-    """
-    Crea la funcion que va a ser utilizada para jugar la carta del usuario
-
-    :param carta: carta a jugar
-
-    :return: Funcion para jugar la carta
-    """
-
-    def _jugar_carta():
-        nonlocal carta
-
-        cartas = get_computer_cards()
-        cartas.remove(carta)
-
-        ronda_actual = get_current_round()
-
-        ronda_actual['carta_computadora'] = carta
-        print(f"La computadora jugo el {formatear_carta(carta)}")
-
-        if is_last_action_in_round():
-            add_action(determinar_ganador_ronda)
-        else:
-            from acciones_usuario import pedir_accion_usuario
-            add_action(pedir_accion_usuario)
-
-        return noop
-
-    return _jugar_carta

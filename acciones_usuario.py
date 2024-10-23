@@ -1,13 +1,7 @@
-
-from guardado import guardar_partida
-from computadora import responder_a_carta, responder_a_truco, responder_a_envido
 from envido import calcular_envido
-from ronda import determinar_ganador_ronda
 
-from utilidades import formatear_carta, pedir_eleccion, noop
-from variables import get_current_hand, get_user_cards, is_first_round, get_current_round, add_action, \
-    is_last_action_in_round
-
+from utilidades import formatear_carta, pedir_eleccion
+from variables import get_current_hand, get_user_cards, is_first_round, USUARIO
 
 
 def pedir_accion_usuario():
@@ -18,7 +12,6 @@ def pedir_accion_usuario():
     """
     opciones = []
 
-
     mano_actual = get_current_hand()
     cartas = get_user_cards()
 
@@ -26,29 +19,31 @@ def pedir_accion_usuario():
         puntos_envido = calcular_envido(cartas)
         print(f"Tenes {puntos_envido} de envido")
         if mano_actual['envido'].get("activo") is False and mano_actual['envido'].get("cantado_por") is None:
-            opciones.append(["Cantar envido", cantar_envido()])
+            from acciones import cantar_envido
+            opciones.append(["Cantar envido", cantar_envido(USUARIO)])
 
         if mano_actual['envido'].get("cantado_por") == "computadora":
-            opciones.append(["Aceptar envido", {"accion": "aceptar_envido"}])
-            opciones.append(["No aceptar envido", {"accion": "no_aceptar_envido"}])
+            from acciones import aceptar_envido, rechazar_envido
+            opciones.append(["Aceptar envido", aceptar_envido(USUARIO)])
+
+            opciones.append(["No aceptar envido", rechazar_envido(USUARIO)])
 
     if mano_actual['truco'].get('cantado_por') == "computadora" and mano_actual["truco"].get('nivel') == 0:
         # Si la computadora canta truco se le da la opcion al usuario de aceptar
-        opciones.append(["Quiero", {"accion": "aceptar_truco"}])
-        opciones.append(["No quiero", {"accion": "rechazar_truco"}])
+        from acciones import aceptar_truco, rechazar_truco
+        opciones.append(["Quiero", aceptar_truco(USUARIO)])
+        opciones.append(["No quiero", rechazar_truco(USUARIO)])
 
     else:
         for carta in cartas:
             # Por cada carta en su mano agregamos la opcion de jugarla.
-            opciones.append([f"Jugar {formatear_carta(carta)}", jugar_carta(carta)])
-
-
-
-
+            from acciones import jugar_carta
+            opciones.append([f"Jugar {formatear_carta(carta)}", jugar_carta(carta, USUARIO)])
 
     if mano_actual['truco'].get('activo') is False:
         # Si no se ha cantado truco aun, se le da la opcion de cantar truco
-        opciones.append(["Cantar truco", cantar_truco()])
+        from acciones import cantar_truco
+        opciones.append(["Cantar truco", cantar_truco(USUARIO)])
     """    
     if partida['mano_actual']['truco'].get('nivel') == 1:
         opciones.append(["Cantar retruco", {"accion": "cantar_retruco"}])
@@ -57,85 +52,3 @@ def pedir_accion_usuario():
         opciones.append(["Cantar vale 4", {"accion": "cantar_vale_4"}])
     """
     return pedir_eleccion(opciones)
-
-
-def jugar_carta(carta):
-    """
-    Crea la funcion que va a ser utilizada para jugar la carta del usuario
-
-    :param carta: carta a jugar
-
-    :return: Funcion para jugar la carta
-    """
-
-    def _jugar_carta():
-
-        nonlocal carta
-
-        cartas = get_user_cards()
-        cartas.remove(carta)
-
-        ronda_actual = get_current_round()
-
-        ronda_actual['carta_usuario'] = carta
-        print(f"Jugaste el {formatear_carta(carta)}")
-
-        # print('__??', is_last_action_in_round())
-        if is_last_action_in_round():
-            add_action(determinar_ganador_ronda)
-        else:
-            add_action(responder_a_carta)
-
-        return noop
-
-    return _jugar_carta
-
-
-def cantar_truco():
-    """
-    Crea la funcion que va a ser utilizada para cantar truco
-
-    :return: Funcion para cantar truco
-    """
-
-    def _cantar_truco():
-        mano_actual = get_current_hand()
-        mano_actual['truco'].update({
-            "activo": False,
-            "cantado_por": "usuario",
-            "nivel": 1
-        })
-
-        if is_last_action_in_round():
-            pass
-        else:
-            add_action(responder_a_truco)
-
-        return noop
-
-    return _cantar_truco
-
-
-def cantar_envido():
-    """
-    Crea la funcion que va a ser utilizada para cantar envido
-
-    :return: Funcion para cantar envido
-    """
-
-    def _cantar_envido():
-        mano_actual = get_current_hand()
-        mano_actual['envido'].update({
-            "activo": False,
-            "cantado_por": "usuario",
-            "nivel": 1
-        })
-
-        if is_last_action_in_round():
-            pass
-        else:
-            add_action(responder_a_envido)
-
-        return noop
-
-    return _cantar_envido
