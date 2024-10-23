@@ -1,5 +1,5 @@
 from mazo import obtener_numero
-from variables import get_current_hand, partida_actual, get_current_game
+from variables import get_current_hand, get_current_game
 
 
 def calcular_envido(mano):
@@ -43,6 +43,8 @@ def calcular_envido(mano):
 
 
 def envido(mano_cantada, mano_aceptada):
+    # Hay que modificar esto para que no reciba parametros, sino que tome las manos de la partida actual
+    # y solo devuelva como una string el ganador "usuario" o "computadora"
     envido_cantado = calcular_envido(mano_cantada)
     envido_aceptado = calcular_envido(mano_aceptada)
 
