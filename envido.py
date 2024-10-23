@@ -65,3 +65,21 @@ def envido(mano_cantada, mano_aceptada):
             print(f"LA COMPUTADORA TIENE {envido_cantado} DE ENVIDO Y VOS TENES {envido_aceptado}, GANASTE 2 PUNTOS")
             partida_actual['puntos']['usuario'] += 2
     return partida_actual
+
+
+def calcular_puntos_envido():
+    """
+    Calcula los puntos de envido que se obtiene de ganar el envido
+    :return: el maximo envido posible de la mano
+    """
+    envido = get_current_hand()['envido']
+
+    puntos_envido = 0
+
+    if envido['rechazado_por'] is not None:
+        puntos_envido = + envido['nivel']
+    elif envido['activo']:
+        # Calcular los puntos en base al nivel del envido o algo por el estilo
+        puntos_envido = + envido['nivel']
+
+    return puntos_envido

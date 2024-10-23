@@ -140,10 +140,9 @@ def cantar_envido(jugador):
             "esperando": True
         })
 
-        if is_last_action_in_round():
-            pass
-        else:
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        print(f"{jugador.capitalize()} canta envido")
+
+        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
 
@@ -166,10 +165,9 @@ def aceptar_envido(jugador):
             "esperando": False
         })
 
-        if is_last_action_in_round():
-            add_action(determinar_ganador_ronda)
-        else:
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        print(f"{jugador.capitalize()} acepta el envido")
+
+        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
 
@@ -193,10 +191,10 @@ def rechazar_envido(jugador):
             "esperando": False
         })
 
-        if is_last_action_in_round():
-            add_action(determinar_ganador_ronda)
-        else:
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        print(f"{jugador.capitalize()} no quiere el envido")
+
+        add_action()
+        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
 

@@ -87,7 +87,7 @@ def jugar_mano():
     ganador_mano = determinar_ganador_de_la_mano()
 
     # Determinamos cuantos puntos se lleva el ganador de la mano
-    puntos_a_sumar = determinar_puntos()
+    puntos_a_sumar = determinar_puntos_ganador()
 
     # Sumamos los puntos al ganador de la mano
     partida['puntos'][ganador_mano] += puntos_a_sumar
@@ -116,7 +116,7 @@ def imprimir_puntos():
     print("".center(95, '='), end='|\n')
 
 
-def determinar_puntos():
+def determinar_puntos_ganador():
     """
     Calcula cuantos puntos hay que sumar al ganador de la mano
     :param mano: mano actual
