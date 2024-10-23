@@ -167,6 +167,8 @@ def aceptar_envido(jugador):
 
         print(f"{jugador.capitalize()} acepta el envido")
 
+        # aca falta agregar la accion para determinar el ganador del envido, y sumar los puntos correspondientes
+        # add_action()
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
@@ -193,7 +195,11 @@ def rechazar_envido(jugador):
 
         print(f"{jugador.capitalize()} no quiere el envido")
 
-        add_action()
+        # aca falta agregar la accion para calcular los puntos en base a que nivel de envido estemos,
+        # y que se sumen a los puntos del jugador que lo habia cantado.
+        # add_action()
+
+        # Despues se deberia llamar a la accion para pedir la proxima accion del jugador o computadora
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
