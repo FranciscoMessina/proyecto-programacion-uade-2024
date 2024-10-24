@@ -117,5 +117,19 @@ def imprimir_carta_ascii(carta):
     print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
 
 
+DEV = True
+
+
+def dev_print(*args, **kwargs):
+    """
+    Función de utilidad para imprimir en consola, pero solo si estamos en modo debug.
+    :param args:
+    :param kwargs:
+    :return:
+    """
+    if DEV:
+        print(*args, **kwargs)
+
+
 def noop():
     return "Noop"

@@ -1,7 +1,7 @@
 from acciones_usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from ronda import determinar_ganador_ronda
-from utilidades import formatear_carta, noop
+from utilidades import formatear_carta, noop, dev_print
 from variables import get_current_hand, get_current_round, is_last_action_in_round, add_action, USUARIO, COMPUTADORA
 
 
@@ -50,6 +50,8 @@ def cantar_truco(jugador):
     :return:
     """
 
+    dev_print('Cantar Truco Builder')
+
     def _cantar_truco():
         mano_actual = get_current_hand()
         mano_actual['truco'].update({
@@ -59,12 +61,11 @@ def cantar_truco(jugador):
             "esperando": True
         })
 
+        dev_print('Cantar Truco Execution')
+
         print(f"{jugador.capitalize()} canta truco")
 
-        if is_last_action_in_round():
-            pass
-        else:
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
 
@@ -80,6 +81,8 @@ def aceptar_truco(jugador):
     :return:
     """
 
+    dev_print('Aceptar Truco Builder')
+
     def _aceptar_truco():
         mano_actual = get_current_hand()
         mano_actual['truco'].update({
@@ -87,11 +90,15 @@ def aceptar_truco(jugador):
             "esperando": False,
         })
 
+        dev_print('Aceptar Truco Execution')
+
         print(f"{jugador.capitalize()} quiere el truco")
 
         if is_last_action_in_round():
+            dev_print('LAST ACTION IN TRUCO')
             add_action(determinar_ganador_ronda)
         else:
+            dev_print('NOT LAST ACTION IN TRUCO')
             add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop

@@ -2,44 +2,56 @@ from random import choice
 
 from envido import calcular_envido
 from mazo import obtener_poder
-from utilidades import noop
+from utilidades import noop, dev_print
 from variables import get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, envido_needs_answer, \
-    truco_needs_answer
+    truco_needs_answer, is_first_round
 
 
 def actuar_computadora():
     """
-    Determina como acciona la computadora en su turno, cuando no tiene que responder al usuario.
+    Determina como acciona la computadora en su turno.
 
     :return:
     """
+
+    dev_print('Inicio Actuar computadora')
 
     mano_actual = get_current_hand()
     cartas = get_computer_cards()
 
     if envido_needs_answer():
+        dev_print('AC- Responder a envido')
         return responder_a_envido()
 
     if truco_needs_answer():
+        dev_print('AC- Responder a truco')
         return responder_a_truco()
 
-    if mano_actual['rondas'][0]['ganador'] is None and mano_actual['envido'].get(
-            'cantado_por') is None:
+    if is_first_round() and mano_actual['envido'].get('cantado_por') is None:
+        dev_print('AC- Cantar envido')
         envido_puntos = calcular_envido(cartas)
         if envido_puntos >= 20:
             # CANTAR ENVIDO
-            return noop
+            from acciones import cantar_envido
+            return cantar_envido(COMPUTADORA)
+        dev_print('AC- No canta envido por puntos insuficientes')
 
     c_truco = choice([True, False])
-    if not c_truco:
+    if c_truco and mano_actual['truco'].get('nivel') == 0:
+        dev_print('AC- Cantar truco')
+        from acciones import cantar_truco
+        return cantar_truco(COMPUTADORA)
+    else:
+        if get_current_round().get('carta_usuario') is not None:
+            dev_print('AC- Responder a carta')
+            return responder_a_carta()
+
+        dev_print('AC- Jugar carta')
+
         carta_random = choice(cartas)
 
         from acciones import jugar_carta
         return jugar_carta(carta_random, COMPUTADORA)
-    elif c_truco and mano_actual['truco'].get('nivel') is None:
-        # CANTAR TRUCO
-        from acciones import cantar_truco
-        return cantar_truco(COMPUTADORA)
 
 
 def responder_a_carta():

@@ -15,25 +15,8 @@ def init_game(max_points):
             "computadora": 0
         },
         "manos_jugadas": 0,
-        "siguiente_en_empezar": choice(["usuario"]),
-        "mano_actual": {
-            "acciones": [],
-            "cartas_usuario": [],
-            "cartas_computadora": [],
-            "rondas": [],
-            "truco": {
-                "activo": False,
-                "cantando_por": None,
-                "rechazado_por": None,
-                "nivel": 0
-            },
-            "envido": {
-                "activo": False,
-                "cantado_por": None,
-                "rechazado_por": None,
-                "nivel": 0
-            }
-        }
+        "siguiente_en_empezar": choice(['computadora']),
+        "mano_actual": {}
     }
 
     return partida_actual
