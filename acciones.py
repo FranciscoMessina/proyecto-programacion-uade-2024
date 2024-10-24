@@ -50,6 +50,7 @@ def jugar_carta(carta, jugador):
 def cantar_truco(jugador):
     """
     Funcion que se llama para cantar truco, crea y devuelve una funcion que al ser llamada
+    ejecuta la logica para cantar el truco.
 
     :param jugador: Jugador que va a cantar el truco
     :return:
