@@ -128,7 +128,7 @@ def dev_print(*args, **kwargs):
     :return:
     """
     if DEV:
-        print(*args, **kwargs)
+        print('(DEV-ONLY)', *args, **kwargs)
 
 
 def noop():

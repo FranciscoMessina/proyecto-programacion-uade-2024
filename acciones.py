@@ -15,9 +15,13 @@ def jugar_carta(carta, jugador):
     :return:
     """
 
+    dev_print('Jugar Carta Builder')
+
     def _jugar_carta():
         mano_actual = get_current_hand()
         ronda_actual = get_current_round()
+
+        dev_print('Jugar Carta Execution')
 
         if jugador == USUARIO:
             mano_actual['cartas_usuario'].remove(carta)
@@ -33,6 +37,7 @@ def jugar_carta(carta, jugador):
         print(f"{jugador.capitalize()} jugo {formatear_carta(carta)}")
 
         if is_last_action_in_round():
+            dev_print('LAST ACTION IN ROUND')
             add_action(determinar_ganador_ronda)
         else:
             add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
@@ -115,6 +120,8 @@ def rechazar_truco(jugador):
     :return:
     """
 
+    dev_print('Rechazar Truco Builder')
+
     def _rechazar_truco():
         mano_actual = get_current_hand()
         mano_actual['truco'].update({
@@ -122,6 +129,8 @@ def rechazar_truco(jugador):
             "rechazado_por": jugador,
             "esperando": False
         })
+
+        dev_print('Rechazar Truco Execution')
 
         print(f"{jugador.capitalize()} no quiere el truco")
 
@@ -138,6 +147,8 @@ def cantar_envido(jugador):
     :return:
     """
 
+    dev_print('Cantar Envido Builder')
+
     def _cantar_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
@@ -146,6 +157,8 @@ def cantar_envido(jugador):
             "nivel": 1,
             "esperando": True
         })
+
+        dev_print('Cantar Envido Execution')
 
         print(f"{jugador.capitalize()} canta envido")
 
@@ -165,12 +178,16 @@ def aceptar_envido(jugador):
     :return:
     """
 
+    dev_print('Aceptar Envido Builder')
+
     def _aceptar_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
             "activo": True,
             "esperando": False
         })
+
+        dev_print('Aceptar Envido Execution')
 
         print(f"{jugador.capitalize()} acepta el envido")
 
@@ -192,6 +209,8 @@ def rechazar_envido(jugador):
     :return:
     """
 
+    dev_print('Rechazar Envido Builder')
+
     def _rechazar_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
@@ -199,6 +218,8 @@ def rechazar_envido(jugador):
             "rechazado_por": jugador,
             "esperando": False
         })
+
+        dev_print('Rechazar Envido Execution')
 
         print(f"{jugador.capitalize()} no quiere el envido")
 
