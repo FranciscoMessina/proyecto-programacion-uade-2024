@@ -2,7 +2,8 @@ from acciones_usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from ronda import determinar_ganador_ronda
 from utilidades import formatear_carta, noop, dev_print
-from variables import get_current_hand, get_current_round, is_last_action_in_round, add_action, USUARIO, COMPUTADORA
+from variables import get_current_hand, get_current_round, is_last_action_in_round, add_action, USUARIO, COMPUTADORA, \
+    niveles_nombre
 
 
 def jugar_carta(carta, jugador):
@@ -47,12 +48,13 @@ def jugar_carta(carta, jugador):
     return _jugar_carta
 
 
-def cantar_truco(jugador):
+def cantar_truco(jugador, nivel):
     """
     Funcion que se llama para cantar truco, crea y devuelve una funcion que al ser llamada
     ejecuta la logica para cantar el truco.
 
     :param jugador: Jugador que va a cantar el truco
+    :param nivel: Nivel del truco a cantar (1, Truco) (2, Retruco) (3, Vale Cuatro)
     :return:
     """
 
@@ -63,13 +65,16 @@ def cantar_truco(jugador):
         mano_actual['truco'].update({
             "activo": False,
             "cantado_por": jugador,
-            "nivel": 1,
+            "nivel": nivel,
             "esperando": True
         })
 
         dev_print('Cantar Truco Execution')
 
-        print(f"{jugador.capitalize()} canta truco")
+
+
+
+        print(f"{jugador.capitalize()} canta {niveles_nombre[nivel]}")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -140,7 +145,8 @@ def rechazar_truco(jugador):
     return _rechazar_truco
 
 
-def cantar_envido(jugador):
+
+def cantar_envido( jugador):
     """
     Funcion que se llama para cantar envido, crea y devuelve una funcion que al ser llamada
 
@@ -155,6 +161,7 @@ def cantar_envido(jugador):
         mano_actual['envido'].update({
             "activo": False,
             "cantado_por": jugador,
+            "cantos": [],
             "nivel": 1,
             "esperando": True
         })
