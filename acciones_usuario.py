@@ -40,11 +40,11 @@ def pedir_accion_usuario():
             # Si no se ha cantado truco aun, se le da la opcion de cantar truco
             from acciones import cantar_truco
             if mano_actual['truco'].get('nivel') == 0:
-                opciones.append(["Cantar truco", cantar_truco(USUARIO)])
+                opciones.append(["Cantar truco", cantar_truco(USUARIO, 1)])
             elif mano_actual['truco'].get('nivel') == 1 and mano_actual['truco'].get('cantado_por') == COMPUTADORA:
-                opciones.append(["Cantar Retruco", cantar_truco(USUARIO)])
+                opciones.append(["Cantar Retruco", cantar_truco(USUARIO, 2)])
             elif mano_actual['truco'].get('nivel') == 2 and mano_actual['truco'].get('cantado_por') == COMPUTADORA:
-                opciones.append(["Cantar Vale_cuatro", cantar_truco(USUARIO)])
+                opciones.append(["Cantar Vale_cuatro", cantar_truco(USUARIO, 3)])
 
         if is_first_round():
             puntos_envido = calcular_envido(cartas)
