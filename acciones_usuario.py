@@ -1,7 +1,7 @@
 from envido import calcular_envido
 
 from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print
-from variables import get_current_hand, get_user_cards, is_first_round, USUARIO, envido_needs_answer, truco_needs_answer
+from variables import get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, truco_needs_answer
 
 
 def pedir_accion_usuario():
@@ -39,7 +39,12 @@ def pedir_accion_usuario():
         if mano_actual['truco'].get('activo') is False:
             # Si no se ha cantado truco aun, se le da la opcion de cantar truco
             from acciones import cantar_truco
-            opciones.append(["Cantar truco", cantar_truco(USUARIO)])
+            if mano_actual['truco'].get('nivel') == 0:
+                opciones.append(["Cantar truco", cantar_truco(USUARIO)])
+            elif mano_actual['truco'].get('nivel') == 1 and mano_actual['truco'].get('cantado_por') == COMPUTADORA:
+                opciones.append(["Cantar Retruco", cantar_truco(USUARIO)])
+            elif mano_actual['truco'].get('nivel') == 2 and mano_actual['truco'].get('cantado_por') == COMPUTADORA:
+                opciones.append(["Cantar Vale_cuatro", cantar_truco(USUARIO)])
 
         if is_first_round():
             puntos_envido = calcular_envido(cartas)
