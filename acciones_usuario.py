@@ -29,7 +29,7 @@ def pedir_accion_usuario():
         opciones.append(["Quiero", aceptar_truco(USUARIO)])
         opciones.append(["No quiero", rechazar_truco(USUARIO)])
 
-    else:
+   else:
         dev_print('AU- Opciones normales')
         for carta in cartas:
             # Por cada carta en su mano agregamos la opcion de jugarla.
@@ -41,7 +41,8 @@ def pedir_accion_usuario():
             from acciones import cantar_truco
             if mano_actual['truco'].get('nivel') == 0:
                 opciones.append(["Cantar truco", cantar_truco(USUARIO, 1)])
-            elif mano_actual['truco'].get('nivel') == 1 and mano_actual['truco'].get('cantado_por') == COMPUTADORA:
+        if mano_actual['truco'].get('activo') is True:
+            if mano_actual['truco'].get('nivel') == 1 and mano_actual['truco'].get('cantado_por') == COMPUTADORA:
                 opciones.append(["Cantar Retruco", cantar_truco(USUARIO, 2)])
             elif mano_actual['truco'].get('nivel') == 2 and mano_actual['truco'].get('cantado_por') == COMPUTADORA:
                 opciones.append(["Cantar Vale_cuatro", cantar_truco(USUARIO, 3)])
