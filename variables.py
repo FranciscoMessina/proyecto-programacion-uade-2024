@@ -15,7 +15,7 @@ def init_game(max_points):
             "computadora": 0
         },
         "manos_jugadas": 0,
-        "siguiente_en_empezar": choice(['computadora']),
+        "siguiente_en_empezar": choice(['computadora','usuario']),
         "mano_actual": {}
     }
 

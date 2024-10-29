@@ -1,5 +1,5 @@
 from mazo import obtener_numero
-from variables import get_current_hand, get_current_game
+from variables import COMPUTADORA, USUARIO, get_computer_cards, get_current_hand, get_current_game, get_current_round, get_user_cards
 
 
 def calcular_envido(mano):
@@ -42,29 +42,41 @@ def calcular_envido(mano):
     return max_envido
 
 
-def envido(mano_cantada, mano_aceptada):
+def envido(jugador):
     # Hay que modificar esto para que no reciba parametros, sino que tome las manos de la partida actual
     # y solo devuelva como una string el ganador "usuario" o "computadora"
-    envido_cantado = calcular_envido(mano_cantada)
-    envido_aceptado = calcular_envido(mano_aceptada)
+    cartas_usuario = get_user_cards()
+    cartas_computadora = get_computer_cards()
+    envido_usuario = calcular_envido(cartas_usuario)
+    envido_compu = calcular_envido(cartas_computadora)
+    if len(cartas_usuario) == 2:
+        carta_jugada = get_current_round().get('carta_usuario')
+        cartas_usuario.append(carta_jugada)
+        envido_usuario = calcular_envido(cartas_usuario)
+        cartas_usuario.pop()
+    elif len(cartas_computadora) == 2:
+        carta_jugada = get_current_round().get('carta_computadora')
+        cartas_computadora.append(carta_jugada)
+        envido_compu = calcular_envido(cartas_computadora)
+        cartas_computadora.pop()
+
 
     partida_actual = get_current_game()
-    mano_envido = get_current_hand()['envido']
 
-    if mano_envido['cantado_por'] == "usuario":
-        if envido_cantado > envido_aceptado:
-            print(f"TENES {envido_cantado} DE ENVIDO Y LA COMPUTADORA TIENE {envido_aceptado}, GANASTE 2 PUNTOS")
+    if jugador == USUARIO:
+        if envido_usuario > envido_compu:
+            print(f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, GANASTE 2 PUNTOS")
             partida_actual['puntos']['usuario'] += 2
-        elif envido_aceptado > envido_cantado:
+        elif envido_compu > envido_usuario:
             print(
-                f"TENES {envido_cantado} DE ENVIDO Y LA COMPUTADORA TIENE {envido_aceptado}, LA COMPUTADORA GANA 2 PUNTOS")
+                f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, LA COMPUTADORA GANA 2 PUNTOS")
             partida_actual['puntos']['computadora'] += 2
-    elif mano_envido['cantado_por'] == "computadora":
-        if envido_cantado > envido_aceptado:
-            print(f"LA COMPUTADORA TIENE {envido_cantado} DE ENVIDO Y VOS TENES {envido_aceptado}, GANA 2 PUNTOS")
+    elif jugador == COMPUTADORA:
+        if envido_compu > envido_usuario:
+            print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANA 2 PUNTOS")
             partida_actual['puntos']['computadora'] += 2
-        elif envido_aceptado > envido_cantado:
-            print(f"LA COMPUTADORA TIENE {envido_cantado} DE ENVIDO Y VOS TENES {envido_aceptado}, GANASTE 2 PUNTOS")
+        elif envido_usuario > envido_compu:
+            print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANASTE 2 PUNTOS")
             partida_actual['puntos']['usuario'] += 2
     return partida_actual
 

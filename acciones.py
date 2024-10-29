@@ -1,8 +1,9 @@
 from acciones_usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from ronda import determinar_ganador_ronda
+from envido import envido
 from utilidades import formatear_carta, noop, dev_print
-from variables import get_current_hand, get_current_round, is_last_action_in_round, add_action, USUARIO, COMPUTADORA
+from variables import get_computer_cards, get_computer_points, get_current_game, get_current_hand, get_current_round, get_user_cards, is_last_action_in_round, add_action, USUARIO, COMPUTADORA
 
 
 def jugar_carta(carta, jugador):
@@ -194,6 +195,8 @@ def aceptar_envido(jugador):
             "esperando": False
         })
 
+        add_action(sumar_puntos_envido(jugador))
+
         dev_print('Aceptar Envido Execution')
 
         print(f"{jugador.capitalize()} acepta el envido")
@@ -226,6 +229,8 @@ def rechazar_envido(jugador):
             "esperando": False
         })
 
+        add_action(sumar_puntos_envido(jugador))
+
         dev_print('Rechazar Envido Execution')
 
         print(f"{jugador.capitalize()} no quiere el envido")
@@ -240,3 +245,24 @@ def rechazar_envido(jugador):
         return noop
 
     return _rechazar_envido
+
+def sumar_puntos_envido(jugador):
+  
+    
+    def _sumar_puntos():
+        juego_actual = get_current_game()
+        mano_actual = get_current_hand()
+        #puntos_computadora = get_computer_points()
+        #puntos_usuario = get_computer_points()
+        if mano_actual['envido']['cantado_por'] == USUARIO:
+            envido(USUARIO)
+        elif mano_actual['envido']['cantado_por'] == COMPUTADORA:
+            envido(COMPUTADORA)
+        elif mano_actual['envido']['rechazado_por'] == jugador:
+            if jugador == USUARIO:
+                juego_actual['puntos']['computadora'] += 1
+            else:
+                juego_actual['puntos']['usuario'] += 1
+        return noop
+    
+    return _sumar_puntos

@@ -117,7 +117,8 @@ def imprimir_carta_ascii(carta):
     print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
 
 
-DEV = False
+DEV = False #True
+
 
 
 def dev_print(*args, **kwargs):
