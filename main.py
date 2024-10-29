@@ -41,7 +41,7 @@ def mensaje_bienvenida():
 
 def jugar_al_truco():
     """
-    Menu principal del juego, se elige si comenzar una nueva partida o salir del programa
+    Menu principal del juego, le muestra al usuario las opciones disponibles
     :return:
     """
     mensaje_bienvenida()
@@ -50,13 +50,11 @@ def jugar_al_truco():
 
     def cerrar_programa():
         print("Gracias por usar nuestro programa, esperamos verlo pronto.")
-        # Esto hace que en vez de buscar la variable en el scope local de la funcion `cerrar_programa` lo busque en el scop anterior,
+        # Esto hace que en vez de buscar la variable en el scope local de la funcion `cerrar_programa` lo busque en el scope anterior,
         # que en este caso es la funcion `jugar_al_truco`. De esta manera se puede modificar la variable `continuar` y salir del bucle.
-        # La diferencia con la keyword `global` es que esa buscaria la variable en el scope global del archivo, y no lo encontraria.
+        # La diferencia con la keyword `global` es que esa buscaría la variable en el scope global del archivo, y no lo encontraría.
         nonlocal continuar
         continuar = False
-
-        hola_franco = "hola"
 
     while continuar:
         print('Elegi una de las opciones: \n'.center(65))
@@ -67,11 +65,7 @@ def jugar_al_truco():
         ], True)
 
         respuesta()
-        # if respuesta['accion'] == 'cerrar_programa':
-        #     print("Gracias por usar nuestro programa, esperamos verlo pronto.")
-        #     continuar = False
-        # else:
-        #     respuesta['accion']()
+
 
 
 jugar_al_truco()

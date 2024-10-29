@@ -120,6 +120,7 @@ def imprimir_carta_ascii(carta):
 DEV = False #True
 
 
+
 def dev_print(*args, **kwargs):
     """
     Función de utilidad para imprimir en consola, pero solo si estamos en modo debug.
