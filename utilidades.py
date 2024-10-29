@@ -135,5 +135,6 @@ def dev_print(*args, **kwargs):
 
 
 def noop():
+    print("Noop fue llamado")
     return "Noop"
 

@@ -110,13 +110,13 @@ def responder_a_envido():
 
 
 def responder_a_truco():
-    from acciones import aceptar_truco, rechazar_truco
-    from acciones import cantar_truco
     """
     Determina como responde la computadora a un truco cantado por el usuario
 
-    :return:
+    :return: Function
     """
+    from acciones import aceptar_truco, rechazar_truco
+    from acciones import cantar_truco
 
     mano_actual = get_current_hand()
 

@@ -8,11 +8,11 @@ from variables import get_user_points, get_max_points, get_computer_points, get_
 
 def jugar_mano():
     """
-    Juega una mano de truco, esta funcion es ejecutada las veces necesarias para llegar a los puntos maximos de la partida
+    Juega una mano de truco, esta función es ejecutada las veces necesarias para llegar a los puntos máximos de la partida
 
     :return:
     """
-    # Antes de comenzar una nueva mano se verifica si alguno de los jugadores llego a los puntos maximos,
+    # Antes de comenzar una nueva mano se verifica si alguno de los jugadores llego a los puntos máximos,
     # en ese caso se termina la partida
     max_points = get_max_points()
 
@@ -47,7 +47,7 @@ def jugar_mano():
     continuar = True
     numero_de_ronda = 1
     # Generalmente, las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
-    # por eso tenemos un while con una condicion de corte en 4 rondas y una bandera: continuar.
+    # por eso tenemos un while con una condición de corte en 4 rondas y una bandera: continuar.
     # Esta última puede ser modificada dentro de la ronda para darle un final temprano.
     while continuar and numero_de_ronda < 4:
         # Este es el inicio de una nueva ronda en la mano actual.
@@ -132,13 +132,13 @@ def determinar_puntos_ganador():
 
 def determinar_ganador_de_la_mano():
     """
-    Funcion para determinar quien gano la mano basándose en las rondas jugadas.
+    Función para determinar quien gano la mano basándose en las rondas jugadas.
 
     :return: Str: "usuario" | "computadora"
     """
     mano_actual = get_current_hand()
 
-    # Si se cantó truco, y fue rechazado, automatica gana el que lo canto
+    # Si se cantó truco, y fue rechazado, automáticamente gana el que lo canto
     if mano_actual['truco'].get('rechazado_por') is not None:
         return mano_actual['truco']['cantado_por']
 

@@ -87,7 +87,7 @@ def obtener_palo(carta):
     """
     Devuelve el palo de una carta.
     :param carta:
-    :return: str
+    :return: Str
     """
     return carta[1]
 
