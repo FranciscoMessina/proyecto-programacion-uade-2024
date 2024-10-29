@@ -1,18 +1,15 @@
 from acciones_usuario import pedir_accion_usuario
 from computadora import actuar_computadora
-from mazo import repartir_cartas, mazo_truco, determinar_carta_mayor
-from ronda import determinar_ganador_ronda
-from utilidades import formatear_carta
-from guardado import guardar_partida
+from mazo import repartir_cartas, mazo_truco
 
-from variables import get_user_points, get_max_points, get_computer_points, get_current_round, get_current_game, \
-    get_previous_round, add_action, init_hand, partida_actual, get_current_hand
+from variables import get_user_points, get_max_points, get_computer_points, get_current_game, \
+    get_previous_round, add_action, init_hand, get_current_hand
 
 
 def jugar_mano():
     """
     Juega una mano de truco, esta funcion es ejecutada las veces necesarias para llegar a los puntos maximos de la partida
-    :param partida: estado actual de la partida
+
     :return:
     """
     # Antes de comenzar una nueva mano se verifica si alguno de los jugadores llego a los puntos maximos,
@@ -39,18 +36,19 @@ def jugar_mano():
     # Se reparten las cartas a cada jugadora
     cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
 
+
+
+    # Se inicializa la mano actual, conas las cartas de cada jugador
+    mano_actual = init_hand(cartas_usuario, cartas_computadora)
+
     # Se incrementa la cantidad de manos jugadas
     partida['manos_jugadas'] += 1
 
-    # se actualiza el estado de la partida, reiniciando la Mano Actual
-    # variable de utilidad para acceder mas facilmente a la mano_actual
-    mano_actual = init_hand(cartas_usuario, cartas_computadora)
-
     continuar = True
     numero_de_ronda = 1
-    # Generalmente las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
+    # Generalmente, las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
     # por eso tenemos un while con una condicion de corte en 4 rondas y una bandera: continuar.
-    # Esta ultima puede ser modificada dentro de la ronda para darle un final temprano.
+    # Esta última puede ser modificada dentro de la ronda para darle un final temprano.
     while continuar and numero_de_ronda < 4:
         # Este es el inicio de una nueva ronda en la mano actual.
         # Agregamos a la lista de rondas de la mano una nueva ronda.
@@ -73,8 +71,7 @@ def jugar_mano():
         if ronda_anterior == {} or ronda_anterior.get('ganador') == 'empate':
             if partida['siguiente_en_empezar'] == 'usuario':
                 add_action(pedir_accion_usuario)
-
-            if partida['siguiente_en_empezar'] == 'computadora':
+            else:
                 add_action(actuar_computadora)
 
         for idx, action in enumerate(mano_actual['acciones']):
@@ -104,7 +101,7 @@ def jugar_mano():
 def imprimir_puntos():
     puntos_usuario = get_user_points()
     puntos_computadora = get_computer_points()
-    # Printea un gráfico que muestra los puntos de cada jugador
+    # Imprime un gráfico que muestra los puntos de cada jugador
     print("|", end="")
     print(" PUNTOS ".center(95, '='), end='|\n')
     print("|---  01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ", end='|\n')
@@ -118,9 +115,8 @@ def imprimir_puntos():
 
 def determinar_puntos_ganador():
     """
-    Calcula cuantos puntos hay que sumar al ganador de la mano
-    :param mano: mano actual
-    :return:
+    Calcula cuantos puntos hay que sumar al ganador de la mano.
+    :return: Int: puntos a sumar al ganador
     """
     truco = get_current_hand()['truco']
 
@@ -136,13 +132,13 @@ def determinar_puntos_ganador():
 
 def determinar_ganador_de_la_mano():
     """
-    Determina quien gano la mano actual
-    :param mano: mano actual
-    :return:
+    Funcion para determinar quien gano la mano basándose en las rondas jugadas.
+
+    :return: Str: "usuario" | "computadora"
     """
     mano_actual = get_current_hand()
 
-    # Si se canto truco, y fue rechazado, automatica gana el que lo canto
+    # Si se cantó truco, y fue rechazado, automatica gana el que lo canto
     if mano_actual['truco'].get('rechazado_por') is not None:
         return mano_actual['truco']['cantado_por']
 
