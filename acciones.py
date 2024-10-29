@@ -135,6 +135,7 @@ def rechazar_truco(jugador):
         mano_actual['truco'].update({
             "activo": False,
             "rechazado_por": jugador,
+            "nivel": mano_actual["truco"]["nivel"] - 1,
             "esperando": False
         })
 
@@ -145,7 +146,6 @@ def rechazar_truco(jugador):
         return noop
 
     return _rechazar_truco
-
 
 def cantar_envido(jugador):
     """
