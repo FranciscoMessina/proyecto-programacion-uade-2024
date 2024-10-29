@@ -111,7 +111,7 @@ def responder_a_envido():
 
 def responder_a_truco():
     from acciones import aceptar_truco, rechazar_truco
-
+    from acciones import cantar_truco
     """
     Determina como responde la computadora a un truco cantado por el usuario
 
@@ -124,14 +124,22 @@ def responder_a_truco():
         # Si se canto truco
         aceptar = choice([True, False])
         if aceptar:
-            return aceptar_truco(COMPUTADORA)
+            step_up = choice([True, False])
+            if step_up:
+                return cantar_truco(COMPUTADORA, 2)
+            else:
+                return aceptar_truco(COMPUTADORA)
         else:
             return rechazar_truco(COMPUTADORA)
     elif mano_actual['truco'].get('nivel') == 2:
         # Si se canto retruco
         aceptar = choice([True, False])
         if aceptar:
-            return aceptar_truco(COMPUTADORA)
+            step_up = choice([True, False])
+            if step_up:
+                return cantar_truco(COMPUTADORA, 3)
+            else:
+                return aceptar_truco(COMPUTADORA)
         else:
             return rechazar_truco(COMPUTADORA)
     elif mano_actual['truco'].get('nivel') == 3:
