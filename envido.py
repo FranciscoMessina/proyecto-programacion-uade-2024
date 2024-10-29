@@ -1,5 +1,5 @@
 from mazo import obtener_numero
-from variables import COMPUTADORA, USUARIO, get_computer_cards, get_current_hand, get_current_game, get_user_cards
+from variables import COMPUTADORA, USUARIO, get_computer_cards, get_current_hand, get_current_game, get_current_round, get_user_cards
 
 
 def calcular_envido(mano):
@@ -49,6 +49,17 @@ def envido(jugador):
     cartas_computadora = get_computer_cards()
     envido_usuario = calcular_envido(cartas_usuario)
     envido_compu = calcular_envido(cartas_computadora)
+    if len(cartas_usuario) == 2:
+        carta_jugada = get_current_round().get('carta_usuario')
+        cartas_usuario.append(carta_jugada)
+        envido_usuario = calcular_envido(cartas_usuario)
+        cartas_usuario.pop()
+    elif len(cartas_computadora) == 2:
+        carta_jugada = get_current_round().get('carta_computadora')
+        cartas_computadora.append(carta_jugada)
+        envido_compu = calcular_envido(cartas_computadora)
+        cartas_computadora.pop()
+
 
     partida_actual = get_current_game()
 
