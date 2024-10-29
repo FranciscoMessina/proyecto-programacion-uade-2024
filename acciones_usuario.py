@@ -35,10 +35,9 @@ def pedir_accion_usuario():
             # Por cada carta en su mano agregamos la opcion de jugarla.
             from acciones import jugar_carta
             opciones.append([f"Jugar {formatear_carta(carta)}", jugar_carta(carta, USUARIO)])
-
+        from acciones import cantar_truco
         if mano_actual['truco'].get('activo') is False:
             # Si no se ha cantado truco aun, se le da la opcion de cantar truco
-            from acciones import cantar_truco
             if mano_actual['truco'].get('nivel') == 0:
                 opciones.append(["Cantar truco", cantar_truco(USUARIO, 1)])
         if mano_actual['truco'].get('activo') is True:
