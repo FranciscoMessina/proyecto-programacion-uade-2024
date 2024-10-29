@@ -1,4 +1,6 @@
 import os
+import random
+
 from mazo import obtener_palo, obtener_numero
 
 
@@ -15,8 +17,8 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     También se encarga de validar que la elección del usuario.
 
-    :param opciones: lista con las opciones a mostrar
-    :return: eleccion del usuario
+    :param opciones: Lista con las opciones a mostrar
+    :return: elección del usuario
     """
 
     for i in range(len(opciones)):
@@ -39,18 +41,18 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     opciones_disponibles = max(1, len(opciones))
 
-    # Si la eleccion esta fuera de rango, la volvemos a pedir.
+    # Si la elección está fuera de rango, la volvemos a pedir.
     if eleccion < 1 or eleccion > opciones_disponibles:
         print(f"{Colores.RED}{Colores.BOLD}Eleccion invalida. {Colores.RESET}\n")
         return pedir_eleccion(opciones)
 
     else:
-        # Devolvemos el valor asignado a la eleccion
+        # Devolvemos el valor asignado a la elección
         return opciones[eleccion - 1][1]
 
 
-# Se que no se supone que usemos clases, pero es una forma mas
-# facil de poder acceder a las propiedades sin cometer errores de tipeo
+# Sé que no se supone que usemos clases, pero es una forma más
+# fácil de poder acceder a las propiedades sin cometer errores de tipeo
 # asi por favor no nos saquen puntos por esto.
 # Si no lo cambiamos a diccionario, solo avisar.
 class Colores:
@@ -77,7 +79,7 @@ def formatear_carta(carta):
     """
     Función de utilidad para generar una string visualmente atractiva de una carta de truco.
     :param carta:
-    :return: string estilada para ser impresa en consola
+    :return: String estilada para ser impresa en consola
     """
     return f"{colores_palos[obtener_palo(carta)]}{Colores.BOLD}{carta[0]}{Colores.RESET}"
 
@@ -134,3 +136,4 @@ def dev_print(*args, **kwargs):
 
 def noop():
     return "Noop"
+
