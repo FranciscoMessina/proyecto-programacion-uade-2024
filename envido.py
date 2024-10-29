@@ -49,6 +49,7 @@ def envido(jugador):
     cartas_computadora = get_computer_cards()
     envido_usuario = calcular_envido(cartas_usuario)
     envido_compu = calcular_envido(cartas_computadora)
+
     if len(cartas_usuario) == 2:
         carta_jugada = get_current_round().get('carta_usuario')
         cartas_usuario.append(carta_jugada)
@@ -83,8 +84,8 @@ def envido(jugador):
 
 def calcular_puntos_envido():
     """
-    Calcula los puntos de envido que se obtiene de ganar el envido
-    :return: el maximo envido posible de la mano
+    Calcula los puntos que se obtienen al ganar él envido
+    :return: puntos a sumar al ganador del envido
     """
     envido = get_current_hand()['envido']
 
