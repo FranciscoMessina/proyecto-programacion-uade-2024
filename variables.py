@@ -120,7 +120,7 @@ def envido_puntos():
     return get_current_hand()['envido']['puntos']
 
 def get_current_hand():
-    return partida_actual['mano_actual']
+    return get_current_game()['mano_actual']
 
 
 def get_user_points():
@@ -153,7 +153,7 @@ def is_last_action_in_round():
 
 
 def add_action(action):
-    partida_actual['mano_actual']['acciones'].append(action)
+    get_current_hand()['acciones'].append(action)
 
 
 def get_current_round():
