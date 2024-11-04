@@ -3,7 +3,7 @@ from computadora import actuar_computadora
 from ronda import determinar_ganador_ronda
 from envido import envido
 from utilidades import formatear_carta, noop, dev_print
-from variables import get_computer_cards, get_computer_points, get_current_game, get_current_hand, get_current_round, get_user_cards, is_last_action_in_round, add_action, USUARIO, COMPUTADORA
+from variables import envido_cantado_por, envido_envido_cantado_por, envido_envido_rechazado_por, envido_puntos, envido_rechazado_por, falta_envido_cantado_por, falta_envido_rechazado_por, get_computer_cards, get_computer_points, get_current_game, get_current_hand, get_current_round, get_user_cards, is_last_action_in_round, add_action, USUARIO, COMPUTADORA, real_envido_cantado_por, real_envido_rechazado_por
 
 
 def jugar_carta(carta, jugador):
@@ -156,7 +156,7 @@ def cantar_envido(jugador):
         mano_actual['envido'].update({
             "activo": False,
             "cantado_por": jugador,
-            "nivel": 1,
+            "puntos": 1,
             "esperando": True
         })
 
@@ -186,7 +186,8 @@ def aceptar_envido(jugador):
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
             "activo": True,
-            "esperando": False
+            "esperando": False,
+            "puntos": 2,
         })
 
         add_action(sumar_puntos_envido(jugador))
@@ -240,23 +241,103 @@ def rechazar_envido(jugador):
 
     return _rechazar_envido
 
+def cantar_envido_envido(jugador):
+
+    def _cantar_envido_envido():
+
+        mano_actual = get_current_hand()
+        mano_actual['envido'].update({
+            "envido_envido_cantado_por": jugador,
+            "envido_envido_esperando": True,
+            "puntos": 2,
+            "esperando": False
+        })
+
+        print(f"{jugador.capitalize()} canta envido envido")
+
+        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+
+        return noop
+    
+    return _cantar_envido_envido
+
+def aceptar_envido_envido(jugador):
+    
+    def _aceptar_envido_envido():
+        mano_actual = get_current_hand()
+        mano_actual['envido'].update({
+            "envido_envido": True,
+            "envido_envido_esperando": False,
+            "puntos": 4
+        })
+
+        add_action(sumar_puntos_envido(jugador))
+
+        print(f"{jugador.capitalize()} acepta el envido envido")
+
+        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+
+        return noop
+
+    return _aceptar_envido_envido
+
+
+def rechazar_envido_envido(jugador):
+    
+    def _rechazar_envido_envido():
+        mano_actual = get_current_hand()
+        mano_actual['envido'].update({
+            "envido_envido_rechazado_por": jugador,
+            "envido_envido_esperando": False
+        })
+
+        add_action(sumar_puntos_envido(jugador))
+
+
+        print(f"{jugador.capitalize()} no quiere el envido envido")
+
+        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+
+        return noop
+
+    return _rechazar_envido_envido
+
 def sumar_puntos_envido(jugador):
   
     
     def _sumar_puntos():
         juego_actual = get_current_game()
-        mano_actual = get_current_hand()
+        envido_rechazado = envido_rechazado_por()
+        envido_envido_rechazado = envido_envido_rechazado_por()
+        real_envido_rechazado = real_envido_rechazado_por()
+        falta_envido_rechazado = falta_envido_rechazado_por()
+        envido_cantado = envido_cantado_por()
+        envido_envido_cantado = envido_envido_cantado_por()
+        real_envido_cantado = real_envido_cantado_por()
+        falta_envido_cantado = falta_envido_cantado_por()
+        puntos = envido_puntos()
         #puntos_computadora = get_computer_points()
         #puntos_usuario = get_computer_points()
-        if mano_actual['envido']['cantado_por'] == USUARIO:
-            envido(USUARIO)
-        elif mano_actual['envido']['cantado_por'] == COMPUTADORA:
-            envido(COMPUTADORA)
-        elif mano_actual['envido']['rechazado_por'] == jugador:
-            if jugador == USUARIO:
-                juego_actual['puntos']['computadora'] += 1
+
+        if envido_envido_rechazado != None:
+            if envido_envido_rechazado == jugador and jugador == USUARIO:
+                juego_actual['puntos']['computadora'] += puntos
             else:
-                juego_actual['puntos']['usuario'] += 1
+                juego_actual['puntos']['usuario'] += puntos
+        elif envido_rechazado != None:
+            if envido_rechazado == jugador and jugador == USUARIO:
+                juego_actual['puntos']['computadora'] += puntos
+            else:
+                juego_actual['puntos']['usuario'] += puntos
+        elif envido_envido_cantado == USUARIO:
+            envido(USUARIO)
+        elif envido_envido_cantado == COMPUTADORA:
+            envido(COMPUTADORA)
+        elif envido_cantado == USUARIO:
+            envido(USUARIO)
+        elif envido_cantado == COMPUTADORA:
+            envido(COMPUTADORA)
+
         return noop
     
     return _sumar_puntos

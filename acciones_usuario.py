@@ -1,7 +1,7 @@
 from envido import calcular_envido
 
 from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print
-from variables import get_current_hand, get_user_cards, is_first_round, USUARIO, envido_needs_answer, truco_needs_answer
+from variables import envido_envido_needs_answer, get_current_hand, get_user_cards, is_first_round, USUARIO, envido_needs_answer, truco_needs_answer
 
 
 def pedir_accion_usuario():
@@ -17,11 +17,18 @@ def pedir_accion_usuario():
     mano_actual = get_current_hand()
     cartas = get_user_cards()
 
-    if envido_needs_answer():
+    if envido_envido_needs_answer():
+        dev_print('AU- Responder a envido envido')
+        from acciones import aceptar_envido_envido, rechazar_envido_envido
+        opciones.append(["Quiero", aceptar_envido_envido(USUARIO)])
+        opciones.append(["No quiero", rechazar_envido_envido(USUARIO)])
+
+    elif envido_needs_answer():
         dev_print('AU- Responder a envido')
-        from acciones import aceptar_envido, rechazar_envido
+        from acciones import aceptar_envido, rechazar_envido, cantar_envido_envido
         opciones.append(["Quiero", aceptar_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_envido(USUARIO)])
+        opciones.append(["Cantar envido envido", cantar_envido_envido(USUARIO)])
 
     elif truco_needs_answer():
         dev_print('AU- Responder a truco')

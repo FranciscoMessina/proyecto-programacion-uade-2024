@@ -40,7 +40,19 @@ def init_hand(user_cards, computer_cards):
             "cantado_por": None,
             "rechazado_por": None,
             "esperando": False,
-            "nivel": 0
+            "puntos": 0,
+            "envido_envido": False,
+            "envido_envido_cantado_por": None,
+            "envido_envido_rechazado_por": None,
+            "envido_envido_esperando": False,
+            "real_envido": False,
+            "real_envido_cantado_por": None,
+            "real_envido_rechazado_por": None,
+            "real_envido_esperando": False,
+            "falta_envido": False,
+            "falta_envido_cantado_por": None,
+            "falta_envido_rechazado_por": None,
+            "falta_envido_esperando": False
         }
     }
 
@@ -72,6 +84,40 @@ def envido_needs_answer():
 
     return envido['esperando']
 
+def envido_envido_needs_answer():
+    envido = get_current_hand()['envido']
+
+    if envido['envido_envido_rechazado_por'] is not None:
+        return False
+
+    return envido['envido_envido_esperando']
+
+def envido_rechazado_por():
+    return get_current_hand()['envido']['rechazado_por']
+
+def envido_envido_rechazado_por():
+    return get_current_hand()['envido']['envido_envido_rechazado_por']
+
+def real_envido_rechazado_por():
+    return get_current_hand()['envido']['real_envido_rechazado_por']
+
+def falta_envido_rechazado_por():
+    return get_current_hand()['envido']['falta_envido_rechazado_por']
+
+def envido_cantado_por():
+    return get_current_hand()['envido']['cantado_por']
+
+def envido_envido_cantado_por():
+    return get_current_hand()['envido']['envido_envido_cantado_por']
+
+def real_envido_cantado_por():
+    return get_current_hand()['envido']['real_envido_cantado_por']
+
+def falta_envido_cantado_por():
+    return get_current_hand()['envido']['falta_envido_cantado_por']
+
+def envido_puntos():
+    return get_current_hand()['envido']['puntos']
 
 def get_current_hand():
     return partida_actual['mano_actual']

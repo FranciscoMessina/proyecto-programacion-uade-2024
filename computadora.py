@@ -3,7 +3,7 @@ from random import choice
 from envido import calcular_envido
 from mazo import obtener_poder
 from utilidades import noop, dev_print
-from variables import get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, envido_needs_answer, \
+from variables import envido_envido_needs_answer, get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, envido_needs_answer, \
     truco_needs_answer, is_first_round
 
 
@@ -19,7 +19,7 @@ def actuar_computadora():
     mano_actual = get_current_hand()
     cartas = get_computer_cards()
 
-    if envido_needs_answer():
+    if envido_needs_answer() or envido_envido_needs_answer():
         dev_print('AC- Responder a envido')
         return responder_a_envido()
 
@@ -86,14 +86,28 @@ def responder_a_envido():
     :return:
     """
 
-    mano_actual = get_current_hand()
+   # mano_actual = get_current_hand()
+    if envido_envido_needs_answer():
+        # Si se canto envido envido, la computadora decide si aceptar o no
+        aceptar = choice([True, False])
+        if aceptar:
+            from acciones import aceptar_envido_envido
+            return aceptar_envido_envido(COMPUTADORA)
+        else:
+            from acciones import rechazar_envido_envido
+            return rechazar_envido_envido(COMPUTADORA)
 
-    if mano_actual['envido'].get('nivel') == 1:
+    elif envido_needs_answer():
         # Si se canto envido, la computadora decide si aceptar o no
         aceptar = choice([True, False])
         if aceptar:
-            from acciones import aceptar_envido
-            return aceptar_envido(COMPUTADORA)
+            elegir = choice([True, False])
+            if elegir:
+                from acciones import cantar_envido_envido
+                return cantar_envido_envido(COMPUTADORA)
+            else:
+                from acciones import aceptar_envido
+                return aceptar_envido(COMPUTADORA)
         else:
             from acciones import rechazar_envido
             return rechazar_envido(COMPUTADORA)
