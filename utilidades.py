@@ -1,5 +1,4 @@
 import os
-import random
 
 from mazo import obtener_palo, obtener_numero
 
