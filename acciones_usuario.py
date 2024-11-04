@@ -1,7 +1,7 @@
 from envido import calcular_envido
 
 from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print
-from variables import get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, truco_needs_answer
+from variables import envido_envido_needs_answer, get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, truco_needs_answer
 
 
 def pedir_accion_usuario():

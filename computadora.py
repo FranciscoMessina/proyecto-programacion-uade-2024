@@ -3,7 +3,7 @@ from random import choice
 from envido import calcular_envido
 from mazo import obtener_poder
 from utilidades import noop, dev_print
-from variables import get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, USUARIO, envido_needs_answer, \
+from variables import envido_envido_needs_answer, get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, USUARIO, envido_needs_answer, \
     truco_needs_answer, is_first_round
 
 
