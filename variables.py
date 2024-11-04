@@ -1,5 +1,11 @@
 from random import choice
 
+
+# En este archivo definimos variables, y funciones de utilidad para
+# acceder a ellas desde diferentes partes del código.
+
+
+# Guarda toda la información respecto a la partida actual.
 partida_actual: dict = {}
 
 USUARIO = 'usuario'
@@ -7,6 +13,14 @@ COMPUTADORA = 'computadora'
 
 
 def init_game(max_points):
+    """
+    Función utlizada para inicializar la partida.
+    Debe ser llamada antes de cualquier paso del juego.
+    Configura los puntos maximos de la partida a jugar.
+
+    :param max_points: Puntos maximos para la partida a iniciar.
+    :return:
+    """
     global partida_actual
     partida_actual = {
         "puntos_maximos": max_points,
@@ -21,8 +35,25 @@ def init_game(max_points):
 
     return partida_actual
 
+def reset_game():
+    """
+    Resetea la partida actual.
+    :return:
+    """
+    global partida_actual
+    partida_actual = {}
+
+    return partida_actual
 
 def init_hand(user_cards, computer_cards):
+    """
+    Inicializa una nueva mano en la partida actual.
+    Debe ser llamado previo al inicio de cada mano.
+
+    :param user_cards: Mano de cartas del jugador
+    :param computer_cards: Mano de cartas de la computadora
+    :return:
+    """
     partida_actual['mano_actual'] = {
         "acciones": [],
         "cartas_usuario": user_cards,
@@ -48,12 +79,20 @@ def init_hand(user_cards, computer_cards):
 
 
 def get_current_game():
+    """
+    Devuelve la partida actual y verifica que la misma haya sido inicializada
+
+    :return: partida_actual
+    """
     if partida_actual == {}:
         raise Exception(
             "No hay partida actual, por favor recorda inicializar una partida antes de intentar acceder a la misma")
 
     return partida_actual
 
+
+def quien_es_mano():
+    return get_current_game()['siguiente_en_empezar']
 
 def truco_needs_answer():
     truco = get_current_hand()['truco']

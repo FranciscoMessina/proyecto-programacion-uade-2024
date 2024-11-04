@@ -50,6 +50,8 @@ def envido(jugador):
     envido_usuario = calcular_envido(cartas_usuario)
     envido_compu = calcular_envido(cartas_computadora)
 
+    # En estos casos alguno de los jugadores ya jugó una carta,
+    # por lo que hay que agregarla a la mano para calcular él envido.
     if len(cartas_usuario) == 2:
         carta_jugada = get_current_round().get('carta_usuario')
         cartas_usuario.append(carta_jugada)

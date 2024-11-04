@@ -37,6 +37,9 @@ def jugar_mano():
     cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
 
 
+    # actualizamos que jugador empieza la mano
+    if partida["manos_jugadas"] != 0:
+        partida['siguiente_en_empezar'] = "usuario" if partida['siguiente_en_empezar'] == "computadora" else "computadora"
 
     # Se inicializa la mano actual, conas las cartas de cada jugador
     mano_actual = init_hand(cartas_usuario, cartas_computadora)
@@ -56,6 +59,12 @@ def jugar_mano():
             "ganador": None,
         })
 
+        # Aca reiniciamos las acciones de la mano, para iniciar la siguiente ronda.
+        # ¿Qué son las acciones? Son funciones que agregamos a esta lista y que se ejecutan en orden.
+        # Cada una de ellas es ejecutada y debe devolver otra función que se ejecutara cuando termine (noop)
+        # para no hacer nada.
+        # Si una acción no devuelve nada, se ejecuta la siguiente en la lista.
+        # Cuando no quedan más funciones en la lista, se termina la ronda.
         mano_actual['acciones'] = []
 
         # Guardamos en una variable de utilidad la ronda anterior para acceder más fácilmente a ella.
@@ -63,9 +72,11 @@ def jugar_mano():
         ronda_anterior = get_previous_round()
 
         if ronda_anterior.get('ganador') == 'computadora':
+            # Si tiene que empezar la computadora, agregamos la acción de actuar_computadora a la lista de acciones.
             add_action(actuar_computadora)
 
         if ronda_anterior.get('ganador') == 'usuario':
+            # Si tiene que empezar el usuario, agregamos la acción de pedir_accion_usuario a la lista de acciones.
             add_action(pedir_accion_usuario)
 
         if ronda_anterior == {} or ronda_anterior.get('ganador') == 'empate':
@@ -74,6 +85,10 @@ def jugar_mano():
             else:
                 add_action(actuar_computadora)
 
+        # Acá ejecutamos las acciones, es simplemente una iteración por la lista de acciones.
+        # Al ejecutar cada acción, llamamos a la función que devuelve.
+        # Muchas de las acciones agregan otra función a la lista durante su ejecución.
+        # Una vez que no quedan más acciones en la lista se termina la ronda.
         for idx, action in enumerate(mano_actual['acciones']):
             result = action()
             result()
@@ -99,6 +114,10 @@ def jugar_mano():
 
 
 def imprimir_puntos():
+    """
+    Imprime en consola los puntos de cada jugador.
+    :return:
+    """
     puntos_usuario = get_user_points()
     puntos_computadora = get_computer_points()
     # Imprime un gráfico que muestra los puntos de cada jugador

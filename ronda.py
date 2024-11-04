@@ -4,6 +4,10 @@ from variables import get_current_round
 
 
 def determinar_ganador_ronda():
+    """
+    Función que determina el ganador de la ronda actual y lo imprime en consola.
+    :return:
+    """
     carta_usuario = get_current_round()['carta_usuario']
     carta_computadora = get_current_round()['carta_computadora']
 
