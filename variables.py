@@ -41,6 +41,7 @@ def init_hand(user_cards, computer_cards):
             "rechazado_por": None,
             "esperando": False,
             "puntos": 0,
+            'cantos': ["envido", ""],
             "envido_envido": False,
             "envido_envido_cantado_por": None,
             "envido_envido_rechazado_por": None,
@@ -91,6 +92,22 @@ def envido_envido_needs_answer():
         return False
 
     return envido['envido_envido_esperando']
+
+def real_envido_needs_answer():
+    envido = get_current_hand()['envido']
+
+    if envido['real_envido_rechazado_por'] is not None:
+        return False
+
+    return envido['real_envido_esperando']
+
+def falta_envido_needs_answer():
+    envido = get_current_hand()['envido']
+
+    if envido['falta_envido_rechazado_por'] is not None:
+        return False
+
+    return envido['falta_envido_esperando']
 
 def envido_rechazado_por():
     return get_current_hand()['envido']['rechazado_por']

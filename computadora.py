@@ -3,7 +3,7 @@ from random import choice
 from envido import calcular_envido
 from mazo import obtener_poder
 from utilidades import noop, dev_print
-from variables import envido_envido_needs_answer, get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, USUARIO, envido_needs_answer, \
+from variables import envido_envido_needs_answer, get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, USUARIO, envido_needs_answer, real_envido_needs_answer, \
     truco_needs_answer, is_first_round
 
 
@@ -19,7 +19,7 @@ def actuar_computadora():
     mano_actual = get_current_hand()
     cartas = get_computer_cards()
 
-    if envido_needs_answer() or envido_envido_needs_answer():
+    if envido_needs_answer() or envido_envido_needs_answer() or real_envido_needs_answer():
         dev_print('AC- Responder a envido')
         return responder_a_envido()
 
@@ -27,13 +27,18 @@ def actuar_computadora():
         dev_print('AC- Responder a truco')
         return responder_a_truco()
 
-    if is_first_round() and mano_actual['envido'].get('cantado_por') is None:
+    if is_first_round() and mano_actual['envido'].get('cantado_por') is None and mano_actual['envido'].get('real_envido_cantado_por') is None:
         dev_print('AC- Cantar envido')
         envido_puntos = calcular_envido(cartas)
         if envido_puntos >= 20:
             # CANTAR ENVIDO
-            from acciones import cantar_envido
-            return cantar_envido(COMPUTADORA)
+            elegir = choice([1,2])
+            if elegir == 1:
+                from acciones import cantar_envido
+                return cantar_envido(COMPUTADORA)
+            elif elegir == 2:
+                from acciones import cantar_real_envido
+                return cantar_real_envido(COMPUTADORA)
         dev_print('AC- No canta envido por puntos insuficientes')
 
     c_truco = choice([True, False])
@@ -95,12 +100,26 @@ def responder_a_envido():
     """
 
    # mano_actual = get_current_hand()
-    if envido_envido_needs_answer():
+    if real_envido_needs_answer():
+        aceptar = choice([True, False])
+        if aceptar:
+            from acciones import aceptar_real_envido
+            return aceptar_real_envido(COMPUTADORA)
+        else:
+            from acciones import rechazar_real_envido
+            return rechazar_real_envido(COMPUTADORA)
+
+    elif envido_envido_needs_answer():
         # Si se canto envido envido, la computadora decide si aceptar o no
         aceptar = choice([True, False])
         if aceptar:
-            from acciones import aceptar_envido_envido
-            return aceptar_envido_envido(COMPUTADORA)
+            elegir = choice([True, False])
+            if elegir:
+                from acciones import cantar_real_envido
+                return cantar_real_envido(COMPUTADORA)
+            else:
+                from acciones import aceptar_envido_envido
+                return aceptar_envido_envido(COMPUTADORA)
         else:
             from acciones import rechazar_envido_envido
             return rechazar_envido_envido(COMPUTADORA)
@@ -111,8 +130,13 @@ def responder_a_envido():
         if aceptar:
             elegir = choice([True, False])
             if elegir:
-                from acciones import cantar_envido_envido
-                return cantar_envido_envido(COMPUTADORA)
+                elegir2 = choice([True, False])
+                if elegir2:
+                    from acciones import cantar_envido_envido
+                    return cantar_envido_envido(COMPUTADORA)
+                else: 
+                    from acciones import cantar_real_envido
+                    return cantar_real_envido(COMPUTADORA)
             else:
                 from acciones import aceptar_envido
                 return aceptar_envido(COMPUTADORA)

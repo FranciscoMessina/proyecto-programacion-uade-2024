@@ -1,11 +1,11 @@
 from envido import calcular_envido
 
 from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print
-from variables import envido_envido_needs_answer, get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, truco_needs_answer
+from variables import envido_envido_needs_answer, get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, real_envido_needs_answer, truco_needs_answer
 
 
 def pedir_accion_usuario():
-    from acciones import cantar_truco, cantar_envido, aceptar_truco, rechazar_truco, aceptar_envido, rechazar_envido, jugar_carta
+    from acciones import cantar_truco, cantar_envido, cantar_real_envido, aceptar_truco, rechazar_truco, aceptar_envido, rechazar_envido, jugar_carta
     """
     Muestra al usuario las acciones disponibles y le pide que elija una de ellas
 
@@ -18,18 +18,26 @@ def pedir_accion_usuario():
     mano_actual = get_current_hand()
     cartas = get_user_cards()
 
-    if envido_envido_needs_answer():
+    if real_envido_needs_answer():
+        dev_print('AU- Responder a real envido')
+        from acciones import aceptar_real_envido, rechazar_real_envido
+        opciones.append(["Quiero", aceptar_real_envido(USUARIO)])
+        opciones.append(["No quiero", rechazar_real_envido(USUARIO)])
+
+    elif envido_envido_needs_answer():
         dev_print('AU- Responder a envido envido')
-        from acciones import aceptar_envido_envido, rechazar_envido_envido
+        from acciones import aceptar_envido_envido, rechazar_envido_envido, cantar_real_envido
         opciones.append(["Quiero", aceptar_envido_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_envido_envido(USUARIO)])
+        opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
 
     elif envido_needs_answer():
         dev_print('AU- Responder a envido')
-        from acciones import aceptar_envido, rechazar_envido, cantar_envido_envido
+        from acciones import aceptar_envido, rechazar_envido, cantar_envido_envido, cantar_real_envido
         opciones.append(["Quiero", aceptar_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_envido(USUARIO)])
         opciones.append(["Cantar envido envido", cantar_envido_envido(USUARIO)])
+        opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
 
     elif truco_needs_answer():
         dev_print('AU- Responder a truco')
@@ -64,8 +72,9 @@ def pedir_accion_usuario():
         if is_first_round():
             puntos_envido = calcular_envido(cartas)
             print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
-            if mano_actual['envido'].get("activo") is False and mano_actual['envido'].get("cantado_por") is None:
+            if mano_actual['envido'].get("activo") is False and mano_actual['envido'].get("cantado_por") is None and mano_actual['envido'].get("real_envido_cantado_por") is None:
 
                 opciones.append(["Cantar envido", cantar_envido(USUARIO)])
+                opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
 
     return pedir_eleccion(opciones)
