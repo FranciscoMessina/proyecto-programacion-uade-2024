@@ -1,4 +1,4 @@
-from acciones_usuario import pedir_accion_usuario
+from usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco
 

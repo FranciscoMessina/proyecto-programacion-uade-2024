@@ -1,9 +1,10 @@
-from acciones_usuario import pedir_accion_usuario
+from usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from ronda import determinar_ganador_ronda
 from envido import envido
 from utilidades import formatear_carta, noop, dev_print
-from variables import get_computer_cards, get_computer_points, get_current_game, get_current_hand, get_current_round, get_user_cards, is_last_action_in_round, add_action, USUARIO, COMPUTADORA
+from variables import get_computer_cards, get_computer_points, get_current_game, get_current_hand, get_current_round, \
+    get_user_cards, is_last_action_in_round, add_action, USUARIO, COMPUTADORA, next_play_by
 
 
 def jugar_carta(carta, jugador):
@@ -19,6 +20,7 @@ def jugar_carta(carta, jugador):
     dev_print('Jugar Carta Builder')
 
     def _jugar_carta():
+        nonlocal jugador
         mano_actual = get_current_hand()
         ronda_actual = get_current_round()
 
@@ -41,7 +43,7 @@ def jugar_carta(carta, jugador):
             dev_print('LAST ACTION IN ROUND')
             add_action(determinar_ganador_ronda)
         else:
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -66,6 +68,7 @@ def cantar_truco(jugador, nivel):
     dev_print('Cantar Truco Builder')
 
     def _cantar_truco():
+        nonlocal jugador
         mano_actual = get_current_hand()
         mano_actual['truco'].update({
             "activo": False,
@@ -78,7 +81,7 @@ def cantar_truco(jugador, nivel):
 
         print(f"{jugador.capitalize()} canta {niveles_nombre[nivel]}")
 
-        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
     return _cantar_truco
@@ -112,7 +115,7 @@ def aceptar_truco(jugador):
             add_action(determinar_ganador_ronda)
         else:
             dev_print('NOT LAST ACTION IN TRUCO')
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -131,6 +134,7 @@ def rechazar_truco(jugador):
     dev_print('Rechazar Truco Builder')
 
     def _rechazar_truco():
+        nonlocal jugador
         mano_actual = get_current_hand()
         mano_actual['truco'].update({
             "activo": False,
@@ -158,6 +162,7 @@ def cantar_envido(jugador):
     dev_print('Cantar Envido Builder')
 
     def _cantar_envido():
+        nonlocal jugador
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
             "activo": False,
@@ -170,7 +175,7 @@ def cantar_envido(jugador):
 
         print(f"{jugador.capitalize()} canta envido")
 
-        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -203,7 +208,7 @@ def aceptar_envido(jugador):
 
         # aca falta agregar la accion para determinar el ganador del envido, y sumar los puntos correspondientes
         # add_action()
-        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -222,6 +227,7 @@ def rechazar_envido(jugador):
     dev_print('Rechazar Envido Builder')
 
     def _rechazar_envido():
+        nonlocal jugador
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
             "activo": False,
@@ -236,11 +242,11 @@ def rechazar_envido(jugador):
         print(f"{jugador.capitalize()} no quiere el envido")
 
         # aca falta agregar la accion para calcular los puntos en base a que nivel de envido estemos,
-        # y que se sumen a los puntos del jugador que lo habia cantado.
+        # y que se sumen a los puntos del jugador que lo había cantado.
         # add_action()
 
-        # Despues se deberia llamar a la accion para pedir la proxima accion del jugador o computadora
-        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        # Después se deberia llamar a la accion para pedir la proxima accion del jugador o computadora
+        add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -250,6 +256,7 @@ def sumar_puntos_envido(jugador):
   
     
     def _sumar_puntos():
+        nonlocal jugador
         juego_actual = get_current_game()
         mano_actual = get_current_hand()
         #puntos_computadora = get_computer_points()

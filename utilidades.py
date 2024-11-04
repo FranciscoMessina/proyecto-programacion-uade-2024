@@ -27,8 +27,6 @@ def pedir_eleccion(opciones, limpiar_consola = False):
     :return: elección del usuario
     """
 
-    if limpiar_consola:
-        limpiar_terminal()
 
     for i in range(len(opciones)):
         # por cada una de las opciones recibidas, desempaquetamos el texto
@@ -37,6 +35,10 @@ def pedir_eleccion(opciones, limpiar_consola = False):
         print(f"{i + 1}) {texto} ")
 
     ingresado = input('\n').strip()
+
+
+    if limpiar_consola:
+        limpiar_terminal()
 
     # Verificamos que el input sea un numero
     if ingresado == "" or not ingresado.isdigit():
@@ -125,7 +127,7 @@ def imprimir_carta_ascii(carta):
     print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
 
 
-DEV = False #True
+DEV = True #True
 
 
 
@@ -136,8 +138,9 @@ def dev_print(*args, **kwargs):
     :param kwargs:
     :return:
     """
+
     if DEV:
-        print('(DEV-ONLY)', *args, **kwargs)
+        print(f'{Colores.PURPLE}(DEV-ONLY)', *args, f'{Colores.RESET}', **kwargs)
 
 
 def noop():

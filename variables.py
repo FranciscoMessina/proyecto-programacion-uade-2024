@@ -1,5 +1,6 @@
 from random import choice
 
+from utilidades import dev_print
 
 # En este archivo definimos variables, y funciones de utilidad para
 # acceder a ellas desde diferentes partes del código.
@@ -110,6 +111,45 @@ def envido_needs_answer():
         return False
 
     return envido['esperando']
+
+
+def next_play_by():
+    """
+    Funcion para determinar quien tiene que ser el proximo jugador en actuar en diferentes casos.
+    :return:
+    """
+    current_hand = get_current_hand()
+
+
+    if truco_needs_answer():
+        dev_print(f"TRUCO NECESITA RESPUESTA CANTADO POR {current_hand['truco']['cantado_por']}")
+        return USUARIO if current_hand['truco']['cantado_por'] == COMPUTADORA else COMPUTADORA
+
+    if envido_needs_answer():
+        dev_print(f"ENVIDO NECESITA RESPUESTA CANTADO POR {current_hand['envido']['cantado_por']}")
+        return USUARIO if current_hand['envido']['cantado_por'] == COMPUTADORA else COMPUTADORA
+
+    dev_print(f"NEXT PLAY BY")
+
+    current_round = get_current_round()
+    dev_print(current_round)
+
+    carta_usuario = current_round.get('carta_usuario')
+    carta_computadora = current_round.get('carta_computadora')
+
+    dev_print(f"Carta Usuario: {carta_usuario}")
+    dev_print(f"Carta Computadora: {carta_computadora}")
+
+    if carta_usuario is None and carta_computadora is None:
+        dev_print(f"NO HAY CARTAS JUGADAS")
+        return get_current_game()['siguiente_en_empezar']
+    elif carta_usuario is None:
+        return USUARIO
+    else:
+        return COMPUTADORA
+
+
+
 
 
 def get_current_hand():

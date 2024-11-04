@@ -133,7 +133,7 @@ def responder_a_truco():
             return rechazar_truco(COMPUTADORA)
     elif mano_actual['truco'].get('nivel') == 2:
         # Si se canto retruco
-        aceptar = choice([True, False])
+        aceptar = choice([True]) # True
         if aceptar:
             step_up = choice([True, False])
             if step_up:
