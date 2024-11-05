@@ -3,7 +3,7 @@ from computadora import actuar_computadora
 from ronda import determinar_ganador_ronda
 from envido import envido
 from utilidades import formatear_carta, noop, dev_print
-from variables import envido_cantado_por, envido_envido_cantado_por, envido_envido_rechazado_por, envido_puntos, envido_rechazado_por, falta_envido_cantado_por, falta_envido_rechazado_por, get_computer_cards, get_computer_points, get_current_game, get_current_hand, get_current_round, get_user_cards, is_last_action_in_round, add_action, USUARIO, COMPUTADORA, real_envido_cantado_por, real_envido_rechazado_por
+from variables import envido_cantado_por, envido_envido_cantado_por, envido_envido_rechazado_por, envido_puntos, envido_rechazado_por, falta_envido_cantado_por, falta_envido_rechazado_por, get_computer_cards, get_computer_points, get_current_game, get_current_hand, get_current_round, get_user_cards, is_last_action_in_round, add_action, USUARIO, COMPUTADORA, next_play_by, real_envido_cantado_por, real_envido_rechazado_por
 
 
 def jugar_carta(carta, jugador):
@@ -135,7 +135,6 @@ def rechazar_truco(jugador):
         mano_actual['truco'].update({
             "activo": False,
             "rechazado_por": jugador,
-            "nivel": mano_actual["truco"]["nivel"] - 1,
             "esperando": False
         })
 
