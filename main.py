@@ -2,6 +2,7 @@ from partido import nueva_partida
 from utilidades import Colores, pedir_eleccion
 from guardado import ver_historial
 
+
 def mensaje_bienvenida():
     """
     Imprime en terminal un mensaje de bienvenida e información del proyecto para el usuario

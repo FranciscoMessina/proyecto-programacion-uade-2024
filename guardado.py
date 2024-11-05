@@ -7,7 +7,7 @@ from datetime import datetime
 
 
 #Fecha actual
-now = datetime.now()
+
 
 
 def guardar_historial():
@@ -21,7 +21,6 @@ def guardar_historial():
         "puntos_computadora":get_computer_points(),
         "puntos_usuario":get_user_points(),
         "puntos_maximos":get_max_points(),
-
      })
 
     guardar_archivo("historial.json", historial)
@@ -38,14 +37,14 @@ def guardar_partida():
 def ver_historial():
     historial = abrir_archivo("historial.json")
 
+    fecha=datetime.now()
+
     if historial == False:
         print("no tenes historial aun")
 
     else:
         for index, partida in enumerate(historial):
-            print(f"{index}) A {partida["puntos_maximos"]} puntos \n Punto usuario: {partida["puntos_usuario"]}\n fecha:{now()}")
-            
-
+            print(f"La partida fue a {partida["puntos_maximos"]} puntos \n Puntos del usuario: {partida["puntos_usuario"]}\n Puntos de la computadora: {partida["puntos_computadora"]} \n fecha:{fecha.day}/{fecha.month}/{fecha.year}\n hora:{fecha.hour}:{fecha.minute} ")
 def guardar_archivo(nombre_archivo, datos):
     try:
         with open(nombre_archivo,"w") as archivo:
