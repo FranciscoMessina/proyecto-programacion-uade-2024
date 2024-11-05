@@ -1,62 +1,63 @@
+from datetime import date
 import json
-def guardar_partida(partida):
-    with open("guardar_partida.json",'w') as archivo:
+import time
+from variables import get_computer_points,get_user_points,get_max_points
+from datetime import date
+from datetime import datetime
 
 
-        json.dump(partida,archivo)
-#ejemplo de prueba
-partida = {'puntos':3, 'ganador':"usuario"}
-guardar_partida(partida)
-# #Se implementa mas adelante en el desarrollo
-# def hay_partida_guardada():
-#     try:
-#         with open('partida_guardada.json', 'r+') as archivo:
-#             if archivo:
-#                 return True
-#     except FileNotFoundError:
-#         return False
+#Fecha actual
+now = datetime.now()
 
 
-# def cargar_partida_guardada():
-#     with open('partida_guardada.json', 'r+') as archivo:
-#         if archivo:
-#             return json.load(archivo)
+def guardar_historial():
+
+    historial = abrir_archivo("historial.json")
+
+    if historial ==  False:
+        historial = []
+
+    historial.append({
+        "puntos_computadora":get_computer_points(),
+        "puntos_usuario":get_user_points(),
+        "puntos_maximos":get_max_points(),
+
+     })
+
+    guardar_archivo("historial.json", historial)
+
+def guardar_partida():
+
+    guardar_archivo("partida_guardada.json", {
+        "puntos_computadora":get_computer_points(),
+        "puntos_usuario":get_user_points(),
+        "puntos_maximos":get_max_points(),
+    })
 
 
-# def guardar_partida(partida):
-#     try:
-#         with open('partida_guardada.json', 'w') as archivo:
-#             json.dump(partida, archivo)
+def ver_historial():
+    historial = abrir_archivo("historial.json")
 
-#             return True
-#     except FileNotFoundError:
-#         return False
+    if historial == False:
+        print("no tenes historial aun")
 
-# # partido de historial
-# # {
-# # ganador: 'Computadora' o 'Jugador',
-# # puntos_jugador: int,
-# # puntos_computadora: int,
-# # fecha: str
-# # }
-# def buscar_historial():
-#     with open('historial.json', 'r+') as archivo:
-#         if archivo:
-#             return json.load(archivo)
+    else:
+        for index, partida in enumerate(historial):
+            print(f"{index}) A {partida["puntos_maximos"]} puntos \n Punto usuario: {partida["puntos_usuario"]}\n fecha:{now()}")
+            
 
+def guardar_archivo(nombre_archivo, datos):
+    try:
+        with open(nombre_archivo,"w") as archivo:
+            json.dump(datos, archivo)
+    except:
+        print("Error al guardar")
 
-
-# def guardar_partida_en_historial(partido):
-#     try:
-#         with open('historial.json', 'w') as archivo:
-#             json.dump(partido, archivo)
-
-#             return True
-#     except FileNotFoundError:
-#         return False
-
-# def mostrar_historial():
-#     pass
-
-
-# hay_partida_guardada()
+def abrir_archivo(nombre_archivo):
+    datos = None
+    try:
+        with open(nombre_archivo, "r") as archivo:
+            datos = json.load(archivo)
+            return datos
+    except FileNotFoundError:
+        return False

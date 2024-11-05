@@ -1,7 +1,7 @@
 from mano import jugar_mano
 from utilidades import pedir_eleccion
 from variables import init_game
-
+from guardado import guardar_historial
 
 def nueva_partida():
     """
@@ -28,6 +28,7 @@ def nueva_partida():
             continuar = False
             # Asignamos al ganador
             ganador = resultado['ganador']
+            guardar_historial()
 
     print(f"El ganador de la partida es {ganador}")
 
