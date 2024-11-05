@@ -1,5 +1,9 @@
 from mano import jugar_mano
 from utilidades import pedir_eleccion
+
+
+from guardado import guardar_historial
+
 from variables import init_game, reset_game
 
 
@@ -29,6 +33,7 @@ def nueva_partida():
             continuar = False
             # Asignamos al ganador
             ganador = resultado['ganador']
+            guardar_historial()
 
             # Reseteamos los datos de la partida para dejar
             # listo para iniciar una proxima partida.
