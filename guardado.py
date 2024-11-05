@@ -1,6 +1,8 @@
 import json
 def guardar_partida(partida):
     with open("guardar_partida.json",'w') as archivo:
+
+
         json.dump(partida,archivo)
 #ejemplo de prueba
 partida = {'puntos':3, 'ganador':"usuario"}

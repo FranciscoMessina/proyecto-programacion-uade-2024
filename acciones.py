@@ -1,4 +1,4 @@
-from acciones_usuario import pedir_accion_usuario
+from usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from ronda import determinar_ganador_ronda
 from envido import envido
@@ -41,7 +41,7 @@ def jugar_carta(carta, jugador):
             dev_print('LAST ACTION IN ROUND')
             add_action(determinar_ganador_ronda)
         else:
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -78,7 +78,7 @@ def cantar_truco(jugador, nivel):
 
         print(f"{jugador.capitalize()} canta {niveles_nombre[nivel]}")
 
-        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
     return _cantar_truco
@@ -112,7 +112,7 @@ def aceptar_truco(jugador):
             add_action(determinar_ganador_ronda)
         else:
             dev_print('NOT LAST ACTION IN TRUCO')
-            add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -135,6 +135,7 @@ def rechazar_truco(jugador):
         mano_actual['truco'].update({
             "activo": False,
             "rechazado_por": jugador,
+            "nivel": mano_actual["truco"]["nivel"] - 1,
             "esperando": False
         })
 
@@ -170,7 +171,7 @@ def cantar_envido(jugador):
 
         print(f"{jugador.capitalize()} canta envido")
 
-        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -204,7 +205,7 @@ def aceptar_envido(jugador):
 
         # aca falta agregar la accion para determinar el ganador del envido, y sumar los puntos correspondientes
         # add_action()
-        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -237,11 +238,11 @@ def rechazar_envido(jugador):
         print(f"{jugador.capitalize()} no quiere el envido")
 
         # aca falta agregar la accion para calcular los puntos en base a que nivel de envido estemos,
-        # y que se sumen a los puntos del jugador que lo habia cantado.
+        # y que se sumen a los puntos del jugador que lo había cantado.
         # add_action()
 
-        # Despues se deberia llamar a la accion para pedir la proxima accion del jugador o computadora
-        add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
+        # Después se deberia llamar a la accion para pedir la proxima accion del jugador o computadora
+        add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
 
@@ -266,11 +267,11 @@ def cantar_envido_envido(jugador):
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
-    
+
     return _cantar_envido_envido
 
 def aceptar_envido_envido(jugador):
-    
+
     def _aceptar_envido_envido():
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
@@ -293,7 +294,7 @@ def aceptar_envido_envido(jugador):
 
 
 def rechazar_envido_envido(jugador):
-    
+
     def _rechazar_envido_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
@@ -336,11 +337,11 @@ def cantar_real_envido(jugador):
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
-    
+
     return _cantar_real_envido
 
 def aceptar_real_envido(jugador):
-    
+
     def _aceptar_real_envido():
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
@@ -348,7 +349,7 @@ def aceptar_real_envido(jugador):
         envido_cantado = envido_cantado_por()
         if envido_cantado != None or envido_envido_cantado != None:
             puntos += 3
-        else: 
+        else:
             puntos += 2
 
         mano_actual['envido'].update({
@@ -369,7 +370,7 @@ def aceptar_real_envido(jugador):
 
 
 def rechazar_real_envido(jugador):
-    
+
     def _rechazar_real_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
@@ -407,11 +408,11 @@ def cantar_falta_envido(jugador):
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
         return noop
-    
+
     return _cantar_falta_envido
 
 def aceptar_falta_envido(jugador):
-    
+
     def _aceptar_falta_envido():
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
@@ -434,7 +435,7 @@ def aceptar_falta_envido(jugador):
 
 
 def rechazar_falta_envido(jugador):
-    
+
     def _rechazar_falta_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({

@@ -1,4 +1,4 @@
-from acciones_usuario import pedir_accion_usuario
+from usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco
 
@@ -8,11 +8,11 @@ from variables import get_user_points, get_max_points, get_computer_points, get_
 
 def jugar_mano():
     """
-    Juega una mano de truco, esta funcion es ejecutada las veces necesarias para llegar a los puntos maximos de la partida
+    Juega una mano de truco, esta función es ejecutada las veces necesarias para llegar a los puntos máximos de la partida
 
     :return:
     """
-    # Antes de comenzar una nueva mano se verifica si alguno de los jugadores llego a los puntos maximos,
+    # Antes de comenzar una nueva mano se verifica si alguno de los jugadores llego a los puntos máximos,
     # en ese caso se termina la partida
     max_points = get_max_points()
 
@@ -37,6 +37,9 @@ def jugar_mano():
     cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
 
 
+    # actualizamos que jugador empieza la mano
+    if partida["manos_jugadas"] != 0:
+        partida['siguiente_en_empezar'] = "usuario" if partida['siguiente_en_empezar'] == "computadora" else "computadora"
 
     # Se inicializa la mano actual, conas las cartas de cada jugador
     mano_actual = init_hand(cartas_usuario, cartas_computadora)
@@ -47,7 +50,7 @@ def jugar_mano():
     continuar = True
     numero_de_ronda = 1
     # Generalmente, las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
-    # por eso tenemos un while con una condicion de corte en 4 rondas y una bandera: continuar.
+    # por eso tenemos un while con una condición de corte en 4 rondas y una bandera: continuar.
     # Esta última puede ser modificada dentro de la ronda para darle un final temprano.
     while continuar and numero_de_ronda < 4:
         # Este es el inicio de una nueva ronda en la mano actual.
@@ -56,6 +59,12 @@ def jugar_mano():
             "ganador": None,
         })
 
+        # Aca reiniciamos las acciones de la mano, para iniciar la siguiente ronda.
+        # ¿Qué son las acciones? Son funciones que agregamos a esta lista y que se ejecutan en orden.
+        # Cada una de ellas es ejecutada y debe devolver otra función que se ejecutara cuando termine (noop)
+        # para no hacer nada.
+        # Si una acción no devuelve nada, se ejecuta la siguiente en la lista.
+        # Cuando no quedan más funciones en la lista, se termina la ronda.
         mano_actual['acciones'] = []
 
         # Guardamos en una variable de utilidad la ronda anterior para acceder más fácilmente a ella.
@@ -63,9 +72,11 @@ def jugar_mano():
         ronda_anterior = get_previous_round()
 
         if ronda_anterior.get('ganador') == 'computadora':
+            # Si tiene que empezar la computadora, agregamos la acción de actuar_computadora a la lista de acciones.
             add_action(actuar_computadora)
 
         if ronda_anterior.get('ganador') == 'usuario':
+            # Si tiene que empezar el usuario, agregamos la acción de pedir_accion_usuario a la lista de acciones.
             add_action(pedir_accion_usuario)
 
         if ronda_anterior == {} or ronda_anterior.get('ganador') == 'empate':
@@ -74,6 +85,10 @@ def jugar_mano():
             else:
                 add_action(actuar_computadora)
 
+        # Acá ejecutamos las acciones, es simplemente una iteración por la lista de acciones.
+        # Al ejecutar cada acción, llamamos a la función que devuelve.
+        # Muchas de las acciones agregan otra función a la lista durante su ejecución.
+        # Una vez que no quedan más acciones en la lista se termina la ronda.
         for idx, action in enumerate(mano_actual['acciones']):
             result = action()
             result()
@@ -99,6 +114,10 @@ def jugar_mano():
 
 
 def imprimir_puntos():
+    """
+    Imprime en consola los puntos de cada jugador.
+    :return:
+    """
     puntos_usuario = get_user_points()
     puntos_computadora = get_computer_points()
     # Imprime un gráfico que muestra los puntos de cada jugador
@@ -132,13 +151,13 @@ def determinar_puntos_ganador():
 
 def determinar_ganador_de_la_mano():
     """
-    Funcion para determinar quien gano la mano basándose en las rondas jugadas.
+    Función para determinar quien gano la mano basándose en las rondas jugadas.
 
     :return: Str: "usuario" | "computadora"
     """
     mano_actual = get_current_hand()
 
-    # Si se cantó truco, y fue rechazado, automatica gana el que lo canto
+    # Si se cantó truco, y fue rechazado, automáticamente gana el que lo canto
     if mano_actual['truco'].get('rechazado_por') is not None:
         return mano_actual['truco']['cantado_por']
 

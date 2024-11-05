@@ -1,3 +1,4 @@
+import random
 from random import choice
 
 from envido import calcular_envido
@@ -69,7 +70,7 @@ def actuar_computadora():
 
 def responder_a_carta():
     """
-    Determina con que carta responder a una carta jugada por el usuario la computadora
+    Determina con qué carta responder a una carta jugada por el usuario la computadora
 
     :return:
     """
@@ -88,7 +89,7 @@ def responder_a_carta():
 
     # TODO: falta manejar caso de carta empardadora
 
-    # Si no tiene cartas que le ganen juega la carta mas baja que tenga ( su mano esta ordenada de menor a mayor poder)
+    # Si no tiene cartas que le ganen juega la carta más baja que tenga (su mano está ordenada de menor a mayor poder)
     return jugar_carta(cartas_computadora[0], COMPUTADORA)
 
 
@@ -98,6 +99,7 @@ def responder_a_envido():
 
     :return:
     """
+    from acciones import aceptar_envido, rechazar_envido
 
    # mano_actual = get_current_hand()
     if real_envido_needs_answer():
@@ -134,7 +136,7 @@ def responder_a_envido():
                 if elegir2:
                     from acciones import cantar_envido_envido
                     return cantar_envido_envido(COMPUTADORA)
-                else: 
+                else:
                     from acciones import cantar_real_envido
                     return cantar_real_envido(COMPUTADORA)
             else:
@@ -148,32 +150,40 @@ def responder_a_envido():
 
 
 def responder_a_truco():
-    from acciones import aceptar_truco, rechazar_truco
-
     """
     Determina como responde la computadora a un truco cantado por el usuario
 
-    :return:
+    :return: Function
     """
+    from acciones import aceptar_truco, rechazar_truco
+    from acciones import cantar_truco
 
     mano_actual = get_current_hand()
 
     if mano_actual['truco'].get('nivel') == 1:
-        # Si se canto truco, la computadora decide si aceptar o no
+        # Si se canto truco
         aceptar = choice([True, False])
         if aceptar:
-            return aceptar_truco(COMPUTADORA)
+            step_up = choice([True, False])
+            if step_up:
+                return cantar_truco(COMPUTADORA, 2)
+            else:
+                return aceptar_truco(COMPUTADORA)
         else:
             return rechazar_truco(COMPUTADORA)
     elif mano_actual['truco'].get('nivel') == 2:
-        # Si se canto truco, la computadora decide si aceptar o no
-        aceptar = choice([True, False])
+        # Si se canto retruco
+        aceptar = choice([True]) # True
         if aceptar:
-            return aceptar_truco(COMPUTADORA)
+            step_up = choice([True, False])
+            if step_up:
+                return cantar_truco(COMPUTADORA, 3)
+            else:
+                return aceptar_truco(COMPUTADORA)
         else:
             return rechazar_truco(COMPUTADORA)
     elif mano_actual['truco'].get('nivel') == 3:
-        # Si se canto truco, la computadora decide si aceptar o no
+        # Si se canto vale cuatro
         aceptar = choice([True, False])
         if aceptar:
             return aceptar_truco(COMPUTADORA)
