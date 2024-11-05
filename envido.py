@@ -1,5 +1,5 @@
 from mazo import obtener_numero
-from variables import COMPUTADORA, USUARIO, get_computer_cards, get_current_hand, get_current_game, get_current_round, get_user_cards
+from variables import COMPUTADORA, USUARIO, envido_puntos, get_computer_cards, get_current_hand, get_current_game, get_current_round, get_user_cards
 
 
 def calcular_envido(mano):
@@ -50,6 +50,8 @@ def envido(jugador):
     envido_usuario = calcular_envido(cartas_usuario)
     envido_compu = calcular_envido(cartas_computadora)
 
+    # En estos casos alguno de los jugadores ya jugó una carta,
+    # por lo que hay que agregarla a la mano para calcular él envido.
     if len(cartas_usuario) == 2:
         carta_jugada = get_current_round().get('carta_usuario')
         cartas_usuario.append(carta_jugada)
@@ -64,21 +66,23 @@ def envido(jugador):
 
     partida_actual = get_current_game()
 
+    puntos = envido_puntos()
+
     if jugador == USUARIO:
         if envido_usuario > envido_compu:
-            print(f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, GANASTE 2 PUNTOS")
-            partida_actual['puntos']['usuario'] += 2
+            print(f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, GANASTE {puntos} PUNTOS")
+            partida_actual['puntos']['usuario'] += puntos
         elif envido_compu > envido_usuario:
             print(
-                f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, LA COMPUTADORA GANA 2 PUNTOS")
-            partida_actual['puntos']['computadora'] += 2
+                f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, LA COMPUTADORA GANA {puntos} PUNTOS")
+            partida_actual['puntos']['computadora'] += puntos
     elif jugador == COMPUTADORA:
         if envido_compu > envido_usuario:
-            print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANA 2 PUNTOS")
-            partida_actual['puntos']['computadora'] += 2
+            print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANA {puntos} PUNTOS")
+            partida_actual['puntos']['computadora'] += puntos
         elif envido_usuario > envido_compu:
-            print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANASTE 2 PUNTOS")
-            partida_actual['puntos']['usuario'] += 2
+            print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANASTE {puntos} PUNTOS")
+            partida_actual['puntos']['usuario'] += puntos
     return partida_actual
 
 
