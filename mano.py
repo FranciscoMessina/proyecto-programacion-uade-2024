@@ -2,6 +2,7 @@ from usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco
 
+from utilidades import dev_print
 from variables import get_user_points, get_max_points, get_computer_points, get_current_game, \
     get_previous_round, add_action, init_hand, get_current_hand
 
@@ -142,9 +143,14 @@ def determinar_puntos_ganador():
     # Siempre se suma al menos 1 punto por ganar la mano
     puntos = 1
 
-    if truco['activo']:
-        # Si hubiese truco, se suman los puntos correspondientes al nivel del truco
+    if truco.get('rechazado_por'): 
+        puntos += truco['nivel'] - 1
+        dev_print("truco nivel:", truco['nivel'])
+
+    else:
+    # Si hubiese truco, se suman los puntos correspondientes al nivel del truco
         puntos += truco['nivel']
+        dev_print("truco nivel:", truco['nivel'])
 
     return puntos
 
