@@ -1,5 +1,6 @@
 from partido import nueva_partida
 from utilidades import Colores, pedir_eleccion
+from guardado import ver_historial
 
 
 def mensaje_bienvenida():
@@ -61,7 +62,8 @@ def jugar_al_truco():
 
         respuesta = pedir_eleccion([
             ['Comenzar nueva partida', nueva_partida],
-            ['Salir del programa', cerrar_programa]
+            ['Salir del programa', cerrar_programa],
+            ['ver historial',ver_historial],
         ], True)
 
         respuesta()
