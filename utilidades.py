@@ -1,15 +1,19 @@
 import os
-import random
 
 from mazo import obtener_palo, obtener_numero
 
 
 # Deja mas prolija la terminal para empezar a jugar
 def limpiar_terminal():
+    """
+    Función de utilidad para limpiar la terminal.
+
+    :return:
+    """
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def pedir_eleccion(opciones, limpiar_consola=False):
+def pedir_eleccion(opciones, limpiar_consola = False):
     """
     Función de utilidad para pedir input al usuario, recibe una lista con las opciones a mostrar y devuelve la elección del usuario.
     Cada elemento de la lista es otra lista con el siguiente formato: [texto, valor].
@@ -18,16 +22,19 @@ def pedir_eleccion(opciones, limpiar_consola=False):
     También se encarga de validar que la elección del usuario.
 
     :param opciones: Lista con las opciones a mostrar
+    :param limpiar_consola: Booleano que indica si se debe limpiar la consola antes de mostrar las opciones
     :return: elección del usuario
     """
 
+
     for i in range(len(opciones)):
-        # por cada una de las opciones recibidas, desempaquetamos el texto y el valor
+        # por cada una de las opciones recibidas, desempaquetamos el texto
         texto, _ = opciones[i]
 
         print(f"{i + 1}) {texto} ")
 
     ingresado = input('\n').strip()
+
 
     if limpiar_consola:
         limpiar_terminal()
@@ -43,12 +50,12 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     # Si la elección está fuera de rango, la volvemos a pedir.
     if eleccion < 1 or eleccion > opciones_disponibles:
-        print(f"{Colores.RED}{Colores.BOLD}Eleccion invalida. {Colores.RESET}\n")
+        print(f"{Colores.RED}{Colores.BOLD}Elección invalida. {Colores.RESET}\n")
         return pedir_eleccion(opciones)
 
-    else:
-        # Devolvemos el valor asignado a la elección
-        return opciones[eleccion - 1][1]
+
+    # Devolvemos el valor asignado a la elección
+    return opciones[eleccion - 1][1]
 
 
 # Sé que no se supone que usemos clases, pero es una forma más
@@ -119,7 +126,7 @@ def imprimir_carta_ascii(carta):
     print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
 
 
-DEV = False #True
+DEV = True #True
 
 
 
@@ -130,8 +137,9 @@ def dev_print(*args, **kwargs):
     :param kwargs:
     :return:
     """
+
     if DEV:
-        print('(DEV-ONLY)', *args, **kwargs)
+        print(f'{Colores.PURPLE}(DEV-ONLY)', *args, f'{Colores.RESET}', **kwargs)
 
 
 def noop():
