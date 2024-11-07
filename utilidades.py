@@ -126,7 +126,7 @@ def imprimir_carta_ascii(carta):
     print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
 
 
-DEV = True #True
+DEV = False #True
 
 
 
