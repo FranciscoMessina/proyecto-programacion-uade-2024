@@ -2,8 +2,7 @@ from envido import calcular_envido
 
 from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print
 from variables import envido_cantado_por, envido_envido_needs_answer, falta_envido_cantado_por, falta_envido_needs_answer, \
-get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, real_envido_cantado_por, \ 
-real_envido_needs_answer, truco_needs_answer
+get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, real_envido_cantado_por, real_envido_needs_answer, truco_needs_answer
 
 
 def pedir_accion_usuario():
