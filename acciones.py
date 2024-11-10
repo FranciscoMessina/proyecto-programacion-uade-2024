@@ -2,7 +2,7 @@ from usuario import pedir_accion_usuario
 from computadora import actuar_computadora
 from ronda import determinar_ganador_ronda
 from envido import envido
-from utilidades import formatear_carta, noop, dev_print
+from utilidades import formatear_carta, noop, dev_print, player_color, Colores
 from variables import envido_cantado_por, envido_envido_cantado_por, envido_envido_rechazado_por, envido_puntos, \
     envido_rechazado_por, falta_envido_cantado_por, falta_envido_rechazado_por, get_computer_cards, get_computer_points, \
     get_current_game, get_current_hand, get_current_round, get_user_cards, is_last_action_in_round, add_action, USUARIO, \
@@ -38,7 +38,7 @@ def jugar_carta(carta, jugador):
                 "carta_computadora": carta,
             })
 
-        print(f"{jugador.capitalize()} jugo {formatear_carta(carta)}")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Juego {formatear_carta(carta)}")
 
         if is_last_action_in_round():
             dev_print('LAST ACTION IN ROUND')
@@ -51,6 +51,13 @@ def jugar_carta(carta, jugador):
     return _jugar_carta
 
 
+niveles_nombre_truco = {
+    1: "Truco",
+    2: "Retruco",
+    3: "Vale Cuatro"
+}
+
+
 def cantar_truco(jugador, nivel):
     """
     Funcion que se llama para cantar truco, crea y devuelve una funcion que al ser llamada
@@ -59,12 +66,6 @@ def cantar_truco(jugador, nivel):
     :param jugador: Jugador que va a cantar el truco
     :return:
     """
-
-    niveles_nombre = {
-        1: "Truco",
-        2: "Retruco",
-        3: "Vale Cuatro"
-    }
 
     dev_print('Cantar Truco Builder')
 
@@ -79,13 +80,13 @@ def cantar_truco(jugador, nivel):
 
         dev_print('Cantar Truco Execution')
 
-        print(f"{jugador.capitalize()} canta {niveles_nombre[nivel]}")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: {niveles_nombre_truco[nivel]}!")
 
         add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
         return noop
+
     return _cantar_truco
-    
 
 
 def aceptar_truco(jugador):
@@ -108,7 +109,8 @@ def aceptar_truco(jugador):
 
         dev_print('Aceptar Truco Execution')
 
-        print(f"{jugador.capitalize()} quiere el truco")
+        print(
+            f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Quiero! ({niveles_nombre_truco[mano_actual['truco']['nivel']]})")
 
         if is_last_action_in_round():
             dev_print('LAST ACTION IN TRUCO')
@@ -138,7 +140,6 @@ def rechazar_truco(jugador):
         mano_actual['truco'].update({
             "activo": False,
             "rechazado_por": jugador,
-            "nivel": mano_actual["truco"]["nivel"] - 1,
             "esperando": False
         })
 
@@ -147,7 +148,8 @@ def rechazar_truco(jugador):
         # Todo averiguar porque sale del ciclo
         # de rondas cuando se rechaza el truco
         # es lo que tiene que hacer pero no se porque
-        print(f"{jugador.capitalize()} no quiere el truco")
+        print(
+            f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: No quiero! ({niveles_nombre_truco[mano_actual['truco']['nivel']]})")
 
         return noop
 
@@ -175,7 +177,7 @@ def cantar_envido(jugador):
 
         dev_print('Cantar Envido Execution')
 
-        print(f"{jugador.capitalize()} canta envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Envido!")
 
         add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 
@@ -207,7 +209,7 @@ def aceptar_envido(jugador):
 
         dev_print('Aceptar Envido Execution')
 
-        print(f"{jugador.capitalize()} acepta el envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Quiero! (Envido)")
 
         # aca falta agregar la accion para determinar el ganador del envido, y sumar los puntos correspondientes
         # add_action()
@@ -241,7 +243,7 @@ def rechazar_envido(jugador):
 
         dev_print('Rechazar Envido Execution')
 
-        print(f"{jugador.capitalize()} no quiere el envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: No quiero! (Envido)")
 
         # aca falta agregar la accion para calcular los puntos en base a que nivel de envido estemos,
         # y que se sumen a los puntos del jugador que lo había cantado.
@@ -254,10 +256,9 @@ def rechazar_envido(jugador):
 
     return _rechazar_envido
 
+
 def cantar_envido_envido(jugador):
-
     def _cantar_envido_envido():
-
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
         puntos += 1
@@ -268,7 +269,7 @@ def cantar_envido_envido(jugador):
             "esperando": False
         })
 
-        print(f"{jugador.capitalize()} canta envido envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Envido Envido!")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -276,8 +277,8 @@ def cantar_envido_envido(jugador):
 
     return _cantar_envido_envido
 
-def aceptar_envido_envido(jugador):
 
+def aceptar_envido_envido(jugador):
     def _aceptar_envido_envido():
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
@@ -290,7 +291,7 @@ def aceptar_envido_envido(jugador):
 
         add_action(sumar_puntos_envido(jugador))
 
-        print(f"{jugador.capitalize()} acepta el envido envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Quiero! (Envido Envido)")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -300,7 +301,6 @@ def aceptar_envido_envido(jugador):
 
 
 def rechazar_envido_envido(jugador):
-
     def _rechazar_envido_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
@@ -310,8 +310,7 @@ def rechazar_envido_envido(jugador):
 
         add_action(sumar_puntos_envido(jugador))
 
-
-        print(f"{jugador.capitalize()} no quiere el envido envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: No quiero! (Envido Envido)")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -319,8 +318,8 @@ def rechazar_envido_envido(jugador):
 
     return _rechazar_envido_envido
 
-def cantar_real_envido(jugador):
 
+def cantar_real_envido(jugador):
     def _cantar_real_envido():
 
         mano_actual = get_current_hand()
@@ -338,7 +337,7 @@ def cantar_real_envido(jugador):
             "envido_envido_esperando": False
         })
 
-        print(f"{jugador.capitalize()} canta real envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Real Envido!")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -346,8 +345,8 @@ def cantar_real_envido(jugador):
 
     return _cantar_real_envido
 
-def aceptar_real_envido(jugador):
 
+def aceptar_real_envido(jugador):
     def _aceptar_real_envido():
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
@@ -366,7 +365,7 @@ def aceptar_real_envido(jugador):
 
         add_action(sumar_puntos_envido(jugador))
 
-        print(f"{jugador.capitalize()} acepta el real envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Quiero! (Real Envido)")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -376,7 +375,6 @@ def aceptar_real_envido(jugador):
 
 
 def rechazar_real_envido(jugador):
-
     def _rechazar_real_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
@@ -386,8 +384,7 @@ def rechazar_real_envido(jugador):
 
         add_action(sumar_puntos_envido(jugador))
 
-
-        print(f"{jugador.capitalize()} no quiere el real envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: No quiero! (Real Envido)")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -395,10 +392,9 @@ def rechazar_real_envido(jugador):
 
     return _rechazar_real_envido
 
+
 def cantar_falta_envido(jugador):
-
     def _cantar_falta_envido():
-
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
         puntos += 1
@@ -409,7 +405,7 @@ def cantar_falta_envido(jugador):
             "esperando": False
         })
 
-        print(f"{jugador.capitalize()} canta envido envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Falta Envido!")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -417,8 +413,8 @@ def cantar_falta_envido(jugador):
 
     return _cantar_falta_envido
 
-def aceptar_falta_envido(jugador):
 
+def aceptar_falta_envido(jugador):
     def _aceptar_falta_envido():
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
@@ -431,7 +427,7 @@ def aceptar_falta_envido(jugador):
 
         add_action(sumar_puntos_envido(jugador))
 
-        print(f"{jugador.capitalize()} acepta el envido envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Quiero! (Falta Envido)")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -441,7 +437,6 @@ def aceptar_falta_envido(jugador):
 
 
 def rechazar_falta_envido(jugador):
-
     def _rechazar_falta_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
@@ -451,8 +446,7 @@ def rechazar_falta_envido(jugador):
 
         add_action(sumar_puntos_envido(jugador))
 
-
-        print(f"{jugador.capitalize()} no quiere el envido envido")
+        print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: No quiero! (Falta Envido)")
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -460,9 +454,8 @@ def rechazar_falta_envido(jugador):
 
     return _rechazar_falta_envido
 
+
 def sumar_puntos_envido(jugador):
-  
-    
     def _sumar_puntos():
         juego_actual = get_current_game()
         envido_rechazado = envido_rechazado_por()
@@ -474,8 +467,8 @@ def sumar_puntos_envido(jugador):
         real_envido_cantado = real_envido_cantado_por()
         falta_envido_cantado = falta_envido_cantado_por()
         puntos = envido_puntos()
-        #puntos_computadora = get_computer_points()
-        #puntos_usuario = get_computer_points()
+        # puntos_computadora = get_computer_points()
+        # puntos_usuario = get_computer_points()
 
         if real_envido_rechazado != None:
             if real_envido_rechazado == jugador and jugador == USUARIO:
@@ -506,5 +499,5 @@ def sumar_puntos_envido(jugador):
             envido(COMPUTADORA)
 
         return noop
-    
+
     return _sumar_puntos
