@@ -68,21 +68,24 @@ def envido(jugador):
 
     puntos = envido_puntos()
 
-    if jugador == USUARIO:
-        if envido_usuario > envido_compu:
-            print(f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, GANASTE {puntos} PUNTOS")
-            partida_actual['puntos']['usuario'] += puntos
-        elif envido_compu > envido_usuario:
-            print(
-                f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, LA COMPUTADORA GANA {puntos} PUNTOS")
-            partida_actual['puntos']['computadora'] += puntos
-    elif jugador == COMPUTADORA:
-        if envido_compu > envido_usuario:
-            print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANA {puntos} PUNTOS")
-            partida_actual['puntos']['computadora'] += puntos
-        elif envido_usuario > envido_compu:
-            print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANASTE {puntos} PUNTOS")
-            partida_actual['puntos']['usuario'] += puntos
+    #if jugador == USUARIO:
+    if envido_usuario > envido_compu:
+        if puntos == 0:
+            puntos = partida_actual['puntos_maximos'] - partida_actual['puntos']['computadora']
+        print(f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, GANASTE {puntos} PUNTOS")
+        partida_actual['puntos']['usuario'] += puntos
+    elif envido_compu > envido_usuario:
+        if puntos == 0:
+            puntos = partida_actual['puntos_maximos'] - partida_actual['puntos']['usuario']
+        print(f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, LA COMPUTADORA GANA {puntos} PUNTOS")
+        partida_actual['puntos']['computadora'] += puntos
+    #elif jugador == COMPUTADORA:
+    #    if envido_compu > envido_usuario:
+    #        print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANA {puntos} PUNTOS")
+    #        partida_actual['puntos']['computadora'] += puntos
+    #    elif envido_usuario > envido_compu:
+    #        print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANASTE {puntos} PUNTOS")
+    #        partida_actual['puntos']['usuario'] += puntos
     return partida_actual
 
 

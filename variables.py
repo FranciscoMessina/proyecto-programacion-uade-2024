@@ -73,7 +73,6 @@ def init_hand(user_cards, computer_cards):
             "rechazado_por": None,
             "esperando": False,
             "puntos": 0,
-            'cantos': ["envido", ""],
             "envido_envido": False,
             "envido_envido_cantado_por": None,
             "envido_envido_rechazado_por": None,

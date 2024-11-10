@@ -1,11 +1,13 @@
 from envido import calcular_envido
 
 from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print
-from variables import envido_envido_needs_answer, get_current_hand, get_user_cards, is_first_round, USUARIO, \
-    COMPUTADORA, envido_needs_answer, real_envido_needs_answer, truco_needs_answer
+from variables import envido_cantado_por, envido_envido_needs_answer, falta_envido_cantado_por, falta_envido_needs_answer, \
+get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, real_envido_cantado_por, \ 
+real_envido_needs_answer, truco_needs_answer
 
 
 def pedir_accion_usuario():
+
     """
     Muestra al usuario las acciones disponibles y le pide que elija una de ellas
 
@@ -15,9 +17,9 @@ def pedir_accion_usuario():
     # dependencias circulares, como en los archivos de acciones.py se importan funciones de este archivo, y en este se importan funciones de acciones.py
     # entonces si importamos al inicio del archivo, se importan antes de que se definan las funciones, y da error.
     # Pero al importarlo dentro de la funcion (asumo que), se importan recien cuando se ejecuta la funcion, y ahi ya estan definidas las otras funciones
-    from acciones import cantar_truco, cantar_envido, cantar_real_envido, aceptar_truco, rechazar_truco, aceptar_envido, \
+    from acciones import cantar_truco, cantar_envido, cantar_real_envido, cantar_falta_envido, aceptar_truco, rechazar_truco, aceptar_envido, \
         rechazar_envido, jugar_carta, aceptar_real_envido, aceptar_envido_envido, \
-        rechazar_envido_envido, rechazar_real_envido, cantar_envido_envido
+        rechazar_envido_envido, rechazar_real_envido, cantar_envido_envido, aceptar_falta_envido, rechazar_falta_envido
     dev_print("Inicio Pedir Accion Usuario")
 
     opciones = []
@@ -26,13 +28,22 @@ def pedir_accion_usuario():
     cartas = get_user_cards()
     puntos_envido = calcular_envido(cartas)
 
-    if real_envido_needs_answer():
+    if falta_envido_needs_answer():
+        print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
+        
+        dev_print('AU- Responder a falta envido')
+        
+        opciones.append(["Quiero", aceptar_falta_envido(USUARIO)])
+        opciones.append(["No quiero", rechazar_falta_envido(USUARIO)])
+
+    elif real_envido_needs_answer():
         print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
 
         dev_print('AU- Responder a real envido')
 
         opciones.append(["Quiero", aceptar_real_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_real_envido(USUARIO)])
+        opciones.append(["Cantar falta envido", cantar_falta_envido(USUARIO)])
 
     elif envido_envido_needs_answer():
         print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
@@ -52,6 +63,7 @@ def pedir_accion_usuario():
         opciones.append(["No quiero", rechazar_envido(USUARIO)])
         opciones.append(["Cantar envido envido", cantar_envido_envido(USUARIO)])
         opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
+        opciones.append(["Cantar falta envido", cantar_falta_envido(USUARIO)])
 
     elif truco_needs_answer():
         dev_print('AU- Responder a truco')
@@ -82,10 +94,14 @@ def pedir_accion_usuario():
 
         if is_first_round():
             print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
-            if mano_actual['envido'].get("activo") is False and mano_actual['envido'].get("cantado_por") is None and \
-                    mano_actual['envido'].get("real_envido_cantado_por") is None:
+
+            if mano_actual['envido'].get("activo") is False and envido_cantado_por() is None and \
+            real_envido_cantado_por() is None and falta_envido_cantado_por() is None:
+
+
                 opciones.append(["Cantar envido", cantar_envido(USUARIO)])
                 opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
+                opciones.append(["Cantar falta envido", cantar_falta_envido(USUARIO)])
 
     return pedir_eleccion(opciones)
 

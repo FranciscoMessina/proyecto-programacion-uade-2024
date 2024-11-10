@@ -397,15 +397,25 @@ def cantar_falta_envido(jugador):
     def _cantar_falta_envido():
         mano_actual = get_current_hand()
         puntos = mano_actual['envido']['puntos']
-        puntos += 1
+        envido_cantado = envido_cantado_por()
+        real_envido_cantado = real_envido_cantado_por()
+        if real_envido_cantado != None and envido_cantado != None:
+            puntos += 3
+        elif real_envido_cantado != None:
+            puntos += 2
+        else:
+            puntos += 1
         mano_actual['envido'].update({
-            "envido_envido_cantado_por": jugador,
-            "envido_envido_esperando": True,
+            "falta_envido_cantado_por": jugador,
+            "falta_envido_esperando": True,
             "puntos": puntos,
-            "esperando": False
+            "esperando": False,
+            "envido_envido_esperando": False,
+            "real_envido_esperando": False
         })
 
         print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Falta Envido!")
+
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -417,17 +427,16 @@ def cantar_falta_envido(jugador):
 def aceptar_falta_envido(jugador):
     def _aceptar_falta_envido():
         mano_actual = get_current_hand()
-        puntos = mano_actual['envido']['puntos']
-        puntos += 2
         mano_actual['envido'].update({
-            "envido_envido": True,
-            "envido_envido_esperando": False,
-            "puntos": puntos
+            "falta_envido": True,
+            "falta_envido_esperando": False,
+            "puntos": 0,
         })
 
         add_action(sumar_puntos_envido(jugador))
 
         print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: Quiero! (Falta Envido)")
+
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -440,13 +449,14 @@ def rechazar_falta_envido(jugador):
     def _rechazar_falta_envido():
         mano_actual = get_current_hand()
         mano_actual['envido'].update({
-            "envido_envido_rechazado_por": jugador,
-            "envido_envido_esperando": False
+            "falta_envido_rechazado_por": jugador,
+            "falta_envido_esperando": False
         })
 
         add_action(sumar_puntos_envido(jugador))
 
         print(f"{player_color[jugador]}{jugador.capitalize()}{Colores.RESET}: No quiero! (Falta Envido)")
+
 
         add_action(pedir_accion_usuario if jugador == COMPUTADORA else actuar_computadora)
 
@@ -467,10 +477,14 @@ def sumar_puntos_envido(jugador):
         real_envido_cantado = real_envido_cantado_por()
         falta_envido_cantado = falta_envido_cantado_por()
         puntos = envido_puntos()
-        # puntos_computadora = get_computer_points()
-        # puntos_usuario = get_computer_points()
-
-        if real_envido_rechazado != None:
+        #puntos_computadora = get_computer_points()
+        #puntos_usuario = get_computer_points()
+        if falta_envido_rechazado != None:
+            if falta_envido_rechazado == jugador and jugador == USUARIO:
+                juego_actual['puntos']['computadora'] += puntos
+            else:
+                juego_actual['puntos']['usuario'] += puntos
+        elif real_envido_rechazado != None:
             if real_envido_rechazado == jugador and jugador == USUARIO:
                 juego_actual['puntos']['computadora'] += puntos
             else:
@@ -485,18 +499,26 @@ def sumar_puntos_envido(jugador):
                 juego_actual['puntos']['computadora'] += puntos
             else:
                 juego_actual['puntos']['usuario'] += puntos
-        elif real_envido_cantado == USUARIO:
-            envido(USUARIO)
-        elif real_envido_cantado == COMPUTADORA:
-            envido(COMPUTADORA)
-        elif envido_envido_cantado == USUARIO:
-            envido(USUARIO)
-        elif envido_envido_cantado == COMPUTADORA:
-            envido(COMPUTADORA)
-        elif envido_cantado == USUARIO:
-            envido(USUARIO)
-        elif envido_cantado == COMPUTADORA:
-            envido(COMPUTADORA)
+        elif falta_envido_cantado != None:
+            if falta_envido_cantado == jugador and jugador == USUARIO:
+                envido(USUARIO)
+            else:
+                envido(COMPUTADORA)
+        elif real_envido_cantado != None:
+            if real_envido_cantado == jugador and jugador == USUARIO:
+                envido(USUARIO)
+            else:
+                envido(COMPUTADORA)
+        elif envido_envido_cantado != None:
+            if envido_envido_cantado == jugador and jugador == USUARIO:
+                envido(USUARIO)
+            else:
+                envido(COMPUTADORA)
+        elif envido_cantado != None:
+            if envido_cantado == jugador and jugador == USUARIO:
+                envido(USUARIO)
+            else:
+                envido(COMPUTADORA)
 
         return noop
 
