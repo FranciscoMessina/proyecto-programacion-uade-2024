@@ -1,5 +1,6 @@
+from historial import ver_historial
 from partido import nueva_partida
-from utilidades import Colores, pedir_eleccion
+from utilidades import Colores, pedir_eleccion, dev_print
 
 
 def mensaje_bienvenida():
@@ -57,15 +58,16 @@ def jugar_al_truco():
         continuar = False
 
     while continuar:
-        print('Elegi una de las opciones: \n'.center(65))
+        print(f'{Colores.UNDERLINE}Elegi una de las opciones:{Colores.RESET}\n')
+        dev_print("MODO DEBUG ACTIVADO: para desactivar, cambiar la variable DEV a False en utilidades.py")
 
         respuesta = pedir_eleccion([
             ['Comenzar nueva partida', nueva_partida],
-            ['Salir del programa', cerrar_programa]
+            ['Salir del programa', cerrar_programa],
+            ['Ver historial', ver_historial],
         ], True)
 
         respuesta()
-
 
 
 jugar_al_truco()

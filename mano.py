@@ -1,12 +1,13 @@
-from usuario import pedir_accion_usuario
+from usuario import pedir_accion_usuario, mostrar_mano_usuario
 from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco
 
+from utilidades import dev_print
 from variables import get_user_points, get_max_points, get_computer_points, get_current_game, \
-    get_previous_round, add_action, init_hand, get_current_hand
+    get_previous_round, add_action, init_hand, get_current_hand, COMPUTADORA, USUARIO
 
 
-def jugar_mano():
+def jugar_mano(terminar_partida):
     """
     Juega una mano de truco, esta función es ejecutada las veces necesarias para llegar a los puntos máximos de la partida
 
@@ -17,32 +18,30 @@ def jugar_mano():
     max_points = get_max_points()
 
     if get_user_points() >= max_points:
-        return {
-            "accion": "terminar_partida",
-            "ganador": "usuario"
-        }
+        return terminar_partida(USUARIO)
 
     elif get_computer_points() >= max_points:
-        return {
-            "accion": "terminar_partida",
-            "ganador": "computadora"
-        }
+        return terminar_partida(COMPUTADORA)
 
     # Aca empieza una nueva mano.
+    print("\n\n")
     print(f"Iniciando una nueva mano".center(60, "-"))
+    print("\n\n")
 
     partida = get_current_game()
 
     # Se reparten las cartas a cada jugadora
     cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
 
-
     # actualizamos que jugador empieza la mano
     if partida["manos_jugadas"] != 0:
-        partida['siguiente_en_empezar'] = "usuario" if partida['siguiente_en_empezar'] == "computadora" else "computadora"
+        partida['siguiente_en_empezar'] = USUARIO if partida['siguiente_en_empezar'] == COMPUTADORA \
+            else COMPUTADORA
 
-    # Se inicializa la mano actual, conas las cartas de cada jugador
+    # Se inicializa la mano actual, con las cartas de cada jugador
     mano_actual = init_hand(cartas_usuario, cartas_computadora)
+
+    mostrar_mano_usuario()
 
     # Se incrementa la cantidad de manos jugadas
     partida['manos_jugadas'] += 1
@@ -61,9 +60,8 @@ def jugar_mano():
 
         # Aca reiniciamos las acciones de la mano, para iniciar la siguiente ronda.
         # ¿Qué son las acciones? Son funciones que agregamos a esta lista y que se ejecutan en orden.
-        # Cada una de ellas es ejecutada y debe devolver otra función que se ejecutara cuando termine (noop)
-        # para no hacer nada.
-        # Si una acción no devuelve nada, se ejecuta la siguiente en la lista.
+        # Cada una de ellas es ejecutada y debe devolver otra función que se ejecutara cuando termine.
+        # (noop) puede devolverse para no hacer nada.
         # Cuando no quedan más funciones en la lista, se termina la ronda.
         mano_actual['acciones'] = []
 
@@ -71,16 +69,16 @@ def jugar_mano():
         # Si es la primera ronda, la ronda anterior es un diccionario vació.
         ronda_anterior = get_previous_round()
 
-        if ronda_anterior.get('ganador') == 'computadora':
+        if ronda_anterior.get('ganador') == COMPUTADORA:
             # Si tiene que empezar la computadora, agregamos la acción de actuar_computadora a la lista de acciones.
             add_action(actuar_computadora)
 
-        if ronda_anterior.get('ganador') == 'usuario':
+        if ronda_anterior.get('ganador') == USUARIO:
             # Si tiene que empezar el usuario, agregamos la acción de pedir_accion_usuario a la lista de acciones.
             add_action(pedir_accion_usuario)
 
         if ronda_anterior == {} or ronda_anterior.get('ganador') == 'empate':
-            if partida['siguiente_en_empezar'] == 'usuario':
+            if partida['siguiente_en_empezar'] == USUARIO:
                 add_action(pedir_accion_usuario)
             else:
                 add_action(actuar_computadora)
@@ -121,7 +119,7 @@ def imprimir_puntos():
     puntos_usuario = get_user_points()
     puntos_computadora = get_computer_points()
     # Imprime un gráfico que muestra los puntos de cada jugador
-    print("|", end="")
+    print("\n|", end="")
     print(" PUNTOS ".center(95, '='), end='|\n')
     print("|---  01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ", end='|\n')
     print(f"|TU: {"  *" * puntos_usuario} ", end='')
@@ -130,6 +128,7 @@ def imprimir_puntos():
     print("|".rjust(89 - puntos_computadora * 2))
     print("|", end="")
     print("".center(95, '='), end='|\n')
+    print('\n')
 
 
 def determinar_puntos_ganador():
@@ -142,9 +141,14 @@ def determinar_puntos_ganador():
     # Siempre se suma al menos 1 punto por ganar la mano
     puntos = 1
 
-    if truco['activo']:
+    if truco.get('rechazado_por'):
+        puntos += truco['nivel'] - 1
+        dev_print("truco nivel:", truco['nivel'])
+
+    else:
         # Si hubiese truco, se suman los puntos correspondientes al nivel del truco
         puntos += truco['nivel']
+        dev_print("truco nivel:", truco['nivel'])
 
     return puntos
 
@@ -166,8 +170,8 @@ def determinar_ganador_de_la_mano():
     ronda_3 = mano_actual['rondas'][2]
 
     rondas_ganadas = {
-        "usuario": 0,
-        "computadora": 0,
+        USUARIO: 0,
+        COMPUTADORA: 0,
         "empate": 0
     }
 
@@ -183,4 +187,4 @@ def determinar_ganador_de_la_mano():
     if rondas_ganadas['empate'] > 0 and ronda_1['ganador'] != 'empate':
         return ronda_1['ganador']
 
-    return "usuario" if rondas_ganadas['usuario'] > rondas_ganadas['computadora'] else 'computadora'
+    return USUARIO if rondas_ganadas[USUARIO] > rondas_ganadas[COMPUTADORA] else COMPUTADORA

@@ -1,6 +1,8 @@
 import os
+from pydoc import plain
 
 from mazo import obtener_palo, obtener_numero
+from variables import USUARIO, COMPUTADORA
 
 
 # Deja mas prolija la terminal para empezar a jugar
@@ -13,7 +15,7 @@ def limpiar_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def pedir_eleccion(opciones, limpiar_consola = False):
+def pedir_eleccion(opciones, limpiar_consola=False):
     """
     Función de utilidad para pedir input al usuario, recibe una lista con las opciones a mostrar y devuelve la elección del usuario.
     Cada elemento de la lista es otra lista con el siguiente formato: [texto, valor].
@@ -26,7 +28,6 @@ def pedir_eleccion(opciones, limpiar_consola = False):
     :return: elección del usuario
     """
 
-
     for i in range(len(opciones)):
         # por cada una de las opciones recibidas, desempaquetamos el texto
         texto, _ = opciones[i]
@@ -34,7 +35,6 @@ def pedir_eleccion(opciones, limpiar_consola = False):
         print(f"{i + 1}) {texto} ")
 
     ingresado = input('\n').strip()
-
 
     if limpiar_consola:
         limpiar_terminal()
@@ -53,7 +53,6 @@ def pedir_eleccion(opciones, limpiar_consola = False):
         print(f"{Colores.RED}{Colores.BOLD}Elección invalida. {Colores.RESET}\n")
         return pedir_eleccion(opciones)
 
-
     # Devolvemos el valor asignado a la elección
     return opciones[eleccion - 1][1]
 
@@ -71,6 +70,7 @@ class Colores:
     BLUE = '\033[34m'
     PURPLE = '\033[35m'
     RED = '\033[31m'
+    UNDERLINE = '\033[4m'
 
 
 colores_palos = {
@@ -79,6 +79,11 @@ colores_palos = {
     'basto': Colores.GREEN,
     'oro': Colores.YELLOW,
     'copa': Colores.RED
+}
+
+player_color = {
+    USUARIO: Colores.GREEN,
+    COMPUTADORA: Colores.RED
 }
 
 
@@ -126,7 +131,8 @@ def imprimir_carta_ascii(carta):
     print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
 
 
-DEV = False #True
+# Cambiar esto a True si queres ver los mensajes de debug
+DEV = False  # True
 
 
 
@@ -143,6 +149,5 @@ def dev_print(*args, **kwargs):
 
 
 def noop():
-    print("Noop fue llamado")
+    dev_print("Noop fue llamado")
     return "Noop"
-

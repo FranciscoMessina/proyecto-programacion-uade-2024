@@ -1,7 +1,5 @@
 from random import choice
 
-from utilidades import dev_print
-
 # En este archivo definimos variables, y funciones de utilidad para
 # acceder a ellas desde diferentes partes del código.
 
@@ -30,11 +28,12 @@ def init_game(max_points):
             "computadora": 0
         },
         "manos_jugadas": 0,
-        "siguiente_en_empezar": choice(['computadora','usuario']),
+        "siguiente_en_empezar": choice(['computadora', 'usuario']),
         "mano_actual": {}
     }
 
     return partida_actual
+
 
 def reset_game():
     """
@@ -45,6 +44,7 @@ def reset_game():
     partida_actual = {}
 
     return partida_actual
+
 
 def init_hand(user_cards, computer_cards):
     """
@@ -107,6 +107,7 @@ def get_current_game():
 def quien_es_mano():
     return get_current_game()['siguiente_en_empezar']
 
+
 def truco_needs_answer():
     truco = get_current_hand()['truco']
 
@@ -124,6 +125,7 @@ def envido_needs_answer():
 
     return envido['esperando']
 
+
 def envido_envido_needs_answer():
     envido = get_current_hand()['envido']
 
@@ -131,6 +133,7 @@ def envido_envido_needs_answer():
         return False
 
     return envido['envido_envido_esperando']
+
 
 def real_envido_needs_answer():
     envido = get_current_hand()['envido']
@@ -140,6 +143,7 @@ def real_envido_needs_answer():
 
     return envido['real_envido_esperando']
 
+
 def falta_envido_needs_answer():
     envido = get_current_hand()['envido']
 
@@ -148,40 +152,50 @@ def falta_envido_needs_answer():
 
     return envido['falta_envido_esperando']
 
+
 def envido_rechazado_por():
     return get_current_hand()['envido']['rechazado_por']
+
 
 def envido_envido_rechazado_por():
     return get_current_hand()['envido']['envido_envido_rechazado_por']
 
+
 def real_envido_rechazado_por():
     return get_current_hand()['envido']['real_envido_rechazado_por']
+
 
 def falta_envido_rechazado_por():
     return get_current_hand()['envido']['falta_envido_rechazado_por']
 
+
 def envido_cantado_por():
     return get_current_hand()['envido']['cantado_por']
+
 
 def envido_envido_cantado_por():
     return get_current_hand()['envido']['envido_envido_cantado_por']
 
+
 def real_envido_cantado_por():
     return get_current_hand()['envido']['real_envido_cantado_por']
+
 
 def falta_envido_cantado_por():
     return get_current_hand()['envido']['falta_envido_cantado_por']
 
+
 def envido_puntos():
     return get_current_hand()['envido']['puntos']
 
+
 def next_play_by():
+    from utilidades import dev_print
     """
     Funcion para determinar quien tiene que ser el proximo jugador en actuar en diferentes casos.
     :return:
     """
     current_hand = get_current_hand()
-
 
     if truco_needs_answer():
         dev_print(f"TRUCO NECESITA RESPUESTA CANTADO POR {current_hand['truco']['cantado_por']}")
@@ -209,9 +223,6 @@ def next_play_by():
         return USUARIO
     else:
         return COMPUTADORA
-
-
-
 
 
 def get_current_hand():
