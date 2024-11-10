@@ -14,17 +14,17 @@
 El programa tiene como objetivo lograr jugar una partida de truco 1v1 contra la computadora. Algunas de las funciones a
 incluir son:
 
-- [x] Crear un mazo de cartas
-- [x] Repartir las cartas
-- [ ] Jugar las manos determinando quien empieza en cada caso
-- [x] Determinar el ganador de cada mano
-- [ ] Posibilidad de cantar Envido y variantes cuando corresponde
-- [ ] Calcular puntaje de Envido y ganador
-- [ ] Posibilidad de cantar Truco y variantes cuando corresponde
-- [x] Determinar ganador de la ronda
-- [ ] Manejo de empates
-- [x] Elegir partida de 15 o 30 puntos
-- [x] Determinar ganador de la partida
+- [X] Crear un mazo de cartas
+- [X] Repartir las cartas
+- [X] Jugar las manos determinando quien empieza en cada caso
+- [X] Determinar el ganador de cada mano
+- [X] Posibilidad de cantar Envido y variantes cuando corresponde
+- [X] Calcular puntaje de Envido y ganador
+- [X] Posibilidad de cantar Truco y variantes cuando corresponde
+- [X] Determinar ganador de la ronda
+- [] Manejo de empates
+- [X] Elegir partida de 15 o 30 puntos
+- [X] Determinar ganador de la partida
 - [ ] Decisiones de la computadora
 - [ ] Display gráfico de las cartas (Terminal ASCII)
 - [ ] Guardado y continuación de partidas
