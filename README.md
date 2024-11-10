@@ -22,7 +22,7 @@ incluir son:
 - [X] Calcular puntaje de Envido y ganador
 - [X] Posibilidad de cantar Truco y variantes cuando corresponde
 - [X] Determinar ganador de la ronda
-- [] Manejo de empates
+- [ ] Manejo de empates
 - [X] Elegir partida de 15 o 30 puntos
 - [X] Determinar ganador de la partida
 - [ ] Decisiones de la computadora
