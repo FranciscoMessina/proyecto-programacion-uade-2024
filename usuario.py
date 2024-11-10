@@ -6,13 +6,18 @@ from variables import envido_envido_needs_answer, get_current_hand, get_user_car
 
 
 def pedir_accion_usuario():
-    from acciones import cantar_truco, cantar_envido, cantar_real_envido, aceptar_truco, rechazar_truco, aceptar_envido, \
-        rechazar_envido, jugar_carta
     """
     Muestra al usuario las acciones disponibles y le pide que elija una de ellas
 
     :return: la accion que se va a ejecutar
     """
+    # Por que estan todos los import adentro de la funcion? Porque si los importamos en el inicio del archivo, tenemos un problema con
+    # dependencias circulares, como en los archivos de acciones.py se importan funciones de este archivo, y en este se importan funciones de acciones.py
+    # entonces si importamos al inicio del archivo, se importan antes de que se definan las funciones, y da error.
+    # Pero al importarlo dentro de la funcion (asumo que), se importan recien cuando se ejecuta la funcion, y ahi ya estan definidas las otras funciones
+    from acciones import cantar_truco, cantar_envido, cantar_real_envido, aceptar_truco, rechazar_truco, aceptar_envido, \
+        rechazar_envido, jugar_carta, aceptar_real_envido, aceptar_envido_envido, \
+        rechazar_envido_envido, rechazar_real_envido, cantar_envido_envido
     dev_print("Inicio Pedir Accion Usuario")
 
     opciones = []
@@ -25,7 +30,7 @@ def pedir_accion_usuario():
         print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
 
         dev_print('AU- Responder a real envido')
-        from acciones import aceptar_real_envido, rechazar_real_envido
+
         opciones.append(["Quiero", aceptar_real_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_real_envido(USUARIO)])
 
@@ -33,7 +38,7 @@ def pedir_accion_usuario():
         print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
 
         dev_print('AU- Responder a envido envido')
-        from acciones import aceptar_envido_envido, rechazar_envido_envido, cantar_real_envido
+
         opciones.append(["Quiero", aceptar_envido_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_envido_envido(USUARIO)])
         opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
@@ -42,7 +47,7 @@ def pedir_accion_usuario():
         print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
 
         dev_print('AU- Responder a envido')
-        from acciones import aceptar_envido, rechazar_envido, cantar_envido_envido, cantar_real_envido
+
         opciones.append(["Quiero", aceptar_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_envido(USUARIO)])
         opciones.append(["Cantar envido envido", cantar_envido_envido(USUARIO)])
@@ -64,9 +69,7 @@ def pedir_accion_usuario():
 
         for carta in cartas:
             # Por cada carta en su mano agregamos la opcion de jugarla.
-
             opciones.append([f"Jugar {formatear_carta(carta)}", jugar_carta(carta, USUARIO)])
-        from acciones import cantar_truco
         if mano_actual['truco'].get('activo') is False:
             # Si no se ha cantado truco aun, se le da la opcion de cantar truco
             if mano_actual['truco'].get('nivel') == 0:
@@ -87,7 +90,7 @@ def pedir_accion_usuario():
     return pedir_eleccion(opciones)
 
 
-def mostra_mano_usuario():
+def mostrar_mano_usuario():
     """
     Muestra las cartas del usuario en consola
     :return:

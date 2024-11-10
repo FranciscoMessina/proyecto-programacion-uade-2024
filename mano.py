@@ -1,10 +1,10 @@
-from usuario import pedir_accion_usuario, mostra_mano_usuario
+from usuario import pedir_accion_usuario, mostrar_mano_usuario
 from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco
 
 from utilidades import dev_print
 from variables import get_user_points, get_max_points, get_computer_points, get_current_game, \
-    get_previous_round, add_action, init_hand, get_current_hand
+    get_previous_round, add_action, init_hand, get_current_hand, COMPUTADORA, USUARIO
 
 
 def jugar_mano(terminar_partida):
@@ -18,10 +18,10 @@ def jugar_mano(terminar_partida):
     max_points = get_max_points()
 
     if get_user_points() >= max_points:
-        return terminar_partida('usuario')
+        return terminar_partida(USUARIO)
 
     elif get_computer_points() >= max_points:
-        return terminar_partida('computadora')
+        return terminar_partida(COMPUTADORA)
 
     # Aca empieza una nueva mano.
     print("\n\n")
@@ -35,13 +35,13 @@ def jugar_mano(terminar_partida):
 
     # actualizamos que jugador empieza la mano
     if partida["manos_jugadas"] != 0:
-        partida['siguiente_en_empezar'] = "usuario" if partida[
-                                                           'siguiente_en_empezar'] == "computadora" else "computadora"
+        partida['siguiente_en_empezar'] = USUARIO if partida['siguiente_en_empezar'] == COMPUTADORA \
+            else COMPUTADORA
 
-    # Se inicializa la mano actual, conas las cartas de cada jugador
+    # Se inicializa la mano actual, con las cartas de cada jugador
     mano_actual = init_hand(cartas_usuario, cartas_computadora)
 
-    mostra_mano_usuario()
+    mostrar_mano_usuario()
 
     # Se incrementa la cantidad de manos jugadas
     partida['manos_jugadas'] += 1
@@ -69,16 +69,16 @@ def jugar_mano(terminar_partida):
         # Si es la primera ronda, la ronda anterior es un diccionario vació.
         ronda_anterior = get_previous_round()
 
-        if ronda_anterior.get('ganador') == 'computadora':
+        if ronda_anterior.get('ganador') == COMPUTADORA:
             # Si tiene que empezar la computadora, agregamos la acción de actuar_computadora a la lista de acciones.
             add_action(actuar_computadora)
 
-        if ronda_anterior.get('ganador') == 'usuario':
+        if ronda_anterior.get('ganador') == USUARIO:
             # Si tiene que empezar el usuario, agregamos la acción de pedir_accion_usuario a la lista de acciones.
             add_action(pedir_accion_usuario)
 
         if ronda_anterior == {} or ronda_anterior.get('ganador') == 'empate':
-            if partida['siguiente_en_empezar'] == 'usuario':
+            if partida['siguiente_en_empezar'] == USUARIO:
                 add_action(pedir_accion_usuario)
             else:
                 add_action(actuar_computadora)
@@ -170,8 +170,8 @@ def determinar_ganador_de_la_mano():
     ronda_3 = mano_actual['rondas'][2]
 
     rondas_ganadas = {
-        "usuario": 0,
-        "computadora": 0,
+        USUARIO: 0,
+        COMPUTADORA: 0,
         "empate": 0
     }
 
@@ -187,4 +187,4 @@ def determinar_ganador_de_la_mano():
     if rondas_ganadas['empate'] > 0 and ronda_1['ganador'] != 'empate':
         return ronda_1['ganador']
 
-    return "usuario" if rondas_ganadas['usuario'] > rondas_ganadas['computadora'] else 'computadora'
+    return USUARIO if rondas_ganadas[USUARIO] > rondas_ganadas[COMPUTADORA] else COMPUTADORA

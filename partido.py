@@ -1,5 +1,5 @@
 from archivos import guardar_archivo
-from historial import guardar_historial
+from historial import guardar_partida_en_historial
 from mano import jugar_mano
 from utilidades import pedir_eleccion, player_color, Colores
 from variables import init_game, reset_game, get_current_game, get_computer_points, get_user_points, get_max_points
@@ -29,7 +29,7 @@ def nueva_partida():
         partida_actual = get_current_game()
         # Asignamos al ganador
         partida_actual['ganador'] = ganador
-        guardar_historial()
+        guardar_partida_en_historial()
 
         print(f"El ganador de la partida es {player_color[ganador]}{ganador.upper()}{Colores.RESET}\n\n")
         # Reseteamos los datos de la partida para dejar

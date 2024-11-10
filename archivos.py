@@ -8,6 +8,12 @@ from mano import jugar_mano
 
 
 def guardar_archivo(nombre_archivo, datos):
+    """
+    Guarda los datos en un archivo json
+    :param nombre_archivo:
+    :param datos:
+    :return:
+    """
     try:
         with open(nombre_archivo, "w") as archivo:
             json.dump(datos, archivo)
@@ -16,7 +22,11 @@ def guardar_archivo(nombre_archivo, datos):
 
 
 def abrir_archivo(nombre_archivo):
-    datos = None
+    """
+    Abre un archivo json y devuelve los datos, si el archivo no existe devuelve False.
+    :param nombre_archivo:
+    :return: datos o False
+    """
     try:
         with open(nombre_archivo, "r") as archivo:
             datos = json.load(archivo)
