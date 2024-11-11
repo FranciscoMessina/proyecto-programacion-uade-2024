@@ -50,7 +50,7 @@ def repartir_cartas(mazo) -> tuple[list, list]:
     """
     Reparte 3 cartas a cada jugador y las ordena por poder de menor a mayor. Devuelve una tupla con las manos de ambos jugadores.
 
-    :param mazo: el mazo con las cartas a utilizar
+    :param mazo: El mazo con las cartas a utilizar.
     :return (mano_usuario, mano_computadora)
     """
     copia_mazo = mazo.copy()
@@ -70,7 +70,7 @@ def repartir_cartas(mazo) -> tuple[list, list]:
 #Determina que carta tiene mayor poder para poder ordenar la mano posteriormente
 def determinar_carta_mayor(carta_1, carta_2):
     """
-    Determina cual de las dos cartas es mayor. Si son iguales, devuelve "empate".
+    Determina cuál de las dos cartas es mayor. Si son iguales, devuelve "empate".
     :param carta_1:
     :param carta_2:
     :return:
@@ -87,11 +87,11 @@ def obtener_palo(carta):
     """
     Devuelve el palo de una carta.
     :param carta:
-    :return: str
+    :return: Str
     """
     return carta[1]
 
-#Obtiene el poder de la carta
+# Obtiene el poder de la carta
 def obtener_poder(carta):
     """
     Devuelve el poder de una carta.
@@ -100,7 +100,7 @@ def obtener_poder(carta):
     """
     return carta[3]
 
-#Obtiene el numero de la carta
+# Obtiene el número de la carta
 def obtener_numero(carta):
     """
     Devuelve el número de una carta.
@@ -109,7 +109,7 @@ def obtener_numero(carta):
     """
     return carta[2]
 
-#Ordena la mano del jugador en base al poder
+# Ordena la mano del jugador basándonos en el poder
 def ordenar_mano_por_poder(mano):
     """
     Ordena una mano de cartas de menor a mayor poder.

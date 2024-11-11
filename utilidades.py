@@ -1,9 +1,17 @@
 import os
+from pydoc import plain
+
 from mazo import obtener_palo, obtener_numero
+from variables import USUARIO, COMPUTADORA
 
 
 # Deja mas prolija la terminal para empezar a jugar
 def limpiar_terminal():
+    """
+    Función de utilidad para limpiar la terminal.
+
+    :return:
+    """
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
@@ -15,12 +23,13 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     También se encarga de validar que la elección del usuario.
 
-    :param opciones: lista con las opciones a mostrar
-    :return: eleccion del usuario
+    :param opciones: Lista con las opciones a mostrar
+    :param limpiar_consola: Booleano que indica si se debe limpiar la consola antes de mostrar las opciones
+    :return: elección del usuario
     """
 
     for i in range(len(opciones)):
-        # por cada una de las opciones recibidas, desempaquetamos el texto y el valor
+        # por cada una de las opciones recibidas, desempaquetamos el texto
         texto, _ = opciones[i]
 
         print(f"{i + 1}) {texto} ")
@@ -39,29 +48,49 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     opciones_disponibles = max(1, len(opciones))
 
-    # Si la eleccion esta fuera de rango, la volvemos a pedir.
+    # Si la elección está fuera de rango, la volvemos a pedir.
     if eleccion < 1 or eleccion > opciones_disponibles:
-        print(f"{Colores.RED}{Colores.BOLD}Eleccion invalida. {Colores.RESET}\n")
+        print(f"{Colores.RED}{Colores.BOLD}Elección invalida. {Colores.RESET}\n")
         return pedir_eleccion(opciones)
 
-    else:
-        # Devolvemos el valor asignado a la eleccion
-        return opciones[eleccion - 1][1]
+    # Devolvemos el valor asignado a la elección
+    return opciones[eleccion - 1][1]
 
 
-# Se que no se supone que usemos clases, pero es una forma mas
-# facil de poder acceder a las propiedades sin cometer errores de tipeo
+# Sé que no se supone que usemos clases, pero es una forma más
+# fácil de poder acceder a las propiedades sin cometer errores de tipeo
 # asi por favor no nos saquen puntos por esto.
 # Si no lo cambiamos a diccionario, solo avisar.
 class Colores:
     # Colores para imprimir en consola.
-    GREEN = '\033[92m'
     RESET = '\033[0m'
-    BOLD = '\033[1m'
+    GREEN = '\033[92m'
     YELLOW = '\033[33m'
     BLUE = '\033[34m'
     PURPLE = '\033[35m'
     RED = '\033[31m'
+    BOLD = '\033[1m'
+    DEFAULT = '\033[39m'
+    UNDERLINE = '\033[4m'
+    ITALIC = '\033[3m'
+    BLINK = '\033[5m'
+
+    BACKGROUND_GREEN = '\033[42m'
+    BACKGROUND_RED = '\033[41m'
+    BACKGROUND_BLUE = '\033[44m'
+    BACKGROUND_YELLOW = '\033[43m'
+    BACKGROUND_PURPLE = '\033[45m'
+    BACKGROUND_CYAN = '\033[46m'
+    BACKGROUND_WHITE = '\033[47m'
+    BACKGROUND_DEFAULT = '\033[49m'
+
+
+def foreground_color(color):
+    return f"\033[38;5;{color}m"
+
+
+def background_color(color):
+    return f"\033[48;5;{color}m"
 
 
 colores_palos = {
@@ -72,12 +101,17 @@ colores_palos = {
     'copa': Colores.RED
 }
 
+player_color = {
+    USUARIO: Colores.GREEN,
+    COMPUTADORA: Colores.RED
+}
+
 
 def formatear_carta(carta):
     """
     Función de utilidad para generar una string visualmente atractiva de una carta de truco.
     :param carta:
-    :return: string estilada para ser impresa en consola
+    :return: String estilada para ser impresa en consola
     """
     return f"{colores_palos[obtener_palo(carta)]}{Colores.BOLD}{carta[0]}{Colores.RESET}"
 
@@ -115,3 +149,24 @@ def imprimir_carta_ascii(carta):
     :return:
     """
     print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
+
+
+# Cambiar esto a True si queres ver los mensajes de debug
+DEV = False  # True
+
+
+def dev_print(*args, **kwargs):
+    """
+    Función de utilidad para imprimir en consola, pero solo si estamos en modo debug.
+    :param args:
+    :param kwargs:
+    :return:
+    """
+
+    if DEV:
+        print(f'{Colores.PURPLE}(DEV-ONLY)', *args, f'{Colores.RESET}', **kwargs)
+
+
+def noop():
+    dev_print("Noop fue llamado")
+    return "Noop"

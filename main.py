@@ -1,10 +1,11 @@
+from historial import ver_historial
 from partido import nueva_partida
-from utilidades import Colores, pedir_eleccion
+from utilidades import Colores, pedir_eleccion, dev_print
 
 
 def mensaje_bienvenida():
     """
-    Imprime en terminal un mensaje de bienvenida e informacion del proyecto para el usuario
+    Imprime en terminal un mensaje de bienvenida e información del proyecto para el usuario
     :return:
     """
     print(rf"""{Colores.BLUE}
@@ -41,27 +42,32 @@ def mensaje_bienvenida():
 
 def jugar_al_truco():
     """
-    Menu principal del juego, se elige si comenzar una nueva partida o salir del programa
+    Menu principal del juego, le muestra al usuario las opciones disponibles
     :return:
     """
     mensaje_bienvenida()
 
     continuar = True
 
-    while continuar:
+    def cerrar_programa():
+        print("Gracias por usar nuestro programa, esperamos verlo pronto.")
+        # Esto hace que en vez de buscar la variable en el scope local de la funcion `cerrar_programa` lo busque en el scope anterior,
+        # que en este caso es la funcion `jugar_al_truco`. De esta manera se puede modificar la variable `continuar` y salir del bucle.
+        # La diferencia con la keyword `global` es que esa buscaría la variable en el scope global del archivo, y no lo encontraría.
+        nonlocal continuar
+        continuar = False
 
-        print('Elegi una de las opciones: \n'.center(65))
+    while continuar:
+        print(f'{Colores.UNDERLINE}Elegi una de las opciones:{Colores.RESET}\n')
+        dev_print("MODO DEBUG ACTIVADO: para desactivar, cambiar la variable DEV a False en utilidades.py")
 
         respuesta = pedir_eleccion([
-            ['Comenzar nueva partida', {"accion": nueva_partida}],
-            ['Salir del programa', {"accion": "cerrar_programa"}]
+            ['Comenzar nueva partida', nueva_partida],
+            ['Ver historial', ver_historial],
+            ['Salir del programa', cerrar_programa],
         ], True)
 
-        if respuesta['accion'] == 'cerrar_programa':
-            print("Gracias por usar nuestro programa, esperamos verlo pronto.")
-            continuar = False
-        else:
-            respuesta['accion']()
+        respuesta()
 
 
 jugar_al_truco()
