@@ -63,14 +63,34 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 # Si no lo cambiamos a diccionario, solo avisar.
 class Colores:
     # Colores para imprimir en consola.
-    GREEN = '\033[92m'
     RESET = '\033[0m'
-    BOLD = '\033[1m'
+    GREEN = '\033[92m'
     YELLOW = '\033[33m'
     BLUE = '\033[34m'
     PURPLE = '\033[35m'
     RED = '\033[31m'
+    BOLD = '\033[1m'
+    DEFAULT = '\033[39m'
     UNDERLINE = '\033[4m'
+    ITALIC = '\033[3m'
+    BLINK = '\033[5m'
+
+    BACKGROUND_GREEN = '\033[42m'
+    BACKGROUND_RED = '\033[41m'
+    BACKGROUND_BLUE = '\033[44m'
+    BACKGROUND_YELLOW = '\033[43m'
+    BACKGROUND_PURPLE = '\033[45m'
+    BACKGROUND_CYAN = '\033[46m'
+    BACKGROUND_WHITE = '\033[47m'
+    BACKGROUND_DEFAULT = '\033[49m'
+
+
+def foreground_color(color):
+    return f"\033[38;5;{color}m"
+
+
+def background_color(color):
+    return f"\033[48;5;{color}m"
 
 
 colores_palos = {
@@ -133,7 +153,6 @@ def imprimir_carta_ascii(carta):
 
 # Cambiar esto a True si queres ver los mensajes de debug
 DEV = False  # True
-
 
 
 def dev_print(*args, **kwargs):
