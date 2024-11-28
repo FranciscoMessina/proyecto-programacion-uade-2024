@@ -63,8 +63,8 @@ def jugar_al_truco():
 
         respuesta = pedir_eleccion([
             ['Comenzar nueva partida', nueva_partida],
-            ['Salir del programa', cerrar_programa],
             ['Ver historial', ver_historial],
+            ['Salir del programa', cerrar_programa],
         ], True)
 
         respuesta()
