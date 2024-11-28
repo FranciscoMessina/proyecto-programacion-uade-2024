@@ -104,14 +104,14 @@ def jugar_mano(terminar_partida):
 
     print(f"Gana {ganador_mano} sumando {puntos_a_sumar} puntos")
 
-    imprimir_puntos()
+    imprimir_puntos(max_points)
 
     return {
         "accion": "none"
     }
 
 
-def imprimir_puntos():
+def imprimir_puntos(max):
     """
     Imprime en consola los puntos de cada jugador.
     :return:
@@ -122,10 +122,18 @@ def imprimir_puntos():
     print("\n|", end="")
     print(" PUNTOS ".center(95, '='), end='|\n')
     print("|---  01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ", end='|\n')
-    print(f"|TU: {"  *" * puntos_usuario} ", end='')
-    print("|".rjust(91 - puntos_usuario * 3))
-    print(f"|PC: {"  *" * puntos_computadora} ", end='')
-    print("|".rjust(91 - puntos_computadora * 3))
+    if puntos_usuario <= max:
+        print(f"|TU: {"  *" * puntos_usuario} ", end='')
+        print("|".rjust(91 - puntos_usuario * 3))
+    else:
+        print(f"|TU: {"  *" * max} ", end='')
+        print("|".rjust(91 - max * 3))
+    if puntos_computadora <= max:
+        print(f"|PC: {"  *" * puntos_computadora} ", end='')
+        print("|".rjust(91 - puntos_computadora * 3))
+    else:
+        print(f"|PC: {"  *" * max} ", end='')
+        print("|".rjust(91 - max * 3))
     print("|", end="")
     print("".center(95, '='), end='|\n')
     print('\n')
