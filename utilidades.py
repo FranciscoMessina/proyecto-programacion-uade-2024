@@ -1,5 +1,5 @@
 import os
-from pydoc import plain
+import time
 
 from mazo import obtener_palo, obtener_numero
 from variables import USUARIO, COMPUTADORA
@@ -27,12 +27,20 @@ def pedir_eleccion(opciones, limpiar_consola=False):
     :param limpiar_consola: Booleano que indica si se debe limpiar la consola antes de mostrar las opciones
     :return: elección del usuario
     """
+    posibles = []
+    current_option_id = 1
+    for index, element in enumerate(opciones):
 
-    for i in range(len(opciones)):
-        # por cada una de las opciones recibidas, desempaquetamos el texto
-        texto, _ = opciones[i]
+        if type(element) == str:
+            # Si el elemento es solamente una string lo consideramos un separador visual
+            print(element)
 
-        print(f"{i + 1}) {texto} ")
+        else:
+            # por cada una de las opciones recibidas, desempaquetamos el texto
+            texto, _ = element
+            posibles.append(element)
+            print(f"{current_option_id}) {texto} ")
+            current_option_id += 1
 
     ingresado = input('\n').strip()
 
@@ -46,7 +54,7 @@ def pedir_eleccion(opciones, limpiar_consola=False):
 
     eleccion = int(ingresado)
 
-    opciones_disponibles = max(1, len(opciones))
+    opciones_disponibles = max(1, len(posibles))
 
     # Si la elección está fuera de rango, la volvemos a pedir.
     if eleccion < 1 or eleccion > opciones_disponibles:
@@ -54,7 +62,7 @@ def pedir_eleccion(opciones, limpiar_consola=False):
         return pedir_eleccion(opciones)
 
     # Devolvemos el valor asignado a la elección
-    return opciones[eleccion - 1][1]
+    return posibles[eleccion - 1][1]
 
 
 # Sé que no se supone que usemos clases, pero es una forma más
@@ -83,6 +91,17 @@ class Colores:
     BACKGROUND_CYAN = '\033[46m'
     BACKGROUND_WHITE = '\033[47m'
     BACKGROUND_DEFAULT = '\033[49m'
+
+
+def spinner(mensaje, spins=10):
+    chars = ["|", "/", "-", "\\"]
+    n = 0
+    while spins > 0:
+        print(f"\r{mensaje}{chars[n % 4]}", end="")
+        n += 1
+
+        time.sleep(0.2)
+        spins -= 1
 
 
 def foreground_color(color):

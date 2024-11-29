@@ -1,10 +1,13 @@
+from random import choice
+
+from ronda import determinar_ganador_ronda
 from usuario import pedir_accion_usuario, mostrar_mano_usuario
 from computadora import actuar_computadora
 from mazo import repartir_cartas, mazo_truco
 
-from utilidades import dev_print
+from utilidades import dev_print, Colores, player_color
 from variables import get_user_points, get_max_points, get_computer_points, get_current_game, \
-    get_previous_round, add_action, init_hand, get_current_hand, COMPUTADORA, USUARIO
+    get_previous_round, add_action, init_hand, get_current_hand, COMPUTADORA, USUARIO, reset_hand, get_current_round
 
 
 def jugar_mano(terminar_partida):
@@ -24,36 +27,41 @@ def jugar_mano(terminar_partida):
         return terminar_partida(COMPUTADORA)
 
     # Aca empieza una nueva mano.
-    print("\n\n")
-    print(f"Iniciando una nueva mano".center(60, "-"))
+    print(f" Iniciando una nueva mano ".center(60, "-"))
     print("\n\n")
 
     partida = get_current_game()
 
-    # Se reparten las cartas a cada jugadora
-    cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
+    if partida['mano_actual'] == {}:
+        # Se reparten las cartas a cada jugadora
+        cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
 
-    # actualizamos que jugador empieza la mano
-    if partida["manos_jugadas"] != 0:
-        partida['siguiente_en_empezar'] = USUARIO if partida['siguiente_en_empezar'] == COMPUTADORA \
-            else COMPUTADORA
+        # actualizamos que jugador empieza la mano
+        if partida["manos_jugadas"] != 0:
+            partida['siguiente_en_empezar'] = USUARIO if partida['siguiente_en_empezar'] == COMPUTADORA \
+                else COMPUTADORA
 
-    # Se inicializa la mano actual, con las cartas de cada jugador
-    mano_actual = init_hand(cartas_usuario, cartas_computadora)
-
-    mostrar_mano_usuario()
+        # Se inicializa la mano actual, con las cartas de cada jugador
+        mano_actual = init_hand(cartas_usuario, cartas_computadora)
+    else:
+        print('Retomando partida')
+        mano_actual = partida['mano_actual']
 
     # Se incrementa la cantidad de manos jugadas
     partida['manos_jugadas'] += 1
 
+    mostrar_mano_usuario()
+
     continuar = True
-    numero_de_ronda = 1
+    numero_de_ronda = len(mano_actual['rondas']) if len(mano_actual['rondas']) > 0 else 1
     # Generalmente, las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
-    # por eso tenemos un while con una condición de corte en 4 rondas y una bandera: continuar.
+    # por eso tenemos un while con una condición de corte después de la 3 ronda y una bandera: continuar.
     # Esta última puede ser modificada dentro de la ronda para darle un final temprano.
     while continuar and numero_de_ronda < 4:
+
         # Este es el inicio de una nueva ronda en la mano actual.
         # Agregamos a la lista de rondas de la mano una nueva ronda.
+
         mano_actual['rondas'].append({
             "ganador": None,
         })
@@ -65,6 +73,7 @@ def jugar_mano(terminar_partida):
         # Cuando no quedan más funciones en la lista, se termina la ronda.
         mano_actual['acciones'] = []
 
+        print(f" Ronda {numero_de_ronda} ".center(60, "-"))
         # Guardamos en una variable de utilidad la ronda anterior para acceder más fácilmente a ella.
         # Si es la primera ronda, la ronda anterior es un diccionario vació.
         ronda_anterior = get_previous_round()
@@ -83,6 +92,8 @@ def jugar_mano(terminar_partida):
             else:
                 add_action(actuar_computadora)
 
+        determinar_ganador_ronda()
+
         # Acá ejecutamos las acciones, es simplemente una iteración por la lista de acciones.
         # Al ejecutar cada acción, llamamos a la función que devuelve.
         # Muchas de las acciones agregan otra función a la lista durante su ejecución.
@@ -91,7 +102,18 @@ def jugar_mano(terminar_partida):
             result = action()
             result()
 
+        ronda_actual = get_current_round()
+
         numero_de_ronda += 1
+
+        if mano_actual['truco'].get('rechazado_por') is not None:
+            continuar = False
+
+        if ronda_anterior.get('ganador') == 'empate' and ronda_actual.get('ganador') != 'empate':
+            continuar = False
+
+        if ronda_actual.get('ganador') == ronda_anterior.get('ganador'):
+            continuar = False
 
     # Determinamos quien gano la ronda actual
     ganador_mano = determinar_ganador_de_la_mano()
@@ -102,9 +124,12 @@ def jugar_mano(terminar_partida):
     # Sumamos los puntos al ganador de la mano
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
-    print(f"Gana {ganador_mano} sumando {puntos_a_sumar} puntos")
+    print(
+        f"\n\nGana {player_color[ganador_mano]}{ganador_mano.upper()}{Colores.RESET} sumando {puntos_a_sumar} puntos!")
 
     imprimir_puntos(max_points)
+
+    reset_hand()
 
     return {
         "accion": "none"
@@ -123,17 +148,23 @@ def imprimir_puntos(max):
     print(" PUNTOS ".center(95, '='), end='|\n')
     print("|---  01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 ", end='|\n')
     if puntos_usuario <= max:
-        print(f"|TU: {"  *" * puntos_usuario} ", end='')
+        print(f"|{Colores.BACKGROUND_GREEN}TU: {"  *" * puntos_usuario} ", end='')
+        print(f'{Colores.BACKGROUND_DEFAULT}', end='')
         print("|".rjust(91 - puntos_usuario * 3))
+
     else:
-        print(f"|TU: {"  *" * max} ", end='')
+        print(f"|{Colores.BACKGROUND_GREEN}TU: {"  *" * max} ", end='')
+        print(f'{Colores.BACKGROUND_DEFAULT}', end='')
         print("|".rjust(91 - max * 3))
     if puntos_computadora <= max:
-        print(f"|PC: {"  *" * puntos_computadora} ", end='')
+        print(f"|{Colores.BACKGROUND_RED}PC: {"  *" * puntos_computadora} ", end='')
+        print(f'{Colores.BACKGROUND_DEFAULT}', end='')
         print("|".rjust(91 - puntos_computadora * 3))
     else:
-        print(f"|PC: {"  *" * max} ", end='')
+        print(f"|{Colores.BACKGROUND_RED}PC: {"  *" * max} ", end='')
+        print(f'{Colores.BACKGROUND_DEFAULT}', end='')
         print("|".rjust(91 - max * 3))
+
     print("|", end="")
     print("".center(95, '='), end='|\n')
     print('\n')
@@ -172,6 +203,9 @@ def determinar_ganador_de_la_mano():
     # Si se cantó truco, y fue rechazado, automáticamente gana el que lo canto
     if mano_actual['truco'].get('rechazado_por') is not None:
         return mano_actual['truco']['cantado_por']
+
+    if len(mano_actual['rondas']) <= 2:
+        return mano_actual['rondas'][-1]['ganador']
 
     ronda_1 = mano_actual['rondas'][0]
     ronda_2 = mano_actual['rondas'][1]

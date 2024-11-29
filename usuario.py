@@ -1,24 +1,22 @@
-from envido import calcular_envido
+from envido import calcular_envido, envidos_cantables_despues
 
 from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print
-from variables import envido_cantado_por, envido_envido_needs_answer, falta_envido_cantado_por, falta_envido_needs_answer, \
-get_current_hand, get_user_cards, is_first_round, USUARIO, COMPUTADORA, envido_needs_answer, real_envido_cantado_por, real_envido_needs_answer, truco_needs_answer
+from variables import get_current_hand, get_user_cards, is_first_round, \
+    USUARIO, COMPUTADORA, envido_needs_answer, truco_needs_answer, envido_rechazado_por, envido_cantado_por
 
 
 def pedir_accion_usuario():
-
     """
     Muestra al usuario las acciones disponibles y le pide que elija una de ellas
 
     :return: la accion que se va a ejecutar
     """
-    # Por que estan todos los import adentro de la funcion? Porque si los importamos en el inicio del archivo, tenemos un problema con
+    # Por qué están todos los import adentro de la funcion? Porque si los importamos en el inicio del archivo, tenemos un problema con
     # dependencias circulares, como en los archivos de acciones.py se importan funciones de este archivo, y en este se importan funciones de acciones.py
     # entonces si importamos al inicio del archivo, se importan antes de que se definan las funciones, y da error.
     # Pero al importarlo dentro de la funcion (asumo que), se importan recien cuando se ejecuta la funcion, y ahi ya estan definidas las otras funciones
-    from acciones import cantar_truco, cantar_envido, cantar_real_envido, cantar_falta_envido, aceptar_truco, rechazar_truco, aceptar_envido, \
-        rechazar_envido, jugar_carta, aceptar_real_envido, aceptar_envido_envido, \
-        rechazar_envido_envido, rechazar_real_envido, cantar_envido_envido, aceptar_falta_envido, rechazar_falta_envido
+    from acciones import cantar_truco, cantar_envido, aceptar_truco, \
+        rechazar_truco, aceptar_envido, rechazar_envido, jugar_carta, envidos_a_nombres
     dev_print("Inicio Pedir Accion Usuario")
 
     opciones = []
@@ -27,45 +25,20 @@ def pedir_accion_usuario():
     cartas = get_user_cards()
     puntos_envido = calcular_envido(cartas)
 
-    if falta_envido_needs_answer():
-        print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
-        
-        dev_print('AU- Responder a falta envido')
-        
-        opciones.append(["Quiero", aceptar_falta_envido(USUARIO)])
-        opciones.append(["No quiero", rechazar_falta_envido(USUARIO)])
-
-    elif real_envido_needs_answer():
-        print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
-
-        dev_print('AU- Responder a real envido')
-
-        opciones.append(["Quiero", aceptar_real_envido(USUARIO)])
-        opciones.append(["No quiero", rechazar_real_envido(USUARIO)])
-        opciones.append(["Cantar falta envido", cantar_falta_envido(USUARIO)])
-
-    elif envido_envido_needs_answer():
-        print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
-
-        dev_print('AU- Responder a envido envido')
-
-        opciones.append(["Quiero", aceptar_envido_envido(USUARIO)])
-        opciones.append(["No quiero", rechazar_envido_envido(USUARIO)])
-        opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
-
-    elif envido_needs_answer():
+    if envido_needs_answer():
         print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
 
         dev_print('AU- Responder a envido')
 
         opciones.append(["Quiero", aceptar_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_envido(USUARIO)])
-        opciones.append(["Cantar envido envido", cantar_envido_envido(USUARIO)])
-        opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
-        opciones.append(["Cantar falta envido", cantar_falta_envido(USUARIO)])
+
+        for envido in envidos_cantables_despues[mano_actual['envido']['cantados'][-1]]:
+            opciones.append([f"Cantar {envidos_a_nombres[envido]}", cantar_envido(USUARIO, envido)])
+
 
     elif truco_needs_answer():
-        dev_print('AU- Responder a truco')
+        dev_print('AU- Responder a Truco')
 
         opciones.append(["Quiero", aceptar_truco(USUARIO)])
         opciones.append(["No quiero", rechazar_truco(USUARIO)])
@@ -73,14 +46,16 @@ def pedir_accion_usuario():
         if mano_actual['truco'].get('nivel') == 1:
             opciones.append(["Cantar Retruco", cantar_truco(USUARIO, 2)])
         elif mano_actual['truco'].get('nivel') == 2:
-            opciones.append(["Cantar Vale cuatro", cantar_truco(USUARIO, 3)])
+            opciones.append(["Cantar Vale Cuatro", cantar_truco(USUARIO, 3)])
 
     else:
         dev_print('AU- Opciones normales')
-
+        opciones.append('------ Cartas ------')
         for carta in cartas:
             # Por cada carta en su mano agregamos la opcion de jugarla.
             opciones.append([f"Jugar {formatear_carta(carta)}", jugar_carta(carta, USUARIO)])
+
+        opciones.append('----- Acciones -----')
         if mano_actual['truco'].get('activo') is False:
             # Si no se ha cantado truco aun, se le da la opcion de cantar truco
             if mano_actual['truco'].get('nivel') == 0:
@@ -91,16 +66,12 @@ def pedir_accion_usuario():
             elif mano_actual['truco'].get('nivel') == 2 and mano_actual['truco'].get('cantado_por') == COMPUTADORA:
                 opciones.append(["Cantar Vale cuatro", cantar_truco(USUARIO, 3)])
 
-        if is_first_round():
-            print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
+        if is_first_round() and envido_rechazado_por() is None and envido_cantado_por() is None:
+            print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido \n")
 
-            if mano_actual['envido'].get("activo") is False and envido_cantado_por() is None and \
-            real_envido_cantado_por() is None and falta_envido_cantado_por() is None:
-
-
-                opciones.append(["Cantar envido", cantar_envido(USUARIO)])
-                opciones.append(["Cantar real envido", cantar_real_envido(USUARIO)])
-                opciones.append(["Cantar falta envido", cantar_falta_envido(USUARIO)])
+            opciones.append(["Cantar envido", cantar_envido(USUARIO, 'envido')])
+            opciones.append(["Cantar real envido", cantar_envido(USUARIO, 'real_envido')])
+            opciones.append(["Cantar falta envido", cantar_envido(USUARIO, 'falta_envido')])
 
     return pedir_eleccion(opciones)
 
@@ -113,10 +84,13 @@ def mostrar_mano_usuario():
     cartas = get_user_cards()
 
     puntos_envido = calcular_envido(cartas)
-    print("Tu mano".center(50, '-'))
+    print(" Tu mano ".center(50, '-'))
+    print("")
     for i, carta in enumerate(cartas):
         print(f" {formatear_carta(carta)}", end=', ')
 
-    print(f"\n Tenés {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} puntos de envido")
+    if len(cartas) == 3:
+        print(f"\n Tenés {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} puntos de envido")
+    print('')
     print("".center(50, '-'))
     print('\n')

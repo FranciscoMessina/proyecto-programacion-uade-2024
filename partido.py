@@ -1,8 +1,11 @@
-from archivos import guardar_archivo
+import copy
+import time
+
+from archivos import guardar_archivo, abrir_archivo, borrar_archivo
 from historial import guardar_partida_en_historial
 from mano import jugar_mano
-from utilidades import pedir_eleccion, player_color, Colores
-from variables import init_game, reset_game, get_current_game, get_computer_points, get_user_points, get_max_points
+from utilidades import pedir_eleccion, player_color, Colores, limpiar_terminal, spinner
+from variables import init_game, reset_game, get_current_game, default_game_init
 
 
 def nueva_partida():
@@ -13,12 +16,47 @@ def nueva_partida():
     """
     puntos_maximos = preguntar_puntos_partida()
 
-    print('\n\n\n')
-    print("INICIANDO NUEVA PARTIDA".center(60, '-'))
-    print(f"\nLa partida sera a {puntos_maximos} puntos\n")
+    print(" Iniciando una nueva partida ".center(60, '-'))
+    print('\n')
+    spinner(
+        f"{Colores.BLINK}La partida sera a {Colores.UNDERLINE}{puntos_maximos}{Colores.RESET}{Colores.BLINK} puntos{Colores.RESET}".center(
+            66, ' '), 16)
 
     # inicializamos la partida en un diccionario.
-    init_game(puntos_maximos)
+    partida = default_game_init()
+
+    partida['puntos_maximos'] = puntos_maximos
+
+    init_game(partida)
+
+    jugar_partida()
+
+
+def continuar_partida():
+    """
+    Continua una partida guardada.
+
+    :return:
+    """
+
+    spinner('Recuperando partida guardada...  ', 12)
+
+    partida_guardada = abrir_archivo("partida_guardada.json")
+
+    if not partida_guardada:
+        print(f"{Colores.RED}No se pudo recuperar la partida guardada.{Colores.RESET}")
+        borrar_archivo("partida_guardada.json")
+        return
+
+    print(f"{Colores.GREEN}Partida recuperada con éxito.{Colores.RESET}")
+
+    init_game(partida_guardada)
+
+    jugar_partida()
+
+
+def jugar_partida():
+    limpiar_terminal()
 
     continuar = True
 
@@ -37,11 +75,46 @@ def nueva_partida():
         reset_game()
 
     while continuar:
-        jugar_mano(terminar_partida)
+        try:
+            jugar_mano(terminar_partida)
+        except KeyboardInterrupt:
+            print("Partida interrumpida por el usuario.")
+
+            # guardar_partida()
+
+            continuar = False
 
 
-def continuar_partida():
-    pass
+def guardar_partida():
+    """
+    Guarda la partida actual en un archivo JSON. Para poder ser retomada.
+    :return:
+    """
+
+    spinner("Guardando partida...", 12)
+
+    datos_a_guardar = get_current_game()
+
+    datos_a_guardar['mano_actual']['acciones'] = []
+
+    # Eliminamos la última ronda, ya que no se terminó de jugar.
+
+    ultima_ronda = datos_a_guardar['mano_actual']['rondas'].pop()
+
+    if len(datos_a_guardar['mano_actual']['cartas_usuario']) < 3 - len(datos_a_guardar['mano_actual']['rondas']):
+        datos_a_guardar['mano_actual']['cartas_usuario'].append(
+            ultima_ronda['carta_usuario']
+        )
+    elif len(datos_a_guardar['mano_actual']['cartas_computadora']) < 3 - len(datos_a_guardar['mano_actual']['rondas']):
+        datos_a_guardar['mano_actual']['cartas_computadora'].append(
+            ultima_ronda['carta_computadora']
+        )
+
+    guardar_archivo("partida_guardada.json", datos_a_guardar)
+
+    print(f"{Colores.GREEN}Partida guardada con éxito.{Colores.RESET}")
+
+    return
 
 
 def preguntar_puntos_partida():
@@ -49,18 +122,21 @@ def preguntar_puntos_partida():
     Pregunta al usuario a cuantos puntos quiere jugar la partida.
     :return:
     """
-    print("A cuantos puntos querés jugar? ")
-
     return pedir_eleccion([
-        ["DEMO ONLY 3 puntos", 3],
+        f'{Colores.UNDERLINE}A cuantos puntos querés jugar?{Colores.RESET}\n',
         ['A 15 puntos', 15],
         ['A 30 puntos', 30]
     ], True)
 
 
-def guardar_partida():
-    guardar_archivo("partida_guardada.json", {
-        "puntos_computadora": get_computer_points(),
-        "puntos_usuario": get_user_points(),
-        "puntos_maximos": get_max_points(),
-    })
+def hay_partida_guardada():
+    """
+    Verifica si hay una partida guardada.
+    :return:
+    """
+    partida_guardada = abrir_archivo("partida_guardada.json")
+
+    if partida_guardada:
+        return True
+
+    return False

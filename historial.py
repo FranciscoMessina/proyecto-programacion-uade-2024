@@ -1,7 +1,7 @@
 from datetime import date
 
 from archivos import abrir_archivo, guardar_archivo
-from utilidades import Colores
+from utilidades import Colores, player_color
 from variables import get_computer_points, get_user_points, get_max_points, get_current_game
 
 
@@ -54,7 +54,7 @@ def ver_historial():
             print(f" La partida fue a {partida['puntos_maximos']} puntos")
             print(f"   Puntos del usuario: {partida['puntos_usuario']}")
             print(f"   Puntos de la computadora: {partida['puntos_computadora']}")
-            print(f"   Ganador: {partida['ganador'].upper()}")
+            print(f"   Ganador: {player_color[partida['ganador']]}{partida['ganador'].upper()}{Colores.RESET}")
             print(f"   Fecha (Año-Mes-Día): {partida['fecha']}\n")
             print("".center(50, '-'))
             print("")

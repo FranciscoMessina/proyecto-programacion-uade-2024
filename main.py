@@ -1,6 +1,6 @@
 from historial import ver_historial
-from partido import nueva_partida
-from utilidades import Colores, pedir_eleccion, dev_print
+from partido import nueva_partida, hay_partida_guardada, continuar_partida
+from utilidades import Colores, pedir_eleccion, dev_print, noop
 
 
 def mensaje_bienvenida():
@@ -30,14 +30,14 @@ def mensaje_bienvenida():
     print(f" {Colores.PURPLE}MESSINA FRANCISCO{Colores.RESET} ".center(78, '-'))
     print(f" {Colores.PURPLE}PELACCINI FRANCO{Colores.RESET} ".center(78, '-'))
 
-    print(rf"""
-                 .------..------..------..------..------.
-                 |T.--. ||R.--. ||U.--. ||C.--. ||O.--. |
-                 | :/\: || :(): || (\/) || :/\: || :/\: |
-                 | (__) || ()() || :\/: || :\/: || :\/: |
-                 | '--'T|| '--'R|| '--'U|| '--'C|| '--'O|
-                 `------'`------'`------'`------'`------'
-    """)
+    print(rf"""{Colores.BLINK}{Colores.YELLOW}
+                .------..------..------..------..------.
+                |T.--. ||R.--. ||U.--. ||C.--. ||O.--. |
+                | :/\: || :(): || (\/) || :/\: || :/\: |
+                | (__) || ()() || :\/: || :\/: || :\/: |
+                | '--'T|| '--'R|| '--'U|| '--'C|| '--'O|
+                `------'`------'`------'`------'`------'
+    {Colores.RESET}""")
 
 
 def jugar_al_truco():
@@ -58,16 +58,25 @@ def jugar_al_truco():
         continuar = False
 
     while continuar:
-        print(f'{Colores.UNDERLINE}Elegi una de las opciones:{Colores.RESET}\n')
-        dev_print("MODO DEBUG ACTIVADO: para desactivar, cambiar la variable DEV a False en utilidades.py")
 
-        respuesta = pedir_eleccion([
-            ['Comenzar nueva partida', nueva_partida],
-            ['Ver historial', ver_historial],
-            ['Salir del programa', cerrar_programa],
-        ], True)
+        try:
+            dev_print("MODO DEBUG ACTIVADO: para desactivar, cambiar la variable DEV a False en utilidades.py")
 
-        respuesta()
+            opciones = [f'{Colores.UNDERLINE}Elegi una de las opciones:{Colores.RESET}\n',
+                        ['Comenzar nueva partida', nueva_partida]]
+
+            if hay_partida_guardada():
+                opciones.append(['Continuar partida guardada', continuar_partida])
+
+            opciones.append(['Ver historial', ver_historial])
+            opciones.append(['Salir del programa', cerrar_programa])
+
+            respuesta = pedir_eleccion(opciones, True)
+
+            respuesta()
+        except KeyboardInterrupt as e:
+            dev_print(f"{Colores.RED}Se ha interrumpido el programa con Ctrl+C{Colores.RESET}")
+            cerrar_programa()
 
 
 jugar_al_truco()

@@ -1,5 +1,7 @@
 from mazo import obtener_numero
-from variables import COMPUTADORA, USUARIO, envido_puntos, get_computer_cards, get_current_hand, get_current_game, get_current_round, get_user_cards
+from utilidades import Colores, player_color
+from variables import COMPUTADORA, USUARIO, get_computer_cards, get_current_hand, get_current_game, \
+    get_current_round, get_user_cards, quien_es_mano
 
 
 def calcular_envido(mano):
@@ -42,7 +44,11 @@ def calcular_envido(mano):
     return max_envido
 
 
-def envido(jugador):
+def determinar_ganador_envido():
+    #   Si el envido fue rechazado el jugador que lo canto gana automáticamente el último nivel cantado
+    if get_current_hand()['envido']['rechazado_por'] is not None:
+        return USUARIO if get_current_hand()['envido']['rechazado_por'] == COMPUTADORA else COMPUTADORA
+
     # Hay que modificar esto para que no reciba parámetros, sino que tome las manos de la partida actual
     # y solo devuelva como una string el ganador "usuario" o "computadora"
     cartas_usuario = get_user_cards()
@@ -63,45 +69,81 @@ def envido(jugador):
         envido_compu = calcular_envido(cartas_computadora)
         cartas_computadora.pop()
 
-
     partida_actual = get_current_game()
 
-    puntos = envido_puntos()
+    print(" Envido ".center(60, '-'))
+    print(f"{Colores.GREEN}Usuario{Colores.RESET}: {envido_usuario}")
+    print(f"{Colores.RED}Computadora{Colores.RESET}: {envido_compu}")
+    print("".center(60, '-'))
 
-    #if jugador == USUARIO:
+    if envido_usuario == envido_compu:
+        print(
+            f'Gana {player_color[quien_es_mano()]}{quien_es_mano().upper()}, por ser mano.')
+        # Si los puntos de envido son iguales, gana el jugador que es mano.
+        return quien_es_mano()
+
+    # if jugador == USUARIO:
     if envido_usuario > envido_compu:
-        if puntos == 0:
-            puntos = partida_actual['puntos_maximos'] - partida_actual['puntos']['computadora']
-        print(f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, GANASTE {puntos} PUNTOS")
-        partida_actual['puntos']['usuario'] += puntos
-    elif envido_compu > envido_usuario:
-        if puntos == 0:
-            puntos = partida_actual['puntos_maximos'] - partida_actual['puntos']['usuario']
-        print(f"TENES {envido_usuario} DE ENVIDO Y LA COMPUTADORA TIENE {envido_compu}, LA COMPUTADORA GANA {puntos} PUNTOS")
-        partida_actual['puntos']['computadora'] += puntos
-    #elif jugador == COMPUTADORA:
-    #    if envido_compu > envido_usuario:
-    #        print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANA {puntos} PUNTOS")
-    #        partida_actual['puntos']['computadora'] += puntos
-    #    elif envido_usuario > envido_compu:
-    #        print(f"LA COMPUTADORA TIENE {envido_compu} DE ENVIDO Y VOS TENES {envido_usuario}, GANASTE {puntos} PUNTOS")
-    #        partida_actual['puntos']['usuario'] += puntos
-    return partida_actual
+        print(f'Gana {Colores.GREEN}Usuario{Colores.RESET}!')
+
+        return USUARIO
+    else:
+        print(f'Gana {Colores.RED}Computadora{Colores.RESET}!')
+
+        return COMPUTADORA
 
 
-def calcular_puntos_envido():
+puntos_por_envido = {
+    'envido': 2,
+    'envido_2': 2,
+    'real_envido': 3,
+}
+
+envidos_cantables_despues = {
+    "envido": ['envido_2', "real_envido", "falta_envido"],
+    "envido_2": ["real_envido", "falta_envido"],
+    "real_envido": ["falta_envido"],
+    "falta_envido": []
+}
+
+
+def calcular_puntos_por_envido():
     """
     Calcula los puntos que se obtienen al ganar él envido
     :return: puntos a sumar al ganador del envido
     """
     envido = get_current_hand()['envido']
 
-    puntos_envido = 0
+    cantados = envido['cantados']
+
+    puntos_a_sumar = 0
+
+    print(cantados)
 
     if envido['rechazado_por'] is not None:
-        puntos_envido = + envido['nivel']
-    elif envido['activo']:
-        # Calcular los puntos basándonos en el nivel del envido o algo por el estilo
-        puntos_envido = + envido['nivel']
+        # Caso de que se haya rechazado alguno de los envidos
+        # Aca sacamos el último elemento del array de cantado, que es el que se rechazó
+        cantados.pop()
 
-    return puntos_envido
+        print(cantados)
+
+        # y ahora calculamos los puntos que sumarian todos los otros que fueron sabemos que fueron aceptados.
+        for cantado in cantados:
+            if cantado in puntos_por_envido:
+                puntos_a_sumar += puntos_por_envido[cantado]
+
+
+
+
+    else:
+        for cantado in cantados:
+            if cantado in puntos_por_envido:
+                puntos_a_sumar += puntos_por_envido[cantado]
+
+        if 'falta_envido' in cantados:
+            # Calcular puntos correspondientes para el falta envido
+            puntos_a_sumar = 30
+
+    # Si en el calculo de los puntos por alguna razon quedo en 0, es porque solo se canto envido y fue rechazado,
+    # en ese caso simplemente devolvemos 1 y estamos.
+    return puntos_a_sumar if puntos_a_sumar > 0 else 1

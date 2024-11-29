@@ -11,18 +11,8 @@ USUARIO = 'usuario'
 COMPUTADORA = 'computadora'
 
 
-def init_game(max_points):
-    """
-    Función utlizada para inicializar la partida.
-    Debe ser llamada antes de cualquier paso del juego.
-    Configura los puntos maximos de la partida a jugar.
-
-    :param max_points: Puntos maximos para la partida a iniciar.
-    :return:
-    """
-    global partida_actual
-    partida_actual = {
-        "puntos_maximos": max_points,
+def default_game_init() -> dict:
+    return {
         "puntos": {
             "usuario": 0,
             "computadora": 0
@@ -32,6 +22,18 @@ def init_game(max_points):
         "mano_actual": {}
     }
 
+
+def init_game(game_data: dict):
+    """
+    Función utilizada para inicializar la partida.
+    Debe ser llamada antes de cualquier paso del juego.
+
+    :param game_data: Información del estado inicial de la partida
+    :return:
+    """
+    global partida_actual
+    partida_actual.update(game_data)
+
     return partida_actual
 
 
@@ -40,10 +42,11 @@ def reset_game():
     Resetea la partida actual.
     :return:
     """
+    _partida_actual = get_current_game()
     global partida_actual
-    partida_actual = {}
 
-    return partida_actual
+    partida_actual.clear()
+    _partida_actual.clear()
 
 
 def init_hand(user_cards, computer_cards):
@@ -72,21 +75,23 @@ def init_hand(user_cards, computer_cards):
             "cantado_por": None,
             "rechazado_por": None,
             "esperando": False,
+            "cantados": [],
             "puntos": 0,
             "envido_envido": False,
-            "envido_envido_cantado_por": None,
-            "envido_envido_rechazado_por": None,
-            "envido_envido_esperando": False,
             "real_envido": False,
-            "real_envido_cantado_por": None,
-            "real_envido_rechazado_por": None,
-            "real_envido_esperando": False,
             "falta_envido": False,
-            "falta_envido_cantado_por": None,
-            "falta_envido_rechazado_por": None,
-            "falta_envido_esperando": False
         }
     }
+
+    return partida_actual['mano_actual']
+
+
+def reset_hand():
+    """
+    Resetea la mano actual.
+    :return:
+    """
+    partida_actual['mano_actual'] = {}
 
     return partida_actual['mano_actual']
 
@@ -126,67 +131,12 @@ def envido_needs_answer():
     return envido['esperando']
 
 
-def envido_envido_needs_answer():
-    envido = get_current_hand()['envido']
-
-    if envido['envido_envido_rechazado_por'] is not None:
-        return False
-
-    return envido['envido_envido_esperando']
-
-
-def real_envido_needs_answer():
-    envido = get_current_hand()['envido']
-
-    if envido['real_envido_rechazado_por'] is not None:
-        return False
-
-    return envido['real_envido_esperando']
-
-
-def falta_envido_needs_answer():
-    envido = get_current_hand()['envido']
-
-    if envido['falta_envido_rechazado_por'] is not None:
-        return False
-
-    return envido['falta_envido_esperando']
-
-
 def envido_rechazado_por():
     return get_current_hand()['envido']['rechazado_por']
 
 
-def envido_envido_rechazado_por():
-    return get_current_hand()['envido']['envido_envido_rechazado_por']
-
-
-def real_envido_rechazado_por():
-    return get_current_hand()['envido']['real_envido_rechazado_por']
-
-
-def falta_envido_rechazado_por():
-    return get_current_hand()['envido']['falta_envido_rechazado_por']
-
-
 def envido_cantado_por():
     return get_current_hand()['envido']['cantado_por']
-
-
-def envido_envido_cantado_por():
-    return get_current_hand()['envido']['envido_envido_cantado_por']
-
-
-def real_envido_cantado_por():
-    return get_current_hand()['envido']['real_envido_cantado_por']
-
-
-def falta_envido_cantado_por():
-    return get_current_hand()['envido']['falta_envido_cantado_por']
-
-
-def envido_puntos():
-    return get_current_hand()['envido']['puntos']
 
 
 def next_play_by():

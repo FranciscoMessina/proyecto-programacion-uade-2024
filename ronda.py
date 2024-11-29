@@ -1,5 +1,5 @@
 from mazo import determinar_carta_mayor
-from utilidades import formatear_carta, noop
+from utilidades import formatear_carta, noop, player_color, Colores
 from variables import get_current_round
 
 
@@ -8,6 +8,9 @@ def determinar_ganador_ronda():
     Función que determina el ganador de la ronda actual y lo imprime en consola.
     :return:
     """
+    if get_current_round().get('carta_usuario') is None or get_current_round().get('carta_computadora') is None:
+        return noop
+
     carta_usuario = get_current_round()['carta_usuario']
     carta_computadora = get_current_round()['carta_computadora']
 
@@ -30,6 +33,7 @@ def determinar_ganador_ronda():
         print(
             f"{formatear_carta(ronda_actual['carta_usuario'])} empata con {formatear_carta(ronda_actual['carta_computadora'])}")
     else:
-        print(f"Gano {formatear_carta(carta_ganadora)}, jugada por {ronda_actual['ganador']}")
+        print(
+            f"Gano {formatear_carta(carta_ganadora)}, jugada por {player_color[ronda_actual['ganador']]}{ronda_actual['ganador'].upper()}{Colores.RESET}")
 
     return noop
