@@ -41,7 +41,7 @@ def jugar_carta(carta, jugador):
 
         if is_last_action_in_round():
             dev_print('LAST ACTION IN ROUND')
-            add_action(determinar_ganador_ronda)
+            # add_action(determinar_ganador_ronda)
         else:
             add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
 

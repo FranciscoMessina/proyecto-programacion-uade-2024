@@ -1,6 +1,6 @@
 from historial import ver_historial
 from partido import nueva_partida, hay_partida_guardada, continuar_partida
-from utilidades import Colores, pedir_eleccion, dev_print, noop
+from utilidades import Colores, pedir_eleccion, dev_print
 
 
 def mensaje_bienvenida():
@@ -50,7 +50,7 @@ def jugar_al_truco():
     continuar = True
 
     def cerrar_programa():
-        print("Gracias por usar nuestro programa, esperamos verlo pronto.")
+        print("Gracias por jugar al Truco, esperamos verlo pronto.")
         # Esto hace que en vez de buscar la variable en el scope local de la funcion `cerrar_programa` lo busque en el scope anterior,
         # que en este caso es la funcion `jugar_al_truco`. De esta manera se puede modificar la variable `continuar` y salir del bucle.
         # La diferencia con la keyword `global` es que esa buscaría la variable en el scope global del archivo, y no lo encontraría.

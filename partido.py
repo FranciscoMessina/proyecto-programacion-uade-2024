@@ -1,6 +1,3 @@
-import copy
-import time
-
 from archivos import guardar_archivo, abrir_archivo, borrar_archivo
 from historial import guardar_partida_en_historial
 from mano import jugar_mano
@@ -73,14 +70,15 @@ def jugar_partida():
         # Reseteamos los datos de la partida para dejar
         # listo para iniciar una proxima partida.
         reset_game()
+        borrar_partida_guardada()
 
     while continuar:
         try:
             jugar_mano(terminar_partida)
         except KeyboardInterrupt:
-            print("Partida interrumpida por el usuario.")
+            print("Partida interrumpida por el usuario.\n")
 
-            # guardar_partida()
+            guardar_partida()
 
             continuar = False
 
@@ -95,12 +93,15 @@ def guardar_partida():
 
     datos_a_guardar = get_current_game()
 
+    # eliminamos las acciones del array, porque no pueden ser convertidas a JSON.
     datos_a_guardar['mano_actual']['acciones'] = []
 
     # Eliminamos la última ronda, ya que no se terminó de jugar.
 
     ultima_ronda = datos_a_guardar['mano_actual']['rondas'].pop()
 
+    # En este caso alguno de los jugadores ya tiraron cartas, pero como para retomar la partida eliminamos rondas
+    # incompletas, tenemos que volver a agregar la carta a sus manos originales.
     if len(datos_a_guardar['mano_actual']['cartas_usuario']) < 3 - len(datos_a_guardar['mano_actual']['rondas']):
         datos_a_guardar['mano_actual']['cartas_usuario'].append(
             ultima_ronda['carta_usuario']
@@ -112,7 +113,7 @@ def guardar_partida():
 
     guardar_archivo("partida_guardada.json", datos_a_guardar)
 
-    print(f"{Colores.GREEN}Partida guardada con éxito.{Colores.RESET}")
+    print(f"\r{Colores.GREEN}Partida guardada con éxito.{Colores.RESET}\n")
 
     return
 
@@ -140,3 +141,21 @@ def hay_partida_guardada():
         return True
 
     return False
+
+
+def borrar_partida_guardada():
+    """
+    Borra la partida guardada.
+    :return:
+    """
+    try:
+        spinner("Borrando partida guardada...", 12)
+
+        borrar_archivo("partida_guardada.json")
+
+        print(f"\r{Colores.GREEN}Partida guardada borrada con éxito.{Colores.RESET}\n")
+
+    except Exception as a:
+        print(f"\r{Colores.RED}No se pudo borrar la partida guardada.{Colores.RESET}\n")
+
+    return

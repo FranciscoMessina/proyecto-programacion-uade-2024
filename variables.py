@@ -139,6 +139,14 @@ def envido_cantado_por():
     return get_current_hand()['envido']['cantado_por']
 
 
+def truco_cantado_por():
+    return get_current_hand()['truco']['cantado_por']
+
+
+def truco_rechazado_por():
+    return get_current_hand()['truco']['rechazado_por']
+
+
 def next_play_by():
     from utilidades import dev_print
     """
@@ -149,11 +157,11 @@ def next_play_by():
 
     if truco_needs_answer():
         dev_print(f"TRUCO NECESITA RESPUESTA CANTADO POR {current_hand['truco']['cantado_por']}")
-        return USUARIO if current_hand['truco']['cantado_por'] == COMPUTADORA else COMPUTADORA
+        return USUARIO if truco_cantado_por() == COMPUTADORA else COMPUTADORA
 
     if envido_needs_answer():
         dev_print(f"ENVIDO NECESITA RESPUESTA CANTADO POR {current_hand['envido']['cantado_por']}")
-        return USUARIO if current_hand['envido']['cantado_por'] == COMPUTADORA else COMPUTADORA
+        return USUARIO if envido_cantado_por() == COMPUTADORA else COMPUTADORA
 
     dev_print(f"NEXT PLAY BY")
 
@@ -173,6 +181,24 @@ def next_play_by():
         return USUARIO
     else:
         return COMPUTADORA
+
+
+def round_started_by():
+    previous_round = get_previous_round()
+
+    if envido_needs_answer():
+        return USUARIO if envido_cantado_por() == COMPUTADORA else COMPUTADORA
+
+    if truco_needs_answer():
+        return USUARIO if truco_cantado_por() == COMPUTADORA else COMPUTADORA
+
+    if previous_round == {}:
+        return quien_es_mano()
+
+    if previous_round.get('ganador') == 'empate':
+        return quien_es_mano()
+
+    return previous_round['ganador']
 
 
 def get_current_hand():

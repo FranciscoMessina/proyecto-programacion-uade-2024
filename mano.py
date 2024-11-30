@@ -7,7 +7,8 @@ from mazo import repartir_cartas, mazo_truco
 
 from utilidades import dev_print, Colores, player_color
 from variables import get_user_points, get_max_points, get_computer_points, get_current_game, \
-    get_previous_round, add_action, init_hand, get_current_hand, COMPUTADORA, USUARIO, reset_hand, get_current_round
+    get_previous_round, add_action, init_hand, get_current_hand, COMPUTADORA, USUARIO, reset_hand, get_current_round, \
+    round_started_by
 
 
 def jugar_mano(terminar_partida):
@@ -53,11 +54,12 @@ def jugar_mano(terminar_partida):
     mostrar_mano_usuario()
 
     continuar = True
-    numero_de_ronda = len(mano_actual['rondas']) if len(mano_actual['rondas']) > 0 else 1
+    numero_de_ronda = len(mano_actual['rondas'])
     # Generalmente, las manos del truco constan de 3 rondas, pero hay situaciones en las cuales se terminan antes
     # por eso tenemos un while con una condición de corte después de la 3 ronda y una bandera: continuar.
     # Esta última puede ser modificada dentro de la ronda para darle un final temprano.
-    while continuar and numero_de_ronda < 4:
+    while continuar and numero_de_ronda < 3:
+        numero_de_ronda += 1
 
         # Este es el inicio de una nueva ronda en la mano actual.
         # Agregamos a la lista de rondas de la mano una nueva ronda.
@@ -76,23 +78,12 @@ def jugar_mano(terminar_partida):
         print(f" Ronda {numero_de_ronda} ".center(60, "-"))
         # Guardamos en una variable de utilidad la ronda anterior para acceder más fácilmente a ella.
         # Si es la primera ronda, la ronda anterior es un diccionario vació.
-        ronda_anterior = get_previous_round()
+        empieza = round_started_by()
 
-        if ronda_anterior.get('ganador') == COMPUTADORA:
-            # Si tiene que empezar la computadora, agregamos la acción de actuar_computadora a la lista de acciones.
-            add_action(actuar_computadora)
-
-        if ronda_anterior.get('ganador') == USUARIO:
-            # Si tiene que empezar el usuario, agregamos la acción de pedir_accion_usuario a la lista de acciones.
+        if empieza == USUARIO:
             add_action(pedir_accion_usuario)
-
-        if ronda_anterior == {} or ronda_anterior.get('ganador') == 'empate':
-            if partida['siguiente_en_empezar'] == USUARIO:
-                add_action(pedir_accion_usuario)
-            else:
-                add_action(actuar_computadora)
-
-        determinar_ganador_ronda()
+        else:
+            add_action(actuar_computadora)
 
         # Acá ejecutamos las acciones, es simplemente una iteración por la lista de acciones.
         # Al ejecutar cada acción, llamamos a la función que devuelve.
@@ -102,9 +93,10 @@ def jugar_mano(terminar_partida):
             result = action()
             result()
 
-        ronda_actual = get_current_round()
+        determinar_ganador_ronda()
 
-        numero_de_ronda += 1
+        ronda_actual = get_current_round()
+        ronda_anterior = get_previous_round()
 
         if mano_actual['truco'].get('rechazado_por') is not None:
             continuar = False

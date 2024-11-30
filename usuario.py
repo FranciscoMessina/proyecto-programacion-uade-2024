@@ -26,14 +26,19 @@ def pedir_accion_usuario():
     puntos_envido = calcular_envido(cartas)
 
     if envido_needs_answer():
-        print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido")
+
+        cantados = mano_actual['envido']['cantados']
+
+        print(f"Tenes {Colores.BOLD}{Colores.BLUE}{puntos_envido}{Colores.RESET} de envido\n")
+
+        print(f"La {Colores.RED}COMPUTADORA{Colores.RESET} canto {envidos_a_nombres[cantados[-1]]}")
 
         dev_print('AU- Responder a envido')
 
         opciones.append(["Quiero", aceptar_envido(USUARIO)])
         opciones.append(["No quiero", rechazar_envido(USUARIO)])
 
-        for envido in envidos_cantables_despues[mano_actual['envido']['cantados'][-1]]:
+        for envido in envidos_cantables_despues[cantados[-1]]:
             opciones.append([f"Cantar {envidos_a_nombres[envido]}", cantar_envido(USUARIO, envido)])
 
 
