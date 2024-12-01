@@ -136,41 +136,6 @@ def formatear_carta(carta):
     return f"{colores_palos[obtener_palo(carta)]}{Colores.BOLD}{carta[0]}{Colores.RESET}"
 
 
-palo_ascii = {
-    "espada": lambda num: f"""{colores_palos['espada']}
-    +-----------+
-    | {num}   .     |
-    |    / \    |
-    |    | |    |
-    |    |.|    |
-    |    |.|    |
-    |    |:|    |
-    |    |:|    |
-    |  `--8--'  |
-    |     8     |
-    |     O     |     
-    |         {num} |
-    +-----------+
-    {Colores.RESET}
-    """,
-    "basto": lambda num: f"""{colores_palos['basto']}
-    """,
-    "oro": lambda num: f"""{colores_palos['oro']}
-    """,
-    "copa": lambda num: f"""{colores_palos['copa']}
-"""
-}
-
-
-def imprimir_carta_ascii(carta):
-    """
-    Imprime una carta en formato ASCII.
-    :param carta:
-    :return:
-    """
-    print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
-
-
 # Cambiar esto a True si queres ver los mensajes de debug
 DEV = False  # True
 
