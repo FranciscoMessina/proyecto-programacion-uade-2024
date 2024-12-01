@@ -6,7 +6,7 @@ from mazo import repartir_cartas, mazo_truco
 from utilidades import dev_print, Colores, player_color, noop
 from variables import get_user_points, get_max_points, get_computer_points, get_current_game, \
     get_previous_round, add_action, init_hand, get_current_hand, COMPUTADORA, USUARIO, reset_hand, get_current_round, \
-    round_started_by
+    round_started_by, quien_es_mano
 
 
 def jugar_mano(terminar_partida):
@@ -33,7 +33,7 @@ def jugar_mano(terminar_partida):
 
     if partida['mano_actual'] == {}:
         # Se reparten las cartas a cada jugadora
-        cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
+        cartas_usuario, cartas_computadora = ([["Cuatro de Espada", "espada", 4, 1], ["Cinco de Espada", "espada", 5, 2], ["Seis de Espada", "espada", 6, 3]], [["Cuatro de Espada", "espada", 4, 1], ["Cinco de Espada", "espada", 5, 2], ["Seis de Espada", "espada", 6, 3]])     #repartir_cartas(mazo_truco)
 
         # actualizamos que jugador empieza la mano
         if partida["manos_jugadas"] != 0:
@@ -109,7 +109,7 @@ def jugar_mano(terminar_partida):
                 continuar = False
 
             # Si un jugador gana dos rondas seguidas, termina la mano.
-            if ronda_actual.get('ganador') == ronda_anterior.get('ganador'):
+            if ronda_actual.get('ganador') == ronda_anterior.get('ganador') and ronda_actual.get('ganador') != "empate" or ronda_actual.get('ganador') != 'empate':
                 continuar = False
 
     # Determinamos quien gano la ronda actual
@@ -119,6 +119,7 @@ def jugar_mano(terminar_partida):
     puntos_a_sumar = determinar_puntos_ganador()
 
     # Sumamos los puntos al ganador de la mano
+    print(ganador_mano)
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
     print(
@@ -223,6 +224,9 @@ def determinar_ganador_de_la_mano():
         # Sumamos cuantas rondas gano cada jugador
         rondas_ganadas[ronda['ganador']] += 1
 
+    if rondas_ganadas['empate'] == 3:
+        return quien_es_mano()
+
     # Empata la primera, gana el siguiente ganador.
     if ronda_1['ganador'] == 'empate':
         return ronda_2['ganador'] if ronda_2['ganador'] != 'empate' else ronda_3['ganador']
@@ -230,5 +234,6 @@ def determinar_ganador_de_la_mano():
     # Si se empata cualquier ronda menos la primera, gana el que gano la primera.
     if rondas_ganadas['empate'] > 0 and ronda_1['ganador'] != 'empate':
         return ronda_1['ganador']
+    
 
     return USUARIO if rondas_ganadas[USUARIO] > rondas_ganadas[COMPUTADORA] else COMPUTADORA
