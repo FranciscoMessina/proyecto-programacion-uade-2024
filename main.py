@@ -1,6 +1,6 @@
 from historial import ver_historial
 from partido import nueva_partida, hay_partida_guardada, continuar_partida
-from utilidades import Colores, pedir_eleccion, dev_print
+from utilidades import Colores, pedir_eleccion, dev_print, instrucciones
 
 
 def mensaje_bienvenida():
@@ -68,8 +68,10 @@ def jugar_al_truco():
             if hay_partida_guardada():
                 opciones.append(['Continuar partida guardada', continuar_partida])
 
+            opciones.append(['Ver instrucciones', instrucciones])
             opciones.append(['Ver historial', ver_historial])
             opciones.append(['Salir del programa', cerrar_programa])
+            
 
             respuesta = pedir_eleccion(opciones, True)
 

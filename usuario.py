@@ -1,6 +1,6 @@
 from envido import calcular_envido, envidos_cantables_despues
 
-from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print
+from utilidades import formatear_carta, pedir_eleccion, Colores, dev_print, instrucciones
 from variables import get_current_hand, get_user_cards, is_first_round, \
     USUARIO, COMPUTADORA, envido_needs_answer, truco_needs_answer, envido_rechazado_por, envido_cantado_por
 

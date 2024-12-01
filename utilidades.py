@@ -4,7 +4,6 @@ import time
 from mazo import obtener_palo, obtener_numero
 from variables import USUARIO, COMPUTADORA
 
-
 # Deja mas prolija la terminal para empezar a jugar
 def limpiar_terminal():
     """
@@ -185,6 +184,20 @@ def dev_print(*args, **kwargs):
     if DEV:
         print(f'{Colores.PURPLE}(DEV-ONLY)', *args, f'{Colores.RESET}', **kwargs)
 
+def instrucciones():
+    print("""
+  | ---------------------------------- TRUCO BITS: INSTRUCCIONES -------------------------------- |
+  |                                                                                               |
+  | En esta adaptacion del popular juego Argentino, Tuco, se juega ingresando numeros del teclado |
+  | para indicar las acciones a jugar. Las reglas son las mismas que las del juego original.      |
+  | Ademas de las acciones explicitas, tambien se puede abandonar la partida en cualquier momento |
+  | con la combinacion de teclas: CTRL + C, y ademas se puede retomar la partida posteriormente   |
+  |                                                                                               |
+  | --------------------------------------------------------------------------------------------- |         
+          
+          """)
+    return noop
+    
 
 def noop():
     dev_print("Noop fue llamado")
