@@ -155,7 +155,7 @@ def instrucciones():
     print("""
   | ---------------------------------- TRUCO BITS: INSTRUCCIONES -------------------------------- |
   |                                                                                               |
-  | En esta adaptacion del popular juego Argentino, Truco, se juega ingresando numeros del teclado |
+  | En esta adaptacion del popular juego Argentino, Truco, se juega ingresando numeros del teclado|
   | para indicar las acciones a jugar. Las reglas son las mismas que las del juego original.      |
   | Ademas de las acciones explicitas, tambien se puede abandonar la partida en cualquier momento |
   | con la combinacion de teclas: CTRL + C, y ademas se puede retomar la partida posteriormente   |
