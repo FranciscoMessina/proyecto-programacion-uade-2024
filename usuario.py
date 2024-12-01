@@ -47,6 +47,8 @@ def pedir_accion_usuario():
 
         opciones.append(["Quiero", aceptar_truco(USUARIO)])
         opciones.append(["No quiero", rechazar_truco(USUARIO)])
+        if envido_cantado_por() is None and envido_rechazado_por() is None and is_first_round():
+            opciones.append(["El envido va primero", cantar_envido(USUARIO, 'envido')])
 
         if mano_actual['truco'].get('nivel') == 1:
             opciones.append(["Cantar Retruco", cantar_truco(USUARIO, 2)])
