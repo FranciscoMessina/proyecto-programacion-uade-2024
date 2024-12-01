@@ -5,7 +5,7 @@ from mazo import obtener_palo, obtener_numero
 from variables import USUARIO, COMPUTADORA
 
 
-# Deja mas prolija la terminal para empezar a jugar
+# Deja más prolija la terminal para empezar a jugar
 def limpiar_terminal():
     """
     Función de utilidad para limpiar la terminal.
@@ -18,7 +18,8 @@ def limpiar_terminal():
 def pedir_eleccion(opciones, limpiar_consola=False):
     """
     Función de utilidad para pedir input al usuario, recibe una lista con las opciones a mostrar y devuelve la elección del usuario.
-    Cada elemento de la lista es otra lista con el siguiente formato: [texto, valor].
+    En la lista pueden ir dos tipos de elementos, uno es una String, que simplemente se imprime como una adición estetica,
+    el otro elemento de la lista es otra lista con el siguiente formato: [texto, valor]. Que son las opciones seleccionables.
     Texto es lo que se muestra al usuario al momento de pedirle el input y valor es lo que se devuelve si el usuario elige esa opción.
 
     También se encarga de validar que la elección del usuario.
