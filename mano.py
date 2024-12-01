@@ -33,7 +33,7 @@ def jugar_mano(terminar_partida):
 
     if partida['mano_actual'] == {}:
         # Se reparten las cartas a cada jugadora
-        cartas_usuario, cartas_computadora = ([["Cuatro de Espada", "espada", 4, 1], ["Cinco de Espada", "espada", 5, 2], ["Seis de Espada", "espada", 6, 3]], [["Cuatro de Espada", "espada", 4, 1], ["Cinco de Espada", "espada", 5, 2], ["Seis de Espada", "espada", 6, 3]])     #repartir_cartas(mazo_truco)
+        cartas_usuario, cartas_computadora = repartir_cartas(mazo_truco)
 
         # actualizamos que jugador empieza la mano
         if partida["manos_jugadas"] != 0:
@@ -119,7 +119,7 @@ def jugar_mano(terminar_partida):
     puntos_a_sumar = determinar_puntos_ganador()
 
     # Sumamos los puntos al ganador de la mano
-    print(ganador_mano)
+    
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
     print(
