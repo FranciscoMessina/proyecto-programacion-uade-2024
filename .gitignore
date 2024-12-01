@@ -3,3 +3,4 @@ __pycache__
 
 historial.json
 partida_guardada.json
+venv/

@@ -5,7 +5,7 @@ from envido import determinar_ganador_envido, calcular_puntos_por_envido
 from utilidades import formatear_carta, noop, dev_print, player_color, Colores
 from variables import get_current_game, get_current_hand, get_current_round, is_last_action_in_round, add_action, \
     USUARIO, \
-    next_play_by
+    next_play_by, truco_rechazado_por, truco_cantado_por, envido_cantado_por
 
 
 def jugar_carta(carta, jugador):
@@ -70,7 +70,45 @@ def cantar_truco(jugador, nivel):
 
     def _cantar_truco():
         mano_actual = get_current_hand()
-        mano_actual['truco'].update({
+
+        truco = mano_actual['truco']
+
+        # Si el truco ya fue rechazado, no permitimos que se cante
+        if truco_rechazado_por() is not None:
+            print(
+                f"{Colores.RED}No se puede cantar {niveles_nombre_truco[nivel]}, ya fue rechazado!{Colores.RESET}")
+
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
+
+            return noop
+
+        # Si se trata de cantar el mismo nivel de truco que ya fue cantado, no permitimos que se cante
+        if truco['nivel'] == nivel:
+            print(
+                f"{Colores.RED}No se puede volver a cantar {niveles_nombre_truco[nivel]} en la misma mano! {Colores.RESET}")
+
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
+
+            return noop
+
+        if truco['nivel'] - nivel != -1:
+            print(
+                f"{Colores.RED}No se puede cantar {niveles_nombre_truco[nivel]}, ya que el nivel de truco anterior no fue cantado!{Colores.RESET}")
+
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
+
+            return noop
+
+        if truco_cantado_por() is not None:
+            if truco_cantado_por() == jugador:
+                print(
+                    f"{Colores.RED}No se puede cantar {niveles_nombre_truco[nivel]}, ya que el nivel de truco anterior fue cantado por el mismo jugador!{Colores.RESET}")
+
+                add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
+
+                return noop
+
+        truco.update({
             "activo": False,
             "cantado_por": jugador,
             "nivel": nivel,
@@ -172,13 +210,44 @@ def cantar_envido(jugador, que_envido):
 
     def _cantar_envido():
         mano_actual = get_current_hand()
-        mano_actual['envido'].update({
+        envido = mano_actual['envido']
+
+        # Si ya se cantó ese envido, no se puede volver a cantar.
+        # Aunque técnicamente él envido envido, si es un doble canto de envido, lo
+        # manejamos como un envido separado para evitar dificultades.
+        if que_envido in envido['cantados']:
+            print(
+                f"{Colores.RED}No se puede volver a cantar {envidos_a_nombres[que_envido]} en la misma mano!{Colores.RESET}")
+
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
+
+            return noop
+
+        # Un mismo jugador no puede cantar dos envidos seguidos.
+        if jugador == envido_cantado_por():
+            print(
+                f"{Colores.RED}No puede cantar el siguiente envido el mismo jugador que canto el anterior!{Colores.RESET}")
+
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
+
+            return noop
+
+        # Si no se canto "envido" o se canto cualquier otro envido ademas de ese, no se puede cantar "envido_2"
+        if que_envido == 'envido_2' and envido['cantados'] != ['envido']:
+            print(
+                f"{Colores.RED}Solo se puede cantar {envidos_a_nombres[que_envido]} si se canto Envido y ningún otro nivel!{Colores.RESET}")
+
+            add_action(pedir_accion_usuario if next_play_by() == USUARIO else actuar_computadora)
+
+            return noop
+
+        envido.update({
             "activo": False,
             "cantado_por": jugador,
             "puntos": 1,
             "esperando": True
         })
-        mano_actual['envido']['cantados'].append(que_envido)
+        envido['cantados'].append(que_envido)
 
         dev_print('Cantar Envido Execution')
 

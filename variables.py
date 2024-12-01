@@ -65,7 +65,7 @@ def init_hand(user_cards, computer_cards):
         "rondas": [],
         "truco": {
             "activo": False,
-            "cantando_por": None,
+            "cantado_por": None,
             "rechazado_por": None,
             "esperando": False,
             "nivel": 0

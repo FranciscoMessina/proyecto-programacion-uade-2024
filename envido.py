@@ -1,7 +1,7 @@
 from mazo import obtener_numero
 from utilidades import Colores, player_color
 from variables import COMPUTADORA, USUARIO, get_computer_cards, get_current_hand, get_current_game, \
-    get_current_round, get_user_cards, quien_es_mano
+    get_current_round, get_user_cards, quien_es_mano, get_max_points, get_user_points, get_computer_points
 
 
 def calcular_envido(mano):
@@ -118,14 +118,10 @@ def calcular_puntos_por_envido():
 
     puntos_a_sumar = 0
 
-    print(cantados)
-
     if envido['rechazado_por'] is not None:
         # Caso de que se haya rechazado alguno de los envidos
         # Aca sacamos el último elemento del array de cantado, que es el que se rechazó
         cantados.pop()
-
-        print(cantados)
 
         # y ahora calculamos los puntos que sumarian todos los otros que fueron sabemos que fueron aceptados.
         for cantado in cantados:
@@ -142,8 +138,22 @@ def calcular_puntos_por_envido():
 
         if 'falta_envido' in cantados:
             # Calcular puntos correspondientes para el falta envido
-            puntos_a_sumar = 30
+            puntos_maximos = get_max_points()
+            puntos_usuario = get_user_points()
+            puntos_computadora = get_computer_points()
 
-    # Si en el calculo de los puntos por alguna razon quedo en 0, es porque solo se canto envido y fue rechazado,
+            if puntos_maximos == 15:
+                # Si la partida es a 15, siempre suma los puntos para ganar la partida
+                puntos_a_sumar = 15
+            else:
+                if puntos_usuario > 15 or puntos_computadora > 15:
+                    # Si alguno de los jugadores ya está en las buenas, los puntos sumados son la diferencia
+                    # entre los puntajes de ambos jugadores
+                    puntos_a_sumar = abs(puntos_computadora - puntos_usuario)
+                else:
+                    # Si ninguno llego a las buenas, otorga los puntos necesarios para ganar la partida
+                    puntos_a_sumar = 30
+
+    # Si en el cálculo de los puntos por alguna razon quedo en 0, es porque solo se cantó envido y fue rechazado,
     # en ese caso simplemente devolvemos 1 y estamos.
     return puntos_a_sumar if puntos_a_sumar > 0 else 1
