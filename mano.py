@@ -99,15 +99,18 @@ def jugar_mano(terminar_partida):
         # Si el truco fue rechazado, termina la mano
         if mano_actual['truco'].get('rechazado_por') is not None:
             continuar = False
-        # Si se jugaron dos rondas, y la primera fue empatada y la segunda no, termina la mano.
-        if ronda_anterior.get('ganador') == 'empate' and ronda_actual.get('ganador') != 'empate':
-            continuar = False
-        # Si se jugaron dos rondas, y la primera no fue empatada y la segunda sí, termina la mano.
-        if ronda_anterior.get('ganador') != "empate" and ronda_actual.get('ganador') == "empate":
-            continuar = False
-        # Si un jugador gana dos rondas seguidas, termina la mano.
-        if ronda_actual.get('ganador') == ronda_anterior.get('ganador'):
-            continuar = False
+        if numero_de_ronda >= 2:
+            # Si se jugaron dos rondas, y la primera fue empatada y la segunda no, termina la mano.
+            if ronda_anterior.get('ganador') == 'empate' and ronda_actual.get('ganador') != 'empate':
+                continuar = False
+
+            # Si se jugaron dos rondas, y la primera no fue empatada y la segunda sí, termina la mano.
+            if ronda_anterior.get('ganador') != "empate" and ronda_actual.get('ganador') == "empate":
+                continuar = False
+
+            # Si un jugador gana dos rondas seguidas, termina la mano.
+            if ronda_actual.get('ganador') == ronda_anterior.get('ganador'):
+                continuar = False
 
     # Determinamos quien gano la ronda actual
     ganador_mano = determinar_ganador_de_la_mano()

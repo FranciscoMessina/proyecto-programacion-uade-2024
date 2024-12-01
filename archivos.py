@@ -41,8 +41,6 @@ def borrar_archivo(nombre_archivo):
     :param nombre_archivo:
     :return:
     """
-    try:
-        import os
-        os.remove(nombre_archivo)
-    except Exception as a:
-        print("Error al borrar", a)
+
+    import os
+    os.remove(nombre_archivo)

@@ -5,7 +5,8 @@ from envido import determinar_ganador_envido, calcular_puntos_por_envido
 from utilidades import formatear_carta, noop, dev_print, player_color, Colores
 from variables import get_current_game, get_current_hand, get_current_round, is_last_action_in_round, add_action, \
     USUARIO, \
-    next_play_by, truco_rechazado_por, truco_cantado_por, envido_cantado_por
+    next_play_by, truco_rechazado_por, truco_cantado_por, envido_cantado_por, get_max_points, get_user_points, \
+    get_computer_points
 
 
 def jugar_carta(carta, jugador):
@@ -346,6 +347,19 @@ def sumar_puntos_envido(jugador):
         puntos_a_sumar = calcular_puntos_por_envido()
 
         ganador_del_envido = determinar_ganador_envido()
+
+        max_points = get_max_points()
+
+        if ganador_del_envido == USUARIO:
+            puntos_usuario = get_user_points()
+
+            if puntos_usuario + puntos_a_sumar > max_points:
+                puntos_a_sumar = max_points - puntos_usuario
+        else:
+            puntos_computadora = get_computer_points()
+
+            if puntos_computadora + puntos_a_sumar > max_points:
+                puntos_a_sumar = max_points - puntos_computadora
 
         print(
             f"{player_color[ganador_del_envido]}{ganador_del_envido.capitalize()}{Colores.RESET} gana {puntos_a_sumar} puntos!")

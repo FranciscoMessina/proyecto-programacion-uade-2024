@@ -70,7 +70,9 @@ def jugar_partida():
         # Reseteamos los datos de la partida para dejar
         # listo para iniciar una proxima partida.
         reset_game()
-        borrar_partida_guardada()
+
+        if hay_partida_guardada():
+            borrar_partida_guardada()
 
     while continuar:
         try:
