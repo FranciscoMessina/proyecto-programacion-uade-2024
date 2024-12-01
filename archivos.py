@@ -16,7 +16,7 @@ def guardar_archivo(nombre_archivo, datos):
     """
     try:
         with open(nombre_archivo, "w") as archivo:
-            json.dump(datos, archivo)
+            json.dump(datos, archivo, indent=4)
     except Exception as a:
         print("Error al guardar", a)
 
@@ -33,3 +33,14 @@ def abrir_archivo(nombre_archivo):
             return datos
     except FileNotFoundError:
         return False
+
+
+def borrar_archivo(nombre_archivo):
+    """
+    Borra un archivo
+    :param nombre_archivo:
+    :return:
+    """
+
+    import os
+    os.remove(nombre_archivo)

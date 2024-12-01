@@ -1,7 +1,7 @@
 from datetime import date
 
 from archivos import abrir_archivo, guardar_archivo
-from utilidades import Colores
+from utilidades import Colores, player_color
 from variables import get_computer_points, get_user_points, get_max_points, get_current_game
 
 
@@ -20,11 +20,13 @@ def guardar_partida_en_historial():
 
     fecha = date.today()
 
+    max_points = get_max_points()
+
     # Agregamos a la lista los datos que queremos guardar de la partida actual.
     historial.append({
-        "puntos_computadora": get_computer_points(),
-        "puntos_usuario": get_user_points(),
-        "puntos_maximos": get_max_points(),
+        "puntos_computadora": min(get_computer_points(), max_points),
+        "puntos_usuario": min(get_user_points(), max_points),
+        "puntos_maximos": max_points,
         "ganador": get_current_game()['ganador'],
         "fecha": str(fecha)
 
@@ -46,7 +48,7 @@ def ver_historial():
     # Si no existe el archivo o tiene una lista vacia, mostramos un mensaje indicando que aun no se jugaron partidas.
     if historial == False or len(historial) == 0:
         print("\n\n\nAún no jugaste ninguna partida,")
-        print("cuando lo hagas podras ver tu historial aqui.\n\n\n")
+        print("cuando lo hagas podrás ver tu historial aqui.\n\n\n")
     else:
         print(f'{Colores.YELLOW}{Colores.BOLD}{Colores.UNDERLINE}Historial de partidas{Colores.RESET}: \n')
         for idx, partida in enumerate(historial):
@@ -54,7 +56,7 @@ def ver_historial():
             print(f" La partida fue a {partida['puntos_maximos']} puntos")
             print(f"   Puntos del usuario: {partida['puntos_usuario']}")
             print(f"   Puntos de la computadora: {partida['puntos_computadora']}")
-            print(f"   Ganador: {partida['ganador'].upper()}")
+            print(f"   Ganador: {player_color[partida['ganador']]}{partida['ganador'].upper()}{Colores.RESET}")
             print(f"   Fecha (Año-Mes-Día): {partida['fecha']}\n")
             print("".center(50, '-'))
             print("")

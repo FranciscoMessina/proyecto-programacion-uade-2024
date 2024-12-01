@@ -22,13 +22,11 @@ incluir son:
 - [X] Calcular puntaje de Envido y ganador
 - [X] Posibilidad de cantar Truco y variantes cuando corresponde
 - [X] Determinar ganador de la ronda
-- [ ] Manejo de empates
+- [X] Manejo de empates
 - [X] Elegir partida de 15 o 30 puntos
 - [X] Determinar ganador de la partida
-- [ ] Decisiones de la computadora
-- [ ] Display gráfico de las cartas (Terminal ASCII)
-- [ ] Guardado y continuación de partidas
-- [ ] Tutorial
+- [X] Decisiones de la computadora
+- [X] Guardado y continuación de partidas
 
 ### SEGUIR ESTE ESTILO DE CODIGO:
 
