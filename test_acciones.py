@@ -1,7 +1,7 @@
 import pytest
 
 from acciones import jugar_carta, cantar_truco, aceptar_truco, rechazar_truco, cantar_envido
-from envido import calcular_puntos_por_envido
+from envido import calcular_puntos_por_ganar_envido
 from mano import determinar_puntos_ganador, determinar_ganador_de_la_mano
 from mazo import mazo_truco
 from ronda import determinar_ganador_ronda
@@ -292,7 +292,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': None,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 2
 
@@ -302,7 +302,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': USUARIO,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 1
 
@@ -312,7 +312,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': None,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 4
 
@@ -322,7 +322,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': USUARIO,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 2
 
@@ -332,7 +332,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': None,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 7
 
@@ -342,7 +342,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': USUARIO,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 4
 
@@ -352,7 +352,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': None,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 5
 
@@ -362,7 +362,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': USUARIO,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 2
 
@@ -372,7 +372,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': USUARIO,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 7
 
@@ -382,7 +382,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': USUARIO,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 4
 
@@ -392,7 +392,7 @@ def test_puntos_por_envido(reset_game_data):
         'rechazado_por': USUARIO,
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 2
 
@@ -407,7 +407,7 @@ def test_puntos_por_envido(reset_game_data):
     # En una partida a 15
     current_game['puntos_maximos'] = 15
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 15
 
@@ -420,7 +420,7 @@ def test_puntos_por_envido(reset_game_data):
         COMPUTADORA: 14
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == 30
 
@@ -430,7 +430,7 @@ def test_puntos_por_envido(reset_game_data):
         COMPUTADORA: 14
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == abs(16 - 14)
 
@@ -440,6 +440,6 @@ def test_puntos_por_envido(reset_game_data):
         COMPUTADORA: 12
     }
 
-    puntos = calcular_puntos_por_envido()
+    puntos = calcular_puntos_por_ganar_envido()
 
     assert puntos == abs(25 - 12)

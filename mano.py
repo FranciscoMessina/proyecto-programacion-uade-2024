@@ -6,7 +6,7 @@ from mazo import repartir_cartas, mazo_truco
 from utilidades import dev_print, Colores, player_color, noop
 from variables import get_user_points, get_max_points, get_computer_points, get_current_game, \
     get_previous_round, add_action, init_hand, get_current_hand, COMPUTADORA, USUARIO, reset_hand, get_current_round, \
-    round_started_by
+    round_started_by, quien_es_mano
 
 
 def jugar_mano(terminar_partida):
@@ -109,7 +109,8 @@ def jugar_mano(terminar_partida):
                 continuar = False
 
             # Si un jugador gana dos rondas seguidas, termina la mano.
-            if ronda_actual.get('ganador') == ronda_anterior.get('ganador'):
+            if ronda_actual.get('ganador') == ronda_anterior.get('ganador') and (
+                    ronda_actual.get('ganador') != "empate" or ronda_actual.get('ganador') != 'empate'):
                 continuar = False
 
     # Determinamos quien gano la ronda actual
@@ -119,6 +120,7 @@ def jugar_mano(terminar_partida):
     puntos_a_sumar = determinar_puntos_ganador()
 
     # Sumamos los puntos al ganador de la mano
+
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
     print(
@@ -222,6 +224,9 @@ def determinar_ganador_de_la_mano():
     for ronda in rondas:
         # Sumamos cuantas rondas gano cada jugador
         rondas_ganadas[ronda['ganador']] += 1
+
+    if rondas_ganadas['empate'] == 3:
+        return quien_es_mano()
 
     # Empata la primera, gana el siguiente ganador.
     if ronda_1['ganador'] == 'empate':

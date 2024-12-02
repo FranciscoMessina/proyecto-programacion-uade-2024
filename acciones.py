@@ -1,7 +1,6 @@
 from usuario import pedir_accion_usuario
 from computadora import actuar_computadora
-from ronda import determinar_ganador_ronda
-from envido import determinar_ganador_envido, calcular_puntos_por_envido
+from envido import determinar_ganador_envido, calcular_puntos_por_ganar_envido
 from utilidades import formatear_carta, noop, dev_print, player_color, Colores
 from variables import get_current_game, get_current_hand, get_current_round, is_last_action_in_round, add_action, \
     USUARIO, \
@@ -344,7 +343,7 @@ def sumar_puntos_envido(jugador):
         envido = get_current_hand()['envido']
         partida = get_current_game()
 
-        puntos_a_sumar = calcular_puntos_por_envido()
+        puntos_a_sumar = calcular_puntos_por_ganar_envido()
 
         ganador_del_envido = determinar_ganador_envido()
 

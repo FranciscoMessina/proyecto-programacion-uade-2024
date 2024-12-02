@@ -5,7 +5,7 @@ from mazo import obtener_palo, obtener_numero
 from variables import USUARIO, COMPUTADORA
 
 
-# Deja mas prolija la terminal para empezar a jugar
+# Deja más prolija la terminal para empezar a jugar
 def limpiar_terminal():
     """
     Función de utilidad para limpiar la terminal.
@@ -18,7 +18,8 @@ def limpiar_terminal():
 def pedir_eleccion(opciones, limpiar_consola=False):
     """
     Función de utilidad para pedir input al usuario, recibe una lista con las opciones a mostrar y devuelve la elección del usuario.
-    Cada elemento de la lista es otra lista con el siguiente formato: [texto, valor].
+    En la lista pueden ir dos tipos de elementos, uno es una String, que simplemente se imprime como una adición estetica,
+    el otro elemento de la lista es otra lista con el siguiente formato: [texto, valor]. Que son las opciones seleccionables.
     Texto es lo que se muestra al usuario al momento de pedirle el input y valor es lo que se devuelve si el usuario elige esa opción.
 
     También se encarga de validar que la elección del usuario.
@@ -135,41 +136,6 @@ def formatear_carta(carta):
     return f"{colores_palos[obtener_palo(carta)]}{Colores.BOLD}{carta[0]}{Colores.RESET}"
 
 
-palo_ascii = {
-    "espada": lambda num: f"""{colores_palos['espada']}
-    +-----------+
-    | {num}   .     |
-    |    / \    |
-    |    | |    |
-    |    |.|    |
-    |    |.|    |
-    |    |:|    |
-    |    |:|    |
-    |  `--8--'  |
-    |     8     |
-    |     O     |     
-    |         {num} |
-    +-----------+
-    {Colores.RESET}
-    """,
-    "basto": lambda num: f"""{colores_palos['basto']}
-    """,
-    "oro": lambda num: f"""{colores_palos['oro']}
-    """,
-    "copa": lambda num: f"""{colores_palos['copa']}
-"""
-}
-
-
-def imprimir_carta_ascii(carta):
-    """
-    Imprime una carta en formato ASCII.
-    :param carta:
-    :return:
-    """
-    print(palo_ascii[obtener_palo(carta)](obtener_numero(carta)))
-
-
 # Cambiar esto a True si queres ver los mensajes de debug
 DEV = False  # True
 
@@ -185,6 +151,20 @@ def dev_print(*args, **kwargs):
     if DEV:
         print(f'{Colores.PURPLE}(DEV-ONLY)', *args, f'{Colores.RESET}', **kwargs)
 
+def instrucciones():
+    print("""
+  | ---------------------------------- TRUCO BITS: INSTRUCCIONES -------------------------------- |
+  |                                                                                               |
+  | En esta adaptacion del popular juego Argentino, Truco, se juega ingresando numeros del teclado|
+  | para indicar las acciones a jugar. Las reglas son las mismas que las del juego original.      |
+  | Ademas de las acciones explicitas, tambien se puede abandonar la partida en cualquier momento |
+  | con la combinacion de teclas: CTRL + C, y ademas se puede retomar la partida posteriormente   |
+  |                                                                                               |
+  | --------------------------------------------------------------------------------------------- |         
+          
+          """)
+    return noop
+    
 
 def noop():
     dev_print("Noop fue llamado")

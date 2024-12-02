@@ -18,7 +18,7 @@ def default_game_init() -> dict:
             "computadora": 0
         },
         "manos_jugadas": 0,
-        "siguiente_en_empezar": choice(['computadora', 'usuario']),
+        "siguiente_en_empezar": choice(['computadora']),  # 'usuario']),
         "mano_actual": {}
     }
 
@@ -76,10 +76,6 @@ def init_hand(user_cards, computer_cards):
             "rechazado_por": None,
             "esperando": False,
             "cantados": [],
-            "puntos": 0,
-            "envido_envido": False,
-            "real_envido": False,
-            "falta_envido": False,
         }
     }
 
@@ -155,13 +151,13 @@ def next_play_by():
     """
     current_hand = get_current_hand()
 
-    if truco_needs_answer():
-        dev_print(f"TRUCO NECESITA RESPUESTA CANTADO POR {current_hand['truco']['cantado_por']}")
-        return USUARIO if truco_cantado_por() == COMPUTADORA else COMPUTADORA
-
     if envido_needs_answer():
         dev_print(f"ENVIDO NECESITA RESPUESTA CANTADO POR {current_hand['envido']['cantado_por']}")
         return USUARIO if envido_cantado_por() == COMPUTADORA else COMPUTADORA
+
+    if truco_needs_answer():
+        dev_print(f"TRUCO NECESITA RESPUESTA CANTADO POR {current_hand['truco']['cantado_por']}")
+        return USUARIO if truco_cantado_por() == COMPUTADORA else COMPUTADORA
 
     dev_print(f"NEXT PLAY BY")
 

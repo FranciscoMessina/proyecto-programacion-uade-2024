@@ -45,31 +45,15 @@ def calcular_envido(mano):
 
 
 def determinar_ganador_envido():
-    #   Si el envido fue rechazado el jugador que lo canto gana automáticamente el último nivel cantado
+    #   Si él envido fue rechazado el jugador que lo canto gana automáticamente el último nivel cantado
     if get_current_hand()['envido']['rechazado_por'] is not None:
         return USUARIO if get_current_hand()['envido']['rechazado_por'] == COMPUTADORA else COMPUTADORA
 
     # Hay que modificar esto para que no reciba parámetros, sino que tome las manos de la partida actual
     # y solo devuelva como una string el ganador "usuario" o "computadora"
-    cartas_usuario = get_user_cards()
-    cartas_computadora = get_computer_cards()
-    envido_usuario = calcular_envido(cartas_usuario)
-    envido_compu = calcular_envido(cartas_computadora)
 
-    # En estos casos alguno de los jugadores ya jugó una carta,
-    # por lo que hay que agregarla a la mano para calcular él envido.
-    if len(cartas_usuario) == 2:
-        carta_jugada = get_current_round().get('carta_usuario')
-        cartas_usuario.append(carta_jugada)
-        envido_usuario = calcular_envido(cartas_usuario)
-        cartas_usuario.pop()
-    elif len(cartas_computadora) == 2:
-        carta_jugada = get_current_round().get('carta_computadora')
-        cartas_computadora.append(carta_jugada)
-        envido_compu = calcular_envido(cartas_computadora)
-        cartas_computadora.pop()
-
-    partida_actual = get_current_game()
+    envido_usuario = calcular_puntos_envido_usuario()
+    envido_compu = calcular_puntos_envido_computadora()
 
     print(" Envido ".center(60, '-'))
     print(f"{Colores.GREEN}Usuario{Colores.RESET}: {envido_usuario}")
@@ -107,7 +91,39 @@ envidos_cantables_despues = {
 }
 
 
-def calcular_puntos_por_envido():
+def calcular_puntos_envido_computadora():
+    cartas_computadora = get_computer_cards()
+
+    envido_compu = calcular_envido(cartas_computadora)
+    # En estos casos alguno de los jugadores ya jugó una carta,
+    # por lo que hay que agregarla a la mano para calcular él envido.
+
+    if len(cartas_computadora) == 2:
+        carta_jugada = get_current_round().get('carta_computadora')
+        cartas_computadora.append(carta_jugada)
+        envido_compu = calcular_envido(cartas_computadora)
+        cartas_computadora.pop()
+
+    return envido_compu
+
+
+def calcular_puntos_envido_usuario():
+    cartas_usuario = get_user_cards()
+
+    envido_usuario = calcular_envido(cartas_usuario)
+
+    # En estos casos alguno de los jugadores ya jugó una carta,
+    # por lo que hay que agregarla a la mano para calcular él envido.
+    if len(cartas_usuario) == 2:
+        carta_jugada = get_current_round().get('carta_usuario')
+        cartas_usuario.append(carta_jugada)
+        envido_usuario = calcular_envido(cartas_usuario)
+        cartas_usuario.pop()
+
+    return envido_usuario
+
+
+def calcular_puntos_por_ganar_envido():
     """
     Calcula los puntos que se obtienen al ganar él envido
     :return: puntos a sumar al ganador del envido
