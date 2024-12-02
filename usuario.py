@@ -16,7 +16,7 @@ def pedir_accion_usuario():
     # entonces si importamos al inicio del archivo, se importan antes de que se definan las funciones, y da error.
     # Pero al importarlo dentro de la funcion (asumo que), se importan recien cuando se ejecuta la funcion, y ahi ya estan definidas las otras funciones
     from acciones import cantar_truco, cantar_envido, aceptar_truco, \
-        rechazar_truco, aceptar_envido, rechazar_envido, jugar_carta, envidos_a_nombres
+        rechazar_truco, aceptar_envido, rechazar_envido, jugar_carta, envidos_a_nombres, niveles_nombre_truco
     dev_print("Inicio Pedir Accion Usuario")
 
     opciones = []
@@ -45,9 +45,12 @@ def pedir_accion_usuario():
     elif truco_needs_answer():
         dev_print('AU- Responder a Truco')
 
+        print(f"La {Colores.RED}COMPUTADORA{Colores.RESET} canto {niveles_nombre_truco[mano_actual['truco']['nivel']]}")
+
         opciones.append(["Quiero", aceptar_truco(USUARIO)])
         opciones.append(["No quiero", rechazar_truco(USUARIO)])
-        if envido_cantado_por() is None and envido_rechazado_por() is None and is_first_round():
+        if envido_cantado_por() is None and envido_rechazado_por() is None and is_first_round() and \
+                mano_actual['truco']['nivel'] == 1:
             opciones.append(["El envido va primero", cantar_envido(USUARIO, 'envido')])
 
         if mano_actual['truco'].get('nivel') == 1:

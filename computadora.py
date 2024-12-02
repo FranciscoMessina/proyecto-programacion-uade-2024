@@ -1,9 +1,9 @@
 import random
 from random import choice
 
-from envido import calcular_envido
+from envido import calcular_puntos_envido_computadora
 from mazo import obtener_poder
-from utilidades import noop, dev_print
+from utilidades import dev_print
 from variables import get_computer_cards, get_current_round, get_current_hand, COMPUTADORA, USUARIO, \
     envido_needs_answer, truco_needs_answer, is_first_round, envido_rechazado_por, envido_cantado_por
 
@@ -14,7 +14,7 @@ def actuar_computadora():
 
     :return:
     """
-    from acciones import cantar_envido
+    from acciones import cantar_envido, cantar_truco, jugar_carta
 
     dev_print('Inicio Actuar computadora')
 
@@ -31,45 +31,69 @@ def actuar_computadora():
 
     if is_first_round() and envido_rechazado_por() is None and envido_cantado_por() is None:
         dev_print('AC- Cantar envido')
-        envido_puntos = calcular_envido(cartas)
-        if envido_puntos >= 20:
-            # CANTAR ENVIDO
-            elegir = choice([1, 2, 3])
-            if elegir == 1:
 
-                return cantar_envido(COMPUTADORA, 'envido')
-            elif elegir == 2:
+        envido_puntos = calcular_puntos_envido_computadora()
 
-                return cantar_envido(COMPUTADORA, 'real_envido')
-            elif elegir == 3:
+        if envido_puntos >= 30:
+            opciones = [
+                (cantar_envido(COMPUTADORA, 'envido'), 30),
+                (cantar_envido(COMPUTADORA, 'real_envido'), 40),
+                (cantar_envido(COMPUTADORA, 'falta_envido'), 20),
+            ]
 
-                return cantar_envido(COMPUTADORA, 'falta_envido')
-        dev_print('AC- No canta envido por puntos insuficientes')
+            return elegir_opcion(opciones)
 
-    c_truco = choice([True, False])
-    if c_truco and mano_actual['truco'].get('nivel') == 0:
+        elif 30 > envido_puntos >= 25:
+            opciones = [
+                (cantar_envido(COMPUTADORA, 'envido'), 50),
+                (cantar_envido(COMPUTADORA, 'real_envido'), 20),
+            ]
+
+            return elegir_opcion(opciones)
+
+    if mano_actual['truco'].get('nivel') == 0:
         dev_print('AC- Cantar truco')
-        from acciones import cantar_truco
-        return cantar_truco(COMPUTADORA, 1)
-    elif c_truco and mano_actual['truco'].get('nivel') == 1 and mano_actual['truco'].get('cantado_por') == USUARIO:
+
+        c_truco = elegir_opcion([
+            (True, 60),
+            (False, 40)
+        ])
+
+        if c_truco:
+            return cantar_truco(COMPUTADORA, 1)
+
+    elif mano_actual['truco'].get('nivel') == 1 and mano_actual['truco'].get('cantado_por') == USUARIO:
         dev_print('AC- Cantar truco')
-        from acciones import cantar_truco
-        return cantar_truco(COMPUTADORA, 2)
-    elif c_truco and mano_actual['truco'].get('nivel') == 2 and mano_actual['truco'].get('cantado_por') == USUARIO:
+
+        c_truco = elegir_opcion([
+            (True, 35),
+            (False, 60)
+        ])
+
+        if c_truco:
+            return cantar_truco(COMPUTADORA, 2)
+
+
+    elif mano_actual['truco'].get('nivel') == 2 and mano_actual['truco'].get('cantado_por') == USUARIO:
         dev_print('AC- Cantar truco')
-        from acciones import cantar_truco
-        return cantar_truco(COMPUTADORA, 3)
-    else:
-        if get_current_round().get('carta_usuario') is not None:
-            dev_print('AC- Responder a carta')
-            return responder_a_carta()
 
-        dev_print('AC- Jugar carta')
+        c_truco = elegir_opcion([
+            (True, 35),
+            (False, 60)
+        ])
 
-        carta_random = choice(cartas)
+        if c_truco:
+            return cantar_truco(COMPUTADORA, 3)
 
-        from acciones import jugar_carta
-        return jugar_carta(carta_random, COMPUTADORA)
+    if get_current_round().get('carta_usuario') is not None:
+        dev_print('AC- Responder a carta')
+        return responder_a_carta()
+
+    dev_print('AC- Jugar carta')
+
+    carta_random = choice(cartas)
+
+    return jugar_carta(carta_random, COMPUTADORA)
 
 
 def responder_a_carta():
@@ -107,100 +131,178 @@ def responder_a_envido():
 
     cantados = get_current_hand()['envido']['cantados']
 
-    # mano_actual = get_current_hand()
-    if 'falta_envido' in cantados:
-        elegir = choice([1, 2])
-        if elegir == 1:
-            return aceptar_envido(COMPUTADORA)
-        elif elegir == 2:
+    puntos_de_envido = calcular_puntos_envido_computadora()
 
-            return rechazar_envido(COMPUTADORA)
+    opciones = []
+    if 'falta_envido' in cantados:
+
+        if puntos_de_envido >= 30:
+            opciones = [
+                (aceptar_envido(COMPUTADORA), 90),
+                (rechazar_envido(COMPUTADORA), 10)
+            ]
+        elif 30 > puntos_de_envido >= 27:
+            opciones = [
+                (aceptar_envido(COMPUTADORA), 70),
+                (rechazar_envido(COMPUTADORA), 30)
+            ]
+        elif 27 > puntos_de_envido >= 24:
+            opciones = [
+                (aceptar_envido(COMPUTADORA), 30),
+                (rechazar_envido(COMPUTADORA), 70)
+            ]
+        else:
+            opciones = [
+                (rechazar_envido(COMPUTADORA), 100)
+            ]
 
     elif 'real_envido' in cantados:
-        elegir = choice([1, 2, 3])
-        if elegir == 1:
 
-            return cantar_envido(COMPUTADORA, 'falta_envido')
-        elif elegir == 2:
+        if puntos_de_envido >= 30:
+            opciones = [
+                (cantar_envido(COMPUTADORA, "falta_envido"), 40),
+                (aceptar_envido(COMPUTADORA), 50),
+                (rechazar_envido(COMPUTADORA), 10)
+            ]
+        elif 30 > puntos_de_envido >= 27:
+            opciones = [
+                (cantar_envido(COMPUTADORA, "falta_envido"), 20),
+                (aceptar_envido(COMPUTADORA), 60),
+                (rechazar_envido(COMPUTADORA), 20)
+            ]
+        elif 27 > puntos_de_envido >= 24:
+            opciones = [
+                (aceptar_envido(COMPUTADORA), 30),
+                (rechazar_envido(COMPUTADORA), 70)
+            ]
+        else:
+            opciones = [(rechazar_envido(COMPUTADORA), 100)]
 
-            return aceptar_envido(COMPUTADORA)
-        elif elegir == 3:
-
-            return rechazar_envido(COMPUTADORA)
 
     elif 'envido_2' in cantados:
-        # Si se canto envido envido, la computadora decide si aceptar o no
-        elegir = choice([1, 2, 3])
-        if elegir == 1:
 
-            return cantar_envido(COMPUTADORA, 'real_envido')
-        elif elegir == 2:
+        if puntos_de_envido >= 30:
+            opciones = [
+                (cantar_envido(COMPUTADORA, "real_envido"), 60),
+                (aceptar_envido(COMPUTADORA), 30),
+                (rechazar_envido(COMPUTADORA), 10)
+            ]
+        elif 30 > puntos_de_envido >= 27:
+            opciones = [
+                (cantar_envido(COMPUTADORA, "real_envido"), 25),
+                (aceptar_envido(COMPUTADORA), 60),
+                (rechazar_envido(COMPUTADORA), 15)
+            ]
+        elif 27 > puntos_de_envido >= 24:
+            opciones = [
+                (aceptar_envido(COMPUTADORA), 30),
+                (rechazar_envido(COMPUTADORA), 70)
+            ]
+        else:
+            opciones = [(rechazar_envido(COMPUTADORA), 100)]
 
-            return aceptar_envido(COMPUTADORA)
-        elif elegir == 3:
-
-            return rechazar_envido(COMPUTADORA)
 
     elif 'envido' in cantados:
-        # Si se canto envido, la computadora decide si aceptar o no
-        elegir = choice([1, 2, 3, 4, 5])
-        if elegir == 1:
 
-            return cantar_envido(COMPUTADORA, 'falta_envido')
-        elif elegir == 2:
+        if puntos_de_envido > 30:
+            opciones = [
+                (cantar_envido(COMPUTADORA, "real_envido"), 25),
+                (cantar_envido(COMPUTADORA, 'envido_2'), 30),
+                (cantar_envido(COMPUTADORA, 'falta_envido'), 10),
+                (aceptar_envido(COMPUTADORA), 30),
+                (rechazar_envido(COMPUTADORA), 5)
+            ]
+        elif 30 > puntos_de_envido > 27:
+            opciones = [
+                (cantar_envido(COMPUTADORA, "real_envido"), 25),
+                (aceptar_envido(COMPUTADORA), 55),
+                (rechazar_envido(COMPUTADORA), 20)
+            ]
+        elif 27 > puntos_de_envido > 24:
+            opciones = [
+                (aceptar_envido(COMPUTADORA), 30),
+                (rechazar_envido(COMPUTADORA), 70)
+            ]
+        else:
+            opciones = [(rechazar_envido(COMPUTADORA), 80), (aceptar_envido(COMPUTADORA), 20)]
+    print('Puntos envido pc', puntos_de_envido)
+    print(opciones)
+    return elegir_opcion(opciones)
 
-            return cantar_envido(COMPUTADORA, 'real_envido')
-        elif elegir == 3:
 
-            return cantar_envido(COMPUTADORA, 'envido_2')
-        elif elegir == 4:
+def evaluar_fuerza_mano():
+    """
+    Evalúa la fuerza de la mano de la computadora.
+    :param cartas: Lista de cartas de la computadora.
+    :return: Fuerza de la mano.
+    """
+    cartas = get_computer_cards()
 
-            return aceptar_envido(COMPUTADORA)
-        elif elegir == 5:
-            return rechazar_envido(COMPUTADORA)
-
-    return noop
+    return sum(obtener_poder(carta) for carta in cartas)
 
 
 def responder_a_truco():
     """
-    Determina como responde la computadora a un truco cantado por el usuario
-
+    Determina como responde la computadora a un truco cantado por el usuario.
     :return: Function
     """
-    from acciones import aceptar_truco, rechazar_truco
-    from acciones import cantar_truco
+    from acciones import aceptar_truco, cantar_truco, rechazar_truco
 
     mano_actual = get_current_hand()
+    cartas_computadora = get_computer_cards()
+    fuerza_mano = evaluar_fuerza_mano()
+    opciones = []
 
     if mano_actual['truco'].get('nivel') == 1:
-        # Si se canto truco
-        aceptar = choice([True, False])
-        if aceptar:
-            step_up = choice([True, False])
-            if step_up:
-                return cantar_truco(COMPUTADORA, 2)
-            else:
-                return aceptar_truco(COMPUTADORA)
+        if fuerza_mano > 20:
+            opciones = [
+                (cantar_truco(COMPUTADORA, 2), 50),
+                (aceptar_truco(COMPUTADORA), 40),
+                (rechazar_truco(COMPUTADORA), 10)
+            ]
         else:
-            return rechazar_truco(COMPUTADORA)
+            opciones = [
+                (aceptar_truco(COMPUTADORA), 60),
+                (rechazar_truco(COMPUTADORA), 40)
+            ]
     elif mano_actual['truco'].get('nivel') == 2:
-        # Si se canto retruco
-        aceptar = choice([True])  # True
-        if aceptar:
-            step_up = choice([True, False])
-            if step_up:
-                return cantar_truco(COMPUTADORA, 3)
-            else:
-                return aceptar_truco(COMPUTADORA)
+        if fuerza_mano > 25:
+            opciones = [
+                (cantar_truco(COMPUTADORA, 3), 40),
+                (aceptar_truco(COMPUTADORA), 50),
+                (rechazar_truco(COMPUTADORA), 10)
+            ]
         else:
-            return rechazar_truco(COMPUTADORA)
+            opciones = [
+                (aceptar_truco(COMPUTADORA), 70),
+                (rechazar_truco(COMPUTADORA), 30)
+            ]
     elif mano_actual['truco'].get('nivel') == 3:
-        # Si se canto vale cuatro
-        aceptar = choice([True, False])
-        if aceptar:
-            return aceptar_truco(COMPUTADORA)
+        if fuerza_mano > 30:
+            opciones = [
+                (aceptar_truco(COMPUTADORA), 80),
+                (rechazar_truco(COMPUTADORA), 20)
+            ]
         else:
-            return rechazar_truco(COMPUTADORA)
+            opciones = [
+                (aceptar_truco(COMPUTADORA), 50),
+                (rechazar_truco(COMPUTADORA), 50)
+            ]
 
-    return rechazar_truco(COMPUTADORA)
+    return elegir_opcion(opciones)
+
+
+def elegir_opcion(opciones):
+    """
+
+    :param opciones: una lista de tuplas, el primer elemento de cada tupla es la opcion a ejecutar, y el segundo elemento es el peso (chances de elegir) de esa opcion.
+    :return:
+    """
+    _opciones = []
+    pesos = []
+
+    for opcion, peso in opciones:
+        _opciones.append(opcion)
+        pesos.append(peso)
+
+    return random.choices(_opciones, pesos)[0]

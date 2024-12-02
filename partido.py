@@ -155,7 +155,7 @@ def borrar_partida_guardada():
 
         borrar_archivo("partida_guardada.json")
 
-        print(f"\r{Colores.GREEN}Partida guardada borrada con éxito.{Colores.RESET}\n")
+        print(f"\r{Colores.GREEN}La partida guardada fue borrada con éxito.{Colores.RESET}\n")
 
     except Exception as a:
         print(f"\r{Colores.RED}No se pudo borrar la partida guardada.{Colores.RESET}\n")

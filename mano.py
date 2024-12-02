@@ -109,7 +109,8 @@ def jugar_mano(terminar_partida):
                 continuar = False
 
             # Si un jugador gana dos rondas seguidas, termina la mano.
-            if ronda_actual.get('ganador') == ronda_anterior.get('ganador') and ronda_actual.get('ganador') != "empate" or ronda_actual.get('ganador') != 'empate':
+            if ronda_actual.get('ganador') == ronda_anterior.get('ganador') and (
+                    ronda_actual.get('ganador') != "empate" or ronda_actual.get('ganador') != 'empate'):
                 continuar = False
 
     # Determinamos quien gano la ronda actual
@@ -119,7 +120,7 @@ def jugar_mano(terminar_partida):
     puntos_a_sumar = determinar_puntos_ganador()
 
     # Sumamos los puntos al ganador de la mano
-    
+
     partida['puntos'][ganador_mano] += puntos_a_sumar
 
     print(
@@ -234,6 +235,5 @@ def determinar_ganador_de_la_mano():
     # Si se empata cualquier ronda menos la primera, gana el que gano la primera.
     if rondas_ganadas['empate'] > 0 and ronda_1['ganador'] != 'empate':
         return ronda_1['ganador']
-    
 
     return USUARIO if rondas_ganadas[USUARIO] > rondas_ganadas[COMPUTADORA] else COMPUTADORA
