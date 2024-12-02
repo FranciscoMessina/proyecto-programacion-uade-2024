@@ -225,7 +225,6 @@ def responder_a_envido():
             ]
         else:
             opciones = [(rechazar_envido(COMPUTADORA), 80), (aceptar_envido(COMPUTADORA), 20)]
-    print('Puntos envido pc', puntos_de_envido)
     return elegir_opcion(opciones)
 
 
